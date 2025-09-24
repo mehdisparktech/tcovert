@@ -18,10 +18,12 @@ import '../../features/setting/presentation/screen/privacy_policy_screen.dart';
 import '../../features/setting/presentation/screen/setting_screen.dart';
 import '../../features/setting/presentation/screen/terms_of_services_screen.dart';
 import '../../features/splash/splash_screen.dart';
+import '../../features/home/presentation/screen/home_screen.dart';
 
 class AppRoutes {
   static const String test = "/test_screen.dart";
   static const String splash = "/splash_screen.dart";
+  static const String home = "/home_screen.dart";
   static const String signUp = "/sign_up_screen.dart";
   static const String verifyUser = "/verify_user.dart";
   static const String signIn = "/sign_in_screen.dart";
@@ -44,6 +46,7 @@ class AppRoutes {
 
   static List<GetPage> routes = [
     GetPage(name: splash, page: () => const SplashScreen()),
+    GetPage(name: home, page: () => const HomeScreen()),
 
     GetPage(name: signUp, page: () => SignUpScreen()),
     GetPage(name: verifyUser, page: () => const VerifyUser()),
