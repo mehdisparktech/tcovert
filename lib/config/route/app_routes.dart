@@ -6,7 +6,12 @@ import '../../features/auth/forgot password/presentation/screen/verify_screen.da
 import '../../features/auth/sign in/presentation/screen/sign_in_screen.dart';
 import '../../features/auth/sign up/presentation/screen/sign_up_screen.dart';
 import '../../features/auth/sign up/presentation/screen/verify_user.dart';
+import '../../features/profile/presentation/screen/about_us_screen.dart';
+import '../../features/profile/presentation/screen/contact_us_screen.dart';
+import '../../features/profile/presentation/screen/create_promo_screen.dart';
 import '../../features/profile/presentation/screen/edit_profile.dart';
+import '../../features/profile/presentation/screen/permission_screen.dart';
+import '../../features/profile/presentation/screen/preferences_screen.dart';
 import '../../features/profile/presentation/screen/profile_screen.dart';
 import '../../features/setting/presentation/screen/privacy_policy_screen.dart';
 import '../../features/setting/presentation/screen/setting_screen.dart';
@@ -26,6 +31,11 @@ class AppRoutes {
 
   static const String profile = "/profile_screen.dart";
   static const String editProfile = "/edit_profile.dart";
+  static const String preferences = "/preferences_screen.dart";
+  static const String permission = "/permission_screen.dart";
+  static const String createPromo = "/create_promo_screen.dart";
+  static const String contactUs = "/contact_us_screen.dart";
+  static const String aboutUs = "/about_us_screen.dart";
   static const String privacyPolicy = "/privacy_policy_screen.dart";
   static const String termsOfServices = "/terms_of_services_screen.dart";
   static const String setting = "/setting_screen.dart";
@@ -43,6 +53,11 @@ class AppRoutes {
 
     GetPage(name: profile, page: () => const ProfileScreen()),
     GetPage(name: editProfile, page: () => EditProfile()),
+    GetPage(name: preferences, page: () => const PreferencesScreen()),
+    GetPage(name: permission, page: () => const PermissionScreen()),
+    GetPage(name: createPromo, page: () => const CreatePromoScreen()),
+    GetPage(name: contactUs, page: () => const ContactUsScreen()),
+    GetPage(name: aboutUs, page: () => const AboutUsScreen()),
     GetPage(name: privacyPolicy, page: () => const PrivacyPolicyScreen()),
     GetPage(name: termsOfServices, page: () => const TermsOfServicesScreen()),
     GetPage(name: setting, page: () => const SettingScreen()),

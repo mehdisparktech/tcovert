@@ -56,13 +56,33 @@ class ProfileScreen extends StatelessWidget {
                   ),
 
                   /// Setting item here
-                  Item(icon: Icons.settings, title: "Preferences"),
-                  Item(icon: Icons.check_circle, title: "Permission"),
+                  Item(
+                    icon: Icons.settings,
+                    title: "Preferences",
+                    onTap: () => Get.toNamed(AppRoutes.preferences),
+                  ),
+                  Item(
+                    icon: Icons.check_circle,
+                    title: "Permission",
+                    onTap: () => Get.toNamed(AppRoutes.permission),
+                  ),
 
                   /// Setting item here
-                  Item(icon: Icons.scanner, title: "Create Promo"),
-                  Item(icon: Icons.contact_support, title: "Contact Us"),
-                  Item(icon: Icons.info, title: "About Us"),
+                  Item(
+                    icon: Icons.scanner,
+                    title: "Create Promo",
+                    onTap: () => Get.toNamed(AppRoutes.createPromo),
+                  ),
+                  Item(
+                    icon: Icons.contact_support,
+                    title: "Contact Us",
+                    onTap: () => Get.toNamed(AppRoutes.contactUs),
+                  ),
+                  Item(
+                    icon: Icons.info,
+                    title: "About Us",
+                    onTap: () => Get.toNamed(AppRoutes.aboutUs),
+                  ),
 
                   /// Language item here
 
