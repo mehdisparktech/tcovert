@@ -7,29 +7,26 @@ import '../../../../component/button/common_button.dart';
 import '../../../../utils/constants/app_colors.dart';
 import '../../../../utils/extensions/extension.dart';
 
-class ContactUsScreen extends StatefulWidget {
-  const ContactUsScreen({super.key});
+class RequestScreen extends StatefulWidget {
+  const RequestScreen({super.key});
 
   @override
-  State<ContactUsScreen> createState() => _ContactUsScreenState();
+  State<RequestScreen> createState() => _RequestScreenState();
 }
 
-class _ContactUsScreenState extends State<ContactUsScreen> {
+class _RequestScreenState extends State<RequestScreen> {
   final TextEditingController nameController = TextEditingController();
   final TextEditingController emailController = TextEditingController();
-  final TextEditingController subjectController = TextEditingController();
-  final TextEditingController messageController = TextEditingController();
+  final TextEditingController urlController = TextEditingController();
   final GlobalKey<FormState> formKey = GlobalKey<FormState>();
 
   bool isLoading = false;
-  bool isBusinessProfileExpanded = false;
 
   @override
   void dispose() {
     nameController.dispose();
     emailController.dispose();
-    subjectController.dispose();
-    messageController.dispose();
+    urlController.dispose();
     super.dispose();
   }
 
@@ -46,7 +43,7 @@ class _ContactUsScreenState extends State<ContactUsScreen> {
         ),
         centerTitle: true,
         title: const CommonText(
-          text: "Contact Us",
+          text: "Request",
           fontSize: 18,
           fontWeight: FontWeight.w600,
           color: AppColors.white,
@@ -59,9 +56,7 @@ class _ContactUsScreenState extends State<ContactUsScreen> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              // Business Profile Request Section
-              _buildBusinessProfileSection(),
-              32.height,
+              40.height,
 
               // Name Field
               _buildInputField(
@@ -80,21 +75,12 @@ class _ContactUsScreenState extends State<ContactUsScreen> {
               ),
               20.height,
 
-              // Subject Field
+              // URL Field
               _buildInputField(
-                label: "Subject",
-                controller: subjectController,
-                hintText: "Subject",
-              ),
-              20.height,
-
-              // Message Field
-              _buildInputField(
-                label: "Message",
-                controller: messageController,
-                hintText: "Message",
-                maxLines: 5,
-                textInputAction: TextInputAction.done,
+                label: "URL",
+                controller: urlController,
+                hintText: "https://www.example.com/restaurant-demo",
+                keyboardType: TextInputType.url,
               ),
               40.height,
 
@@ -109,48 +95,10 @@ class _ContactUsScreenState extends State<ContactUsScreen> {
                 titleSize: 16,
                 titleWeight: FontWeight.w600,
                 isLoading: isLoading,
-                onTap: _handleSendMessage,
+                onTap: _handleSendRequest,
               ),
             ],
           ),
-        ),
-      ),
-    );
-  }
-
-  Widget _buildBusinessProfileSection() {
-    return GestureDetector(
-      onTap: () {
-        setState(() {
-          isBusinessProfileExpanded = !isBusinessProfileExpanded;
-        });
-      },
-      child: Container(
-        width: double.infinity,
-        padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 14.h),
-        decoration: BoxDecoration(
-          color: AppColors.white10,
-          borderRadius: BorderRadius.circular(10.r),
-          border: Border.all(color: AppColors.transparent),
-        ),
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            const CommonText(
-              text: "Request for Business Profile",
-              fontSize: 14,
-              fontWeight: FontWeight.w400,
-              color: AppColors.textFiledColor,
-              textAlign: TextAlign.left,
-            ),
-            Icon(
-              isBusinessProfileExpanded
-                  ? Icons.keyboard_arrow_up
-                  : Icons.keyboard_arrow_down,
-              color: AppColors.textFiledColor,
-              size: 20.sp,
-            ),
-          ],
         ),
       ),
     );
@@ -161,7 +109,6 @@ class _ContactUsScreenState extends State<ContactUsScreen> {
     required TextEditingController controller,
     required String hintText,
     TextInputType keyboardType = TextInputType.text,
-    int maxLines = 1,
     TextInputAction textInputAction = TextInputAction.next,
   }) {
     return Column(
@@ -186,13 +133,16 @@ class _ContactUsScreenState extends State<ContactUsScreen> {
           borderColor: AppColors.transparent,
           borderRadius: 10,
           paddingHorizontal: 16,
-          paddingVertical: maxLines > 1 ? 16 : 14,
+          paddingVertical: 14,
           validator: (value) {
             if (value == null || value.trim().isEmpty) {
               return '$label is required';
             }
             if (label == 'Email' && !GetUtils.isEmail(value)) {
               return 'Please enter a valid email';
+            }
+            if (label == 'URL' && !GetUtils.isURL(value)) {
+              return 'Please enter a valid URL';
             }
             return null;
           },
@@ -201,7 +151,7 @@ class _ContactUsScreenState extends State<ContactUsScreen> {
     );
   }
 
-  void _handleSendMessage() async {
+  void _handleSendRequest() async {
     if (formKey.currentState!.validate()) {
       setState(() {
         isLoading = true;
@@ -217,7 +167,7 @@ class _ContactUsScreenState extends State<ContactUsScreen> {
       // Show success message
       Get.snackbar(
         "Success",
-        "Your message has been sent successfully!",
+        "Your request has been sent successfully!",
         backgroundColor: AppColors.secondary,
         colorText: AppColors.white,
         snackPosition: SnackPosition.TOP,
@@ -227,8 +177,7 @@ class _ContactUsScreenState extends State<ContactUsScreen> {
       // Clear form
       nameController.clear();
       emailController.clear();
-      subjectController.clear();
-      messageController.clear();
+      urlController.clear();
     }
   }
 }

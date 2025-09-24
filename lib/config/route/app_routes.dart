@@ -13,6 +13,7 @@ import '../../features/profile/presentation/screen/edit_profile.dart';
 import '../../features/profile/presentation/screen/permission_screen.dart';
 import '../../features/profile/presentation/screen/preferences_screen.dart';
 import '../../features/profile/presentation/screen/profile_screen.dart';
+import '../../features/profile/presentation/screen/request_screen.dart';
 import '../../features/setting/presentation/screen/privacy_policy_screen.dart';
 import '../../features/setting/presentation/screen/setting_screen.dart';
 import '../../features/setting/presentation/screen/terms_of_services_screen.dart';
@@ -35,6 +36,7 @@ class AppRoutes {
   static const String permission = "/permission_screen.dart";
   static const String createPromo = "/create_promo_screen.dart";
   static const String contactUs = "/contact_us_screen.dart";
+  static const String request = "/request_screen.dart";
   static const String aboutUs = "/about_us_screen.dart";
   static const String privacyPolicy = "/privacy_policy_screen.dart";
   static const String termsOfServices = "/terms_of_services_screen.dart";
@@ -57,6 +59,7 @@ class AppRoutes {
     GetPage(name: permission, page: () => const PermissionScreen()),
     GetPage(name: createPromo, page: () => const CreatePromoScreen()),
     GetPage(name: contactUs, page: () => const ContactUsScreen()),
+    GetPage(name: request, page: () => const RequestScreen()),
     GetPage(name: aboutUs, page: () => const AboutUsScreen()),
     GetPage(name: privacyPolicy, page: () => const PrivacyPolicyScreen()),
     GetPage(name: termsOfServices, page: () => const TermsOfServicesScreen()),
