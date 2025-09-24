@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:get/get.dart';
+import 'package:tcovert/config/route/app_routes.dart';
 
 import '../../../../../services/api/api_service.dart';
 import '../../../../../config/api/api_end_point.dart';
@@ -16,8 +17,8 @@ class ChangePasswordController extends GetxController {
   ///  change password function
 
   Future<void> changePasswordRepo() async {
-    if (!formKey.currentState!.validate()) return;
-    Get.back();
+    //if (!formKey.currentState!.validate()) return;
+    Get.toNamed(AppRoutes.signIn);
     return;
     isLoading = true;
     update();

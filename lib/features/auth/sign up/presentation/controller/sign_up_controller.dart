@@ -34,7 +34,7 @@ class SignUpController extends GetxController {
 
   String signUpToken = '';
 
-  static SignUpController get instance => Get.put(SignUpController());
+
 
   TextEditingController nameController = TextEditingController(
     text: kDebugMode ? "Namimul Hassan" : "",

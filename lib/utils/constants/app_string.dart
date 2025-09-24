@@ -8,6 +8,7 @@ class AppString {
   static const String yes = "Yes";
   static const String areYouSure = "Are you sure";
   static const String enterYouPassword = "Enter you password";
+  static const String setPassword = "Set Password";
   static const String cancel = "Cancel";
   static const String done = "Done";
   static const String deleteDetails =
@@ -34,12 +35,13 @@ class AppString {
   static const String resendCodeIn = "Resend code in";
   static const String minute = "minute";
   static const String verify = "Verify";
-  static const String logIntoYourAccount = "Login to Your Account";
+  static const String resendLink = "Resend Link";
+  static const String logIntoYourAccount = "Welcome Back!";
   static const String forgotThePassword = "Forgot the password";
   static const String signIn = "Sign in";
-  static const String doNotHaveAccount = "Don’t have an account";
+  static const String doNotHaveAccount = "Don’t have an account? ";
   static const String signUp = "Sign up";
-  static const String alreadyHaveAccount = "Already have an account";
+  static const String alreadyHaveAccount = "Already have an account? ";
   static const String fullName = "Full Name";
   static const String createYourAccount = "Create Your Account";
   static const String otpVerify = "OTP Verify";

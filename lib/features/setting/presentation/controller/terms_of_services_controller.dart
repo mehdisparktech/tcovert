@@ -12,9 +12,7 @@ class TermsOfServicesController extends GetxController {
   ///  HTML model initialize here
   HtmlModel data = HtmlModel.fromJson({});
 
-  /// Terms of services Controller instance create here
-  static TermsOfServicesController get instance =>
-      Get.put(TermsOfServicesController());
+
 
   ///  Terms of services Api call here
   geTermsOfServicesRepo() async {

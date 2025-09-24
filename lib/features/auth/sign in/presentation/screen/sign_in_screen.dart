@@ -39,10 +39,9 @@ class SignInScreen extends StatelessWidget {
                     fontSize: 32,
                     bottom: 20,
                     top: 36,
-                  ),
+                  ).center,
 
                   /// Account Email Input here
-                  const CommonText(text: AppString.email, bottom: 8),
                   CommonTextField(
                     controller: controller.emailController,
                     prefixIcon: const Icon(Icons.mail),
@@ -50,12 +49,9 @@ class SignInScreen extends StatelessWidget {
                     validator: OtherHelper.emailValidator,
                   ),
 
+                  20.height,
+
                   /// Account Password Input here
-                  const CommonText(
-                    text: AppString.password,
-                    bottom: 8,
-                    top: 24,
-                  ),
                   CommonTextField(
                     controller: controller.passwordController,
                     prefixIcon: const Icon(Icons.lock),
@@ -73,7 +69,7 @@ class SignInScreen extends StatelessWidget {
                         text: AppString.forgotThePassword,
                         top: 10,
                         bottom: 30,
-                        color: AppColors.primaryColor,
+                        color: AppColors.secondary,
                         fontSize: 16,
                         fontWeight: FontWeight.w600,
                       ),
@@ -89,7 +85,7 @@ class SignInScreen extends StatelessWidget {
                   30.height,
 
                   /// Account Creating Instruction here
-                  const DoNotHaveAccount(),
+                  const DoNotHaveAccount().center,
                   30.height,
                 ],
               ),

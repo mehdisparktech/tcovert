@@ -41,9 +41,7 @@ class ForgetPasswordController extends GetxController {
     text: kDebugMode ? 'hello123' : '',
   );
 
-  /// create Forget Password Controller instance
-  static ForgetPasswordController get instance =>
-      Get.put(ForgetPasswordController());
+
 
   @override
   void dispose() {

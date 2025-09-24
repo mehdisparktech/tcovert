@@ -22,7 +22,7 @@ class _VerifyScreenState extends State<VerifyScreen> {
   /// init State here
   @override
   void initState() {
-    ForgetPasswordController.instance.startTimer();
+    Get.find<ForgetPasswordController>().startTimer();
     super.initState();
   }
 

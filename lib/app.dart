@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 
+import 'config/dependency/dependency_injection.dart';
 import 'config/route/app_routes.dart';
 import 'config/theme/light_theme.dart';
 
@@ -23,6 +24,7 @@ class MyApp extends StatelessWidget {
         transitionDuration: const Duration(milliseconds: 300),
         initialRoute: AppRoutes.splash,
         getPages: AppRoutes.routes,
+        initialBinding: DependencyInjection(),
       ),
     );
   }

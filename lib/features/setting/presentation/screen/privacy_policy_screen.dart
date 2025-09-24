@@ -33,7 +33,7 @@ class PrivacyPolicyScreen extends StatelessWidget {
 
               /// Error Handle here
               Status.error => ErrorScreen(
-                onTap: PrivacyPolicyController.instance.getPrivacyPolicyRepo(),
+                onTap: Get.find<PrivacyPolicyController>().getPrivacyPolicyRepo(),
               ),
 
               /// Show main data here

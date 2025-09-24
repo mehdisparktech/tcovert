@@ -12,9 +12,7 @@ class PrivacyPolicyController extends GetxController {
   ///  HTML model initialize here
   HtmlModel data = HtmlModel.fromJson({});
 
-  /// Privacy Policy Controller instance create here
-  static PrivacyPolicyController get instance =>
-      Get.put(PrivacyPolicyController());
+
 
   /// Privacy Policy Api call here
   getPrivacyPolicyRepo() async {
