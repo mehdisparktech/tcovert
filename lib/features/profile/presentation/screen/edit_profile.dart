@@ -23,7 +23,7 @@ class EditProfile extends StatelessWidget {
           appBar: AppBar(
             centerTitle: true,
             title: const CommonText(
-              text: AppString.profile,
+              text: AppString.editProfile,
               fontSize: 20,
               fontWeight: FontWeight.w600,
             ),
@@ -77,6 +77,7 @@ class EditProfile extends StatelessWidget {
                       ),
                     ],
                   ),
+                  20.height,
 
                   /// user all information filed here
                   EditProfileAllFiled(controller: controller),

@@ -4,10 +4,15 @@ import '../../../../../utils/constants/app_colors.dart';
 import '../../../../component/text/common_text.dart';
 
 class Item extends StatelessWidget {
-  const Item({super.key, required this.title, required this.icon, this.onTap});
+  const Item({
+    super.key,
+    required this.title,
+    required this.iconDate,
+    this.onTap,
+  });
 
   final String title;
-  final IconData icon;
+  final IconData iconDate;
   final VoidCallback? onTap;
 
   @override
@@ -25,7 +30,7 @@ class Item extends StatelessWidget {
         child: Row(
           children: [
             /// show icon here
-            Icon(icon, color: AppColors.white),
+            Icon(iconDate, color: AppColors.white),
 
             /// show Title here
             CommonText(text: title, color: AppColors.white, left: 12),

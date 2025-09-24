@@ -26,6 +26,7 @@ class ProfileController extends GetxController {
 
   /// all controller here
   TextEditingController nameController = TextEditingController();
+  TextEditingController emailController = TextEditingController();
   TextEditingController numberController = TextEditingController();
 
   /// select image function here

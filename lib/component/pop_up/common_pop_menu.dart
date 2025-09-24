@@ -109,6 +109,7 @@ logOutPopUp() {
             return FadeTransition(
               opacity: ModalRoute.of(context)!.animation!,
               child: AlertDialog(
+                backgroundColor: AppColors.textfieldColor,
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(20.r),
                 ),
@@ -117,6 +118,7 @@ logOutPopUp() {
                   text: AppString.youSureWantToLogout,
                   maxLines: 2,
                   fontWeight: FontWeight.w600,
+                  fontSize: 20,
                 ),
                 actions: [
                   Row(

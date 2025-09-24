@@ -17,95 +17,63 @@ class ProfileScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      /// App Bar Section Starts here
-      appBar: AppBar(
-        centerTitle: true,
-        title: const CommonText(
-          text: AppString.profile,
-          fontWeight: FontWeight.w600,
-          fontSize: 24,
-        ),
-      ),
-
       /// Body Section Starts here
       body: GetBuilder<ProfileController>(
         builder: (controller) {
-          return Padding(
-            padding: EdgeInsets.symmetric(horizontal: 20.w, vertical: 24.h),
-            child: Column(
-              children: [
-                /// User Profile Image here
-                Center(
-                  child: CircleAvatar(
-                    radius: 85.sp,
-                    backgroundColor: Colors.transparent,
-                    child: const ClipOval(
-                      child: CommonImage(
-                        imageSrc: AppImages.profile,
-                        size: 170,
-                        defaultImage: AppImages.profile,
-                      ),
+          return SingleChildScrollView(
+            child: Padding(
+              padding: EdgeInsets.symmetric(horizontal: 20.w, vertical: 100.h),
+              child: Column(
+                children: [
+                  /// User Profile Image here
+                  Center(
+                    child: CommonImage(
+                      imageSrc: AppImages.profile,
+                      size: 120,
+                      defaultImage: AppImages.profile,
                     ),
                   ),
-                ),
 
-                /// User Name here
-                const CommonText(
-                  text: LocalStorageKeys.myName,
-                  fontSize: 18,
-                  fontWeight: FontWeight.w700,
-                  top: 20,
-                  bottom: 24,
-                ),
-
-                /// Edit Profile item here
-                Item(
-                  icon: Icons.person,
-                  title: AppString.editProfile,
-                  onTap: () => Get.toNamed(AppRoutes.editProfile),
-                ),
-
-                /// Setting item here
-                Item(
-                  icon: Icons.settings,
-                  title: AppString.settings,
-                  onTap: () => Get.toNamed(AppRoutes.setting),
-                ),
-
-                /// Language item here
-                Container(
-                  padding: EdgeInsets.symmetric(horizontal: 24.w),
-                  child: Column(
-                    children: [
-                      Row(
-                        children: [
-                          const Icon(Icons.language),
-                          CommonText(
-                            text: controller.selectedLanguage,
-                            fontWeight: FontWeight.w400,
-                            fontSize: 18,
-                            left: 16,
-                          ),
-                          const Spacer(),
-                          PopUpMenu(
-                            items: controller.languages,
-                            selectedItem: [controller.selectedLanguage],
-                            onTap: controller.selectLanguage,
-                          ),
-                        ],
-                      ),
-                      const Divider(),
-                    ],
+                  /// User Name here
+                  const CommonText(
+                    text: LocalStorageKeys.myName,
+                    fontSize: 18,
+                    fontWeight: FontWeight.w700,
+                    top: 20,
+                    bottom: 24,
                   ),
-                ),
 
-                /// Log Out item here
-                Item(
-                  icon: Icons.logout,
-                  title: AppString.logOut,
-                  onTap: logOutPopUp,
-                ),
-              ],
+                  /// Edit Profile item here
+                  Item(
+                    icon: Icons.person,
+                    title: AppString.editProfile,
+                    onTap: () => Get.toNamed(AppRoutes.editProfile),
+                  ),
+                  Item(
+                    icon: Icons.password,
+                    title: AppString.changePassword,
+                    onTap: () => Get.toNamed(AppRoutes.changePassword),
+                  ),
+
+                  /// Setting item here
+                  Item(icon: Icons.settings, title: "Preferences"),
+                  Item(icon: Icons.check_circle, title: "Permission"),
+
+                  /// Setting item here
+                  Item(icon: Icons.scanner, title: "Create Promo"),
+                  Item(icon: Icons.contact_support, title: "Contact Us"),
+                  Item(icon: Icons.info, title: "About Us"),
+
+                  /// Language item here
+
+                  /// Log Out item here
+                  Item(
+                    icon: Icons.logout,
+                    title: AppString.logOut,
+                    onTap: logOutPopUp,
+                  ),
+                ],
+              ),
             ),
           );
         },
