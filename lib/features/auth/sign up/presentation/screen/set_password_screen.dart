@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:tcovert/features/auth/change_password/presentation/controller/change_password_controller.dart';
+import 'package:tcovert/utils/constants/app_images.dart';
 import '../../../../../../../config/route/app_routes.dart';
 import '../../../../../../../utils/extensions/extension.dart';
 import '../../../../../component/button/common_button.dart';
@@ -17,7 +18,20 @@ class SetPasswordScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(),
+      appBar: AppBar(
+        centerTitle: true,
+        backgroundColor: Colors.transparent,
+        elevation: 0,
+        flexibleSpace: Container(
+          decoration: const BoxDecoration(
+            image: DecorationImage(
+              image: AssetImage(AppImages.bg),
+              fit: BoxFit.cover,
+            ),
+          ),
+        ),
+        toolbarHeight: 200.h,
+      ),
       body: GetBuilder<ChangePasswordController>(
         builder: (controller) {
           return SingleChildScrollView(

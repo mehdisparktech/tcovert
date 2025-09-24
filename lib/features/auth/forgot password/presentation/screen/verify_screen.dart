@@ -1,13 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
+import 'package:tcovert/utils/constants/app_images.dart';
+import 'package:tcovert/utils/extensions/extension.dart';
 import '../../../../../component/button/common_button.dart';
 import '../../../../../component/text/common_text.dart';
 import '../controller/forget_password_controller.dart';
 import '../../../../../../../utils/constants/app_colors.dart';
 import 'package:pin_code_fields/pin_code_fields.dart';
 import '../../../../../../../utils/constants/app_string.dart';
-
 
 class VerifyScreen extends StatefulWidget {
   const VerifyScreen({super.key});
@@ -31,11 +32,18 @@ class _VerifyScreenState extends State<VerifyScreen> {
     return Scaffold(
       /// App Bar Section
       appBar: AppBar(
-        title: const CommonText(
-          text: AppString.forgotPassword,
-          fontWeight: FontWeight.w700,
-          fontSize: 24,
+        centerTitle: true,
+        backgroundColor: Colors.transparent,
+        elevation: 0,
+        flexibleSpace: Container(
+          decoration: const BoxDecoration(
+            image: DecorationImage(
+              image: AssetImage(AppImages.bg),
+              fit: BoxFit.cover,
+            ),
+          ),
         ),
+        toolbarHeight: 200.h,
       ),
 
       /// Body Section
@@ -47,13 +55,21 @@ class _VerifyScreenState extends State<VerifyScreen> {
                 key: formKey,
                 child: Column(
                   children: [
+                    CommonText(
+                      text: AppString.verifyCode,
+                      fontSize: 28,
+                      fontWeight: FontWeight.w500,
+                      top: 40,
+                      bottom: 20,
+                    ).center,
+
                     /// instruction how to get OTP
                     Center(
                       child: CommonText(
                         text:
                             "${AppString.codeHasBeenSendTo} ${controller.emailController.text}",
                         fontSize: 18,
-                        top: 100,
+
                         bottom: 60,
                       ),
                     ),
@@ -71,7 +87,8 @@ class _VerifyScreenState extends State<VerifyScreen> {
                           }
                         },
                         autoDisposeControllers: false,
-                        cursorColor: AppColors.black,
+                        cursorColor: AppColors.white,
+                        textStyle: TextStyle(color: AppColors.white),
                         appContext: (context),
                         autoFocus: true,
                         pinTheme: PinTheme(
@@ -79,15 +96,15 @@ class _VerifyScreenState extends State<VerifyScreen> {
                           borderRadius: BorderRadius.circular(8),
                           fieldHeight: 60.h,
                           fieldWidth: 60.w,
-                          activeFillColor: AppColors.transparent,
-                          selectedFillColor: AppColors.transparent,
-                          inactiveFillColor: AppColors.transparent,
+                          activeFillColor: AppColors.textfieldColor,
+                          selectedFillColor: AppColors.textfieldColor,
+                          inactiveFillColor: AppColors.textfieldColor,
                           borderWidth: 0.5.w,
-                          selectedColor: AppColors.primaryColor,
-                          activeColor: AppColors.primaryColor,
-                          inactiveColor: AppColors.black,
+                          selectedColor: AppColors.textfieldColor,
+                          activeColor: AppColors.textfieldColor,
+                          inactiveColor: AppColors.textfieldColor,
                         ),
-                        length: 6,
+                        length: 4,
                         keyboardType: TextInputType.number,
                         autovalidateMode: AutovalidateMode.disabled,
                         enableActiveFill: true,
@@ -108,8 +125,8 @@ class _VerifyScreenState extends State<VerifyScreen> {
                             controller.time == '00:00'
                                 ? AppString.resendCode
                                 : "${AppString.resendCodeIn} ${controller.time} ${AppString.minute}",
-                        top: 60,
-                        bottom: 100,
+                        top: 30,
+                        bottom: 40,
                         fontSize: 18,
                       ),
                     ),

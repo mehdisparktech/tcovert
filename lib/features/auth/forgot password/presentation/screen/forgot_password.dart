@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:tcovert/utils/constants/app_images.dart';
 import '../../../../../../../utils/extensions/extension.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
@@ -21,11 +22,18 @@ class ForgotPasswordScreen extends StatelessWidget {
           (controller) => Scaffold(
             /// App Bar Section
             appBar: AppBar(
-              title: const CommonText(
-                text: AppString.forgotPassword,
-                fontWeight: FontWeight.w700,
-                fontSize: 24,
+              centerTitle: true,
+              backgroundColor: Colors.transparent,
+              elevation: 0,
+              flexibleSpace: Container(
+                decoration: const BoxDecoration(
+                  image: DecorationImage(
+                    image: AssetImage(AppImages.bg),
+                    fit: BoxFit.cover,
+                  ),
+                ),
               ),
+              toolbarHeight: 200.h,
             ),
 
             /// body section
@@ -36,33 +44,30 @@ class ForgotPasswordScreen extends StatelessWidget {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    /// forget password take email for reset Password
-                    const CommonText(text: AppString.email, bottom: 8, top: 80),
+                    const CommonText(
+                      text: AppString.forgotPassword,
+                      fontSize: 28,
+                      bottom: 20,
+                      top: 36,
+                    ).center,
                     CommonTextField(
                       controller: controller.emailController,
                       prefixIcon: const Icon(Icons.mail),
                       hintText: AppString.email,
                       validator: OtherHelper.emailValidator,
                     ),
-                    100.height,
+                    30.height,
+                    CommonButton(
+                      titleText: AppString.continues,
+                      isLoading: controller.isLoadingEmail,
+                      onTap: () {
+                        if (formKey.currentState!.validate()) {
+                          controller.forgotPasswordRepo();
+                        }
+                      },
+                    ),
                   ],
                 ),
-              ),
-            ),
-
-            /// Bottom Navigation Bar Section
-            bottomNavigationBar: Padding(
-              padding: const EdgeInsets.symmetric(vertical: 30, horizontal: 20),
-
-              /// Submit Button
-              child: CommonButton(
-                titleText: AppString.continues,
-                isLoading: controller.isLoadingEmail,
-                onTap: () {
-                  if (formKey.currentState!.validate()) {
-                    controller.forgotPasswordRepo();
-                  }
-                },
               ),
             ),
           ),

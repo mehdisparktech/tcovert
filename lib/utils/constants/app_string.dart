@@ -8,6 +8,8 @@ class AppString {
   static const String yes = "Yes";
   static const String areYouSure = "Are you sure";
   static const String enterYouPassword = "Enter you password";
+  static const String setNewPassword = "Set New Password";
+  static const String verifyCode = "Verify OTP";
   static const String setPassword = "Set Password";
   static const String cancel = "Cancel";
   static const String done = "Done";

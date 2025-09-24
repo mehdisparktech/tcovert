@@ -11,7 +11,6 @@ import '../../../../../../../utils/constants/app_images.dart';
 import '../../../../../../../utils/constants/app_string.dart';
 import '../../../../../../../utils/helpers/other_helper.dart';
 
-
 class CreatePassword extends StatelessWidget {
   CreatePassword({super.key});
 
@@ -22,11 +21,18 @@ class CreatePassword extends StatelessWidget {
     return Scaffold(
       /// App Bar Section starts here
       appBar: AppBar(
-        title: const CommonText(
-          text: AppString.createNewPassword,
-          fontWeight: FontWeight.w700,
-          fontSize: 24,
+        centerTitle: true,
+        backgroundColor: Colors.transparent,
+        elevation: 0,
+        flexibleSpace: Container(
+          decoration: const BoxDecoration(
+            image: DecorationImage(
+              image: AssetImage(AppImages.bg),
+              fit: BoxFit.cover,
+            ),
+          ),
         ),
+        toolbarHeight: 200.h,
       ),
 
       /// Body Section starts here
@@ -39,28 +45,16 @@ class CreatePassword extends StatelessWidget {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  64.height,
-
-                  /// Reset password image here
-                  const Center(
-                    child: CommonImage(
-                      imageSrc: AppImages.noImage,
-                      height: 297,
-                      width: 297,
-                    ),
-                  ),
-
                   /// Instruction of Creating New Password
                   const CommonText(
-                    text: AppString.createYourNewPassword,
-                    fontSize: 18,
+                    text: AppString.setNewPassword,
+                    fontSize: 28,
                     textAlign: TextAlign.start,
                     top: 64,
                     bottom: 24,
-                  ),
+                  ).center,
 
                   /// New Password here
-                  const CommonText(text: AppString.password, bottom: 8),
                   CommonTextField(
                     controller: controller.passwordController,
                     prefixIcon: const Icon(Icons.lock),
@@ -68,13 +62,9 @@ class CreatePassword extends StatelessWidget {
                     isPassword: true,
                     validator: OtherHelper.passwordValidator,
                   ),
+                  30.height,
 
                   /// Confirm Password here
-                  const CommonText(
-                    text: AppString.password,
-                    bottom: 8,
-                    top: 12,
-                  ),
                   CommonTextField(
                     controller: controller.confirmPasswordController,
                     prefixIcon: const Icon(Icons.lock),

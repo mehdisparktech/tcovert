@@ -14,9 +14,6 @@ import '../../../../../services/storage/storage_services.dart';
 import '../../../../../utils/app_utils.dart';
 
 class SignUpController extends GetxController {
-  /// Sign Up Form Key
-  final signUpFormKey = GlobalKey<FormState>();
-
   bool isPopUpOpen = false;
   bool isLoading = false;
   bool isLoadingVerify = false;
@@ -33,8 +30,6 @@ class SignUpController extends GetxController {
   String? image;
 
   String signUpToken = '';
-
-
 
   TextEditingController nameController = TextEditingController(
     text: kDebugMode ? "Namimul Hassan" : "",
@@ -76,7 +71,6 @@ class SignUpController extends GetxController {
   }
 
   signUpUser() async {
-    if (!signUpFormKey.currentState!.validate()) return;
     Get.toNamed(AppRoutes.verifyUser);
     return;
     isLoading = true;

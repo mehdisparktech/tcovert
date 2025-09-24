@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:tcovert/utils/constants/app_images.dart';
 import '../../../../../../../utils/extensions/extension.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
@@ -14,9 +15,23 @@ class SignUpScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    GlobalKey<FormState> signUpFormKey = GlobalKey<FormState>();
     return Scaffold(
       /// App Bar Section Starts Here
-      appBar: AppBar(),
+      appBar: AppBar(
+        centerTitle: true,
+        backgroundColor: Colors.transparent,
+        elevation: 0,
+        flexibleSpace: Container(
+          decoration: const BoxDecoration(
+            image: DecorationImage(
+              image: AssetImage(AppImages.bg),
+              fit: BoxFit.cover,
+            ),
+          ),
+        ),
+        toolbarHeight: 200.h,
+      ),
 
       /// Body Section Starts Here
       body: GetBuilder<SignUpController>(
@@ -24,20 +39,21 @@ class SignUpScreen extends StatelessWidget {
           return SingleChildScrollView(
             padding: EdgeInsets.symmetric(horizontal: 24.w),
             child: Form(
-              key: controller.signUpFormKey,
+              key: signUpFormKey,
               child: Column(
                 children: [
                   /// Sign UP Instructions here
                   const CommonText(
                     text: AppString.createYourAccount,
-                    fontSize: 32,
+                    fontSize: 28,
                     bottom: 20,
+                    top: 36,
                   ),
 
                   /// All Text Filed here
                   SignUpAllField(controller: controller),
 
-                  16.height,
+                  24.height,
 
                   /// Submit Button Here
                   CommonButton(
@@ -45,7 +61,7 @@ class SignUpScreen extends StatelessWidget {
                     isLoading: controller.isLoading,
                     onTap: controller.signUpUser,
                   ),
-                  24.height,
+                  30.height,
 
                   ///  Sign In Instruction here
                   const AlreadyAccountRichText(),

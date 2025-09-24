@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:tcovert/features/auth/sign%20up/presentation/screen/set_password_screen.dart';
+import 'package:tcovert/utils/constants/app_images.dart';
 import '../../../../../component/button/common_button.dart';
 import '../../../../../component/text/common_text.dart';
 import '../controller/sign_up_controller.dart';
@@ -30,11 +31,18 @@ class _VerifyUserState extends State<VerifyUser> {
     return Scaffold(
       /// App Bar Section starts here
       appBar: AppBar(
-        title: const CommonText(
-          text: AppString.otpVerify,
-          fontWeight: FontWeight.w700,
-          fontSize: 24,
+        centerTitle: true,
+        backgroundColor: Colors.transparent,
+        elevation: 0,
+        flexibleSpace: Container(
+          decoration: const BoxDecoration(
+            image: DecorationImage(
+              image: AssetImage(AppImages.bg),
+              fit: BoxFit.cover,
+            ),
+          ),
         ),
+        toolbarHeight: 200.h,
       ),
 
       /// Body Section starts here
