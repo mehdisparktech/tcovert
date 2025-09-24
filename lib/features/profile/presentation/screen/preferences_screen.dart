@@ -2,14 +2,20 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import '../../../../component/text/common_text.dart';
+import '../../../../component/button/common_button.dart';
+import '../../../../component/other_widgets/custom_checkbox.dart';
 import '../../../../utils/constants/app_colors.dart';
+import '../controller/preferences_controller.dart';
 
 class PreferencesScreen extends StatelessWidget {
   const PreferencesScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
+    final controller = Get.put(PreferencesController());
+
     return Scaffold(
+      backgroundColor: AppColors.primaryColor,
       appBar: AppBar(
         title: const CommonText(
           text: "Preferences",
@@ -18,38 +24,91 @@ class PreferencesScreen extends StatelessWidget {
           color: AppColors.white,
         ),
         backgroundColor: AppColors.primaryColor,
+        elevation: 0,
         leading: IconButton(
           icon: const Icon(Icons.arrow_back, color: AppColors.white),
           onPressed: () => Get.back(),
         ),
       ),
       body: Padding(
-        padding: EdgeInsets.all(20.w),
+        padding: EdgeInsets.symmetric(horizontal: 24.w, vertical: 32.h),
         child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            const CommonText(
-              text: "App Preferences",
-              fontSize: 20,
-              fontWeight: FontWeight.w700,
-              bottom: 20,
+            Expanded(
+              child: Column(
+                children: [
+                  _buildPreferenceItem(
+                    title: "Family",
+                    value: controller.familyEnabled,
+                    onChanged: (_) => controller.toggleFamily(),
+                  ),
+                  SizedBox(height: 24.h),
+                  _buildPreferenceItem(
+                    title: "Nature",
+                    value: controller.natureEnabled,
+                    onChanged: (_) => controller.toggleNature(),
+                  ),
+                  SizedBox(height: 24.h),
+                  _buildPreferenceItem(
+                    title: "Social",
+                    value: controller.socialEnabled,
+                    onChanged: (_) => controller.toggleSocial(),
+                  ),
+                  SizedBox(height: 24.h),
+                  _buildPreferenceItem(
+                    title: "Friends",
+                    value: controller.friendsEnabled,
+                    onChanged: (_) => controller.toggleFriends(),
+                  ),
+                  SizedBox(height: 24.h),
+                  _buildPreferenceItem(
+                    title: "Travel",
+                    value: controller.travelEnabled,
+                    onChanged: (_) => controller.toggleTravel(),
+                  ),
+                  SizedBox(height: 24.h),
+                  _buildPreferenceItem(
+                    title: "Restaurants",
+                    value: controller.restaurantsEnabled,
+                    onChanged: (_) => controller.toggleRestaurants(),
+                  ),
+                ],
+              ),
             ),
-            // Add your preferences content here
-            Container(
-              width: double.infinity,
-              padding: EdgeInsets.all(16.w),
-              decoration: BoxDecoration(
-                color: AppColors.white10,
-                borderRadius: BorderRadius.circular(8.r),
-              ),
-              child: const CommonText(
-                text: "Preferences settings will be implemented here.",
-                fontSize: 14,
-                color: AppColors.white,
-              ),
+            SizedBox(height: 40.h),
+            CommonButton(
+              titleText: "Save Changes",
+              onTap: () => controller.saveChanges(),
+              buttonColor: AppColors.secondary,
+              titleColor: AppColors.white,
+              buttonHeight: 52.h,
+              buttonRadius: 12.r,
+              titleSize: 16,
+              titleWeight: FontWeight.w600,
             ),
           ],
         ),
+      ),
+    );
+  }
+
+  Widget _buildPreferenceItem({
+    required String title,
+    required RxBool value,
+    required ValueChanged<bool> onChanged,
+  }) {
+    return Obx(
+      () => Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          CommonText(
+            text: title,
+            fontSize: 16,
+            fontWeight: FontWeight.w500,
+            color: AppColors.white,
+          ),
+          CustomCheckbox(value: value.value, onChanged: onChanged, size: 24),
+        ],
       ),
     );
   }
