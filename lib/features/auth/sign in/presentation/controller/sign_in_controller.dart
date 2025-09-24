@@ -1,7 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:get/get.dart';
-import '../../../../../config/route/app_routes.dart';
+import 'package:tcovert/features/home/presentation/screen/home_screen.dart';
 import '../../../../../services/api/api_service.dart';
 import '../../../../../config/api/api_end_point.dart';
 import '../../../../../services/storage/storage_keys.dart';
@@ -22,7 +22,8 @@ class SignInController extends GetxController {
   /// Sign in Api call here
 
   Future<void> signInUser() async {
-    Get.toNamed(AppRoutes.profile);
+    //Get.toNamed(AppRoutes.profile);
+    Get.to(() => const HomeScreen());
     return;
 
     isLoading = true;
