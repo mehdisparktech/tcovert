@@ -10,4 +10,5 @@ class AppImages {
   static const String image3 = "$baseurl/image3.jpg";
   static const String image4 = "$baseurl/image4.jpg";
   static const String image5 = "$baseurl/image5.jpg";
+  static const String mapBackground = "$baseurl/mapBackground.png";
 }
