@@ -128,7 +128,10 @@ class UserBottomSheet extends StatelessWidget {
   Widget _buildCloseButton() {
     return GestureDetector(
       onTap: () => Get.back(),
-      child: Icon(Icons.close, color: Colors.white, size: 20.sp),
+      child: Padding(
+        padding: EdgeInsets.only(right: 8.w),
+        child: Icon(Icons.close, color: Colors.white, size: 20.sp),
+      ),
     );
   }
 
