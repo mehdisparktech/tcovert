@@ -56,6 +56,7 @@ class SetPasswordScreen extends StatelessWidget {
                     validator: OtherHelper.passwordValidator,
                     isPassword: true,
                     prefixIcon: Icon(Icons.lock, size: 20.sp),
+                    fillColor: AppColors.textfieldColor,
                   ),
                   20.height,
                   CommonTextField(
@@ -68,6 +69,7 @@ class SetPasswordScreen extends StatelessWidget {
                         ),
                     isPassword: true,
                     prefixIcon: Icon(Icons.lock, size: 20.sp),
+                    fillColor: AppColors.textfieldColor,
                   ),
 
                   /// forget Password button
@@ -80,7 +82,6 @@ class SetPasswordScreen extends StatelessWidget {
                         color: AppColors.primaryColor,
                         fontWeight: FontWeight.w600,
                         fontSize: 18.sp,
-                        top: 16.h,
                         bottom: 20.h,
                       ),
                     ),

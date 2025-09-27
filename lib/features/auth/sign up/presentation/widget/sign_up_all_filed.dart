@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:tcovert/utils/extensions/extension.dart';
 import '../../../../../../utils/helpers/other_helper.dart';
 import '../../../../../../utils/constants/app_string.dart';
-import '../../../../../component/text/common_text.dart';
 import '../../../../../component/text_field/common_text_field.dart';
 import '../controller/sign_up_controller.dart';
 import '../../../../../../utils/constants/app_colors.dart';
@@ -23,6 +22,7 @@ class SignUpAllField extends StatelessWidget {
           hintText: AppString.fullName,
           controller: controller.nameController,
           validator: OtherHelper.validator,
+          fillColor: AppColors.textfieldColor,
         ),
         20.height,
 
@@ -32,6 +32,7 @@ class SignUpAllField extends StatelessWidget {
           prefixIcon: const Icon(Icons.mail),
           hintText: AppString.email,
           validator: OtherHelper.emailValidator,
+          fillColor: AppColors.textfieldColor,
         ),
 
         /// User Password here

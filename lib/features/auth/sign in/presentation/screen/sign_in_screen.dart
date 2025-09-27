@@ -62,6 +62,7 @@ class SignInScreen extends StatelessWidget {
                     prefixIcon: const Icon(Icons.mail),
                     hintText: AppString.email,
                     validator: OtherHelper.emailValidator,
+                    fillColor: AppColors.textfieldColor,
                   ),
 
                   20.height,
@@ -73,6 +74,7 @@ class SignInScreen extends StatelessWidget {
                     isPassword: true,
                     hintText: AppString.password,
                     validator: OtherHelper.passwordValidator,
+                    fillColor: AppColors.textfieldColor,
                   ),
 
                   /// Forget Password Button here
@@ -85,7 +87,7 @@ class SignInScreen extends StatelessWidget {
                         top: 10,
                         bottom: 30,
                         color: AppColors.secondary,
-                        fontSize: 16,
+                        fontSize: 12,
                         fontWeight: FontWeight.w600,
                       ),
                     ),
@@ -98,15 +100,15 @@ class SignInScreen extends StatelessWidget {
                     onTap: controller.signInUser,
                   ),
                   30.height,
-
-                  /// Account Creating Instruction here
-                  const DoNotHaveAccount().center,
-                  30.height,
                 ],
               ),
             ),
           );
         },
+      ),
+      bottomNavigationBar: Padding(
+        padding: const EdgeInsets.only(bottom: 50.0),
+        child: const DoNotHaveAccount(),
       ),
     );
   }

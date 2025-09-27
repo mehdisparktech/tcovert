@@ -6,8 +6,6 @@ import 'package:tcovert/utils/constants/app_images.dart';
 import '../../../../../component/button/common_button.dart';
 import '../../../../../component/text/common_text.dart';
 import '../controller/sign_up_controller.dart';
-import '../../../../../../../utils/constants/app_colors.dart';
-import 'package:pin_code_fields/pin_code_fields.dart';
 import '../../../../../../../utils/constants/app_string.dart';
 
 class VerifyUser extends StatefulWidget {

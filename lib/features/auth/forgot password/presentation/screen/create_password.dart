@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
+import 'package:tcovert/utils/constants/app_colors.dart';
 import '../../../../../../../utils/extensions/extension.dart';
 import '../../../../../component/button/common_button.dart';
-import '../../../../../component/image/common_image.dart';
 import '../../../../../component/text/common_text.dart';
 import '../../../../../component/text_field/common_text_field.dart';
 import '../controller/forget_password_controller.dart';
@@ -61,6 +61,7 @@ class CreatePassword extends StatelessWidget {
                     hintText: AppString.password,
                     isPassword: true,
                     validator: OtherHelper.passwordValidator,
+                    fillColor: AppColors.textfieldColor,
                   ),
                   30.height,
 
@@ -75,6 +76,7 @@ class CreatePassword extends StatelessWidget {
                           controller.passwordController,
                         ),
                     isPassword: true,
+                    fillColor: AppColors.textfieldColor,
                   ),
                   64.height,
 

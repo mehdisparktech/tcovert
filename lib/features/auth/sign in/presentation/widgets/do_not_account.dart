@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import '../../../../../../config/route/app_routes.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -19,8 +20,8 @@ class DoNotHaveAccount extends StatelessWidget {
           TextSpan(
             text: AppString.doNotHaveAccount,
             style: GoogleFonts.plusJakartaSans(
-              color: AppColors.white,
-              fontSize: 16,
+              color: AppColors.letterGray,
+              fontSize: 16.sp,
               fontWeight: FontWeight.w500,
             ),
           ),
@@ -34,8 +35,8 @@ class DoNotHaveAccount extends StatelessWidget {
                     Get.toNamed(AppRoutes.signUp);
                   },
             style: GoogleFonts.plusJakartaSans(
-              color: AppColors.secondary,
-              fontSize: 16,
+              color: AppColors.primaryPurple,
+              fontSize: 16.sp,
               fontWeight: FontWeight.w600,
             ),
           ),

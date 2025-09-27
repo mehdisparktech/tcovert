@@ -62,15 +62,15 @@ class SignUpScreen extends StatelessWidget {
                     onTap: controller.signUpUser,
                   ),
                   30.height,
-
-                  ///  Sign In Instruction here
-                  const AlreadyAccountRichText(),
-                  30.height,
                 ],
               ),
             ),
           );
         },
+      ),
+      bottomNavigationBar: Padding(
+        padding: const EdgeInsets.only(bottom: 40),
+        child: const AlreadyAccountRichText(),
       ),
     );
   }
