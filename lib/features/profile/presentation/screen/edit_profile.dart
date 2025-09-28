@@ -1,5 +1,6 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
+import 'package:tcovert/utils/constants/app_colors.dart';
 import '../../../../../../utils/extensions/extension.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
@@ -88,6 +89,7 @@ class EditProfile extends StatelessWidget {
                     titleText: AppString.saveAndChanges,
                     isLoading: controller.isLoading,
                     onTap: controller.editProfileRepo,
+                    buttonColor: AppColors.secondary,
                   ),
                 ],
               ),

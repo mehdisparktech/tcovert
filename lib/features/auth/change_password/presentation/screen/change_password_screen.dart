@@ -11,7 +11,6 @@ import '../../../../../../../utils/constants/app_colors.dart';
 import '../../../../../../../utils/constants/app_string.dart';
 import '../../../../../utils/helpers/other_helper.dart';
 
-
 class ChangePasswordScreen extends StatelessWidget {
   const ChangePasswordScreen({super.key});
 
@@ -23,7 +22,7 @@ class ChangePasswordScreen extends StatelessWidget {
         title: const CommonText(
           text: AppString.changePassword,
           fontSize: 20,
-          fontWeight: FontWeight.w600,
+          fontWeight: FontWeight.w400,
         ),
       ),
       body: GetBuilder<ChangePasswordController>(
@@ -44,7 +43,6 @@ class ChangePasswordScreen extends StatelessWidget {
                     hintText: AppString.currentPassword,
                     validator: OtherHelper.passwordValidator,
                     isPassword: true,
-                    prefixIcon: Icon(Icons.lock, size: 20.sp),
                   ),
 
                   /// New Password section
@@ -58,7 +56,6 @@ class ChangePasswordScreen extends StatelessWidget {
                     hintText: AppString.newPassword,
                     validator: OtherHelper.passwordValidator,
                     isPassword: true,
-                    prefixIcon: Icon(Icons.lock, size: 20.sp),
                   ),
 
                   /// confirm Password section
@@ -76,7 +73,6 @@ class ChangePasswordScreen extends StatelessWidget {
                           controller.newPasswordController,
                         ),
                     isPassword: true,
-                    prefixIcon: Icon(Icons.lock, size: 20.sp),
                   ),
 
                   /// forget Password button
@@ -97,9 +93,10 @@ class ChangePasswordScreen extends StatelessWidget {
 
                   /// submit Button
                   CommonButton(
-                    titleText: AppString.confirm,
+                    titleText: AppString.saveAndChanges,
                     isLoading: controller.isLoading,
                     onTap: controller.changePasswordRepo,
+                    buttonColor: AppColors.secondary,
                   ),
                 ],
               ),

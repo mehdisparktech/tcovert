@@ -18,7 +18,7 @@ class EditProfileAllFiled extends StatelessWidget {
       children: [
         /// User Full Name here
         CommonText(
-          text: AppString.fullName,
+          text: AppString.name,
           fontWeight: FontWeight.w600,
           bottom: 12,
         ),
@@ -26,7 +26,6 @@ class EditProfileAllFiled extends StatelessWidget {
           controller: controller.nameController,
           validator: OtherHelper.validator,
           hintText: AppString.fullName,
-          prefixIcon: const Icon(Icons.person),
         ),
         20.height,
 
@@ -40,7 +39,6 @@ class EditProfileAllFiled extends StatelessWidget {
           controller: controller.emailController,
           validator: OtherHelper.validator,
           hintText: AppString.email,
-          prefixIcon: const Icon(Icons.email),
         ),
       ],
     );

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
+import 'package:tcovert/features/home/presentation/screen/promo_code_screen.dart';
 import 'package:tcovert/utils/constants/app_colors.dart';
 import 'package:tcovert/utils/extensions/extension.dart';
 import '../../../../component/text/common_text.dart';
@@ -197,6 +198,7 @@ class UserBottomSheet extends StatelessWidget {
           borderRadius: BorderRadius.circular(12.r),
           onTap: () {
             // Handle promo code action
+            Get.to(() => PromoCodeScreen());
           },
           child: Padding(
             padding: EdgeInsets.symmetric(vertical: 10.h),

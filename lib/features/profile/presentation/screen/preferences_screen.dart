@@ -19,8 +19,8 @@ class PreferencesScreen extends StatelessWidget {
       appBar: AppBar(
         title: const CommonText(
           text: "Preferences",
-          fontSize: 18,
-          fontWeight: FontWeight.w600,
+          fontSize: 20,
+          fontWeight: FontWeight.w400,
           color: AppColors.white,
         ),
         backgroundColor: AppColors.primaryColor,
@@ -34,8 +34,16 @@ class PreferencesScreen extends StatelessWidget {
         padding: EdgeInsets.symmetric(horizontal: 24.w, vertical: 32.h),
         child: Column(
           children: [
-            Expanded(
+            Container(
+              padding: EdgeInsets.all(20),
+              decoration: BoxDecoration(
+                color: AppColors.white.withOpacity(0.05),
+                borderRadius: BorderRadius.circular(12.r),
+              ),
               child: Column(
+                mainAxisSize: MainAxisSize.min,
+                mainAxisAlignment: MainAxisAlignment.start,
+                crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   _buildPreferenceItem(
                     title: "Family",
@@ -104,7 +112,7 @@ class PreferencesScreen extends StatelessWidget {
           CommonText(
             text: title,
             fontSize: 16,
-            fontWeight: FontWeight.w500,
+            fontWeight: FontWeight.w400,
             color: AppColors.white,
           ),
           CustomCheckbox(value: value.value, onChanged: onChanged, size: 24),

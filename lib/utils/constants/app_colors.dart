@@ -18,4 +18,5 @@ class AppColors {
   static const Color textFiledColor = Color(0xFF979797);
   static const Color blueLight = Color(0xffe8e8f5);
   static const Color letterGray = Color(0xff6B7280);
+  static const Color blue = Color(0xFF13ADED);
 }

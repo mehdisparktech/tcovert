@@ -19,8 +19,8 @@ class PermissionScreen extends StatelessWidget {
       appBar: AppBar(
         title: const CommonText(
           text: "Permission",
-          fontSize: 18,
-          fontWeight: FontWeight.w600,
+          fontSize: 20,
+          fontWeight: FontWeight.w400,
           color: AppColors.white,
         ),
         backgroundColor: AppColors.primaryColor,
@@ -34,48 +34,46 @@ class PermissionScreen extends StatelessWidget {
         padding: EdgeInsets.symmetric(horizontal: 24.w, vertical: 32.h),
         child: Column(
           children: [
-            Expanded(
-              child: Container(
-                padding: EdgeInsets.all(20.w),
-                decoration: BoxDecoration(
-                  color: AppColors.white10.withOpacity(0.1),
-                  borderRadius: BorderRadius.circular(16.r),
-                  border: Border.all(
-                    color: AppColors.white10.withOpacity(0.2),
-                    width: 1,
+            Container(
+              padding: EdgeInsets.all(20.w),
+              decoration: BoxDecoration(
+                color: AppColors.secondary.withOpacity(0.04),
+                borderRadius: BorderRadius.circular(16.r),
+                border: Border.all(
+                  color: AppColors.white10.withOpacity(0.2),
+                  width: 1,
+                ),
+              ),
+              child: Column(
+                children: [
+                  _buildPermissionItem(
+                    icon: Icons.location_on_outlined,
+                    title: "Location Service",
+                    value: controller.locationServiceEnabled,
+                    onChanged: (_) => controller.toggleLocationService(),
                   ),
-                ),
-                child: Column(
-                  children: [
-                    _buildPermissionItem(
-                      icon: Icons.location_on_outlined,
-                      title: "Location Service",
-                      value: controller.locationServiceEnabled,
-                      onChanged: (_) => controller.toggleLocationService(),
-                    ),
-                    SizedBox(height: 20.h),
-                    _buildPermissionItem(
-                      icon: Icons.calendar_today_outlined,
-                      title: "Access Calendar",
-                      value: controller.accessCalendarEnabled,
-                      onChanged: (_) => controller.toggleAccessCalendar(),
-                    ),
-                    SizedBox(height: 20.h),
-                    _buildPermissionItem(
-                      icon: Icons.contacts_outlined,
-                      title: "Access Contacts",
-                      value: controller.accessContactsEnabled,
-                      onChanged: (_) => controller.toggleAccessContacts(),
-                    ),
-                    SizedBox(height: 20.h),
-                    _buildPermissionItem(
-                      icon: Icons.notifications_outlined,
-                      title: "Allow Notification",
-                      value: controller.allowNotificationEnabled,
-                      onChanged: (_) => controller.toggleAllowNotification(),
-                    ),
-                  ],
-                ),
+                  SizedBox(height: 20.h),
+                  _buildPermissionItem(
+                    icon: Icons.calendar_today_outlined,
+                    title: "Access Calendar",
+                    value: controller.accessCalendarEnabled,
+                    onChanged: (_) => controller.toggleAccessCalendar(),
+                  ),
+                  SizedBox(height: 20.h),
+                  _buildPermissionItem(
+                    icon: Icons.contacts_outlined,
+                    title: "Access Contacts",
+                    value: controller.accessContactsEnabled,
+                    onChanged: (_) => controller.toggleAccessContacts(),
+                  ),
+                  SizedBox(height: 20.h),
+                  _buildPermissionItem(
+                    icon: Icons.notifications_outlined,
+                    title: "Allow Notification",
+                    value: controller.allowNotificationEnabled,
+                    onChanged: (_) => controller.toggleAllowNotification(),
+                  ),
+                ],
               ),
             ),
             SizedBox(height: 40.h),
@@ -105,7 +103,7 @@ class PermissionScreen extends StatelessWidget {
       () => Container(
         padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 16.h),
         decoration: BoxDecoration(
-          color: AppColors.white10.withOpacity(0.1),
+          color: AppColors.grey.withOpacity(0.1),
           borderRadius: BorderRadius.circular(12.r),
           border: Border.all(
             color: AppColors.white10.withOpacity(0.2),
@@ -115,12 +113,11 @@ class PermissionScreen extends StatelessWidget {
         child: Row(
           children: [
             Icon(icon, color: AppColors.white.withOpacity(0.8), size: 20.w),
-            SizedBox(width: 12.w),
             Expanded(
               child: CommonText(
                 text: title,
                 fontSize: 16,
-                fontWeight: FontWeight.w500,
+                fontWeight: FontWeight.w400,
                 color: AppColors.white,
               ),
             ),

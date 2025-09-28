@@ -58,7 +58,7 @@ class AppString {
   static const String aboutMe = "About Me";
   static const String gender = "Gender";
   static const String profile = "Profile";
-  static const String saveAndChanges = "Save and Changes";
+  static const String saveAndChanges = "Save Changes";
   static const String editProfile = "Edit Profile";
   static const String settings = "Settings";
   static const String logOut = "Log Out";
@@ -75,4 +75,5 @@ class AppString {
   static const String thePasswordDoesNotMatch = "The password does not match";
   static const String startServer = "Please, start the Server";
   static const String unknownError = "Unknown Error";
+  static const String name = "Name";
 }
