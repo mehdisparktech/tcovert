@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
-import 'package:tcovert/services/storage/storage_keys.dart';
+import 'package:tcovert/utils/constants/app_colors.dart';
 import '../../../../../../config/route/app_routes.dart';
 import '../../../../component/image/common_image.dart';
 import '../../../../component/other_widgets/item.dart';
@@ -36,10 +36,17 @@ class ProfileScreen extends StatelessWidget {
 
                   /// User Name here
                   const CommonText(
-                    text: LocalStorageKeys.myName,
-                    fontSize: 18,
-                    fontWeight: FontWeight.w700,
+                    text: "Emma Phillips",
+                    fontSize: 16,
+                    fontWeight: FontWeight.w600,
                     top: 20,
+                  ),
+                  const CommonText(
+                    text: "www.emmaphilips.com",
+                    fontSize: 16,
+                    fontWeight: FontWeight.w400,
+                    color: AppColors.grey,
+                    top: 4,
                     bottom: 24,
                   ),
 
@@ -77,11 +84,6 @@ class ProfileScreen extends StatelessWidget {
                     icon: Icons.contact_support,
                     title: "Contact Us",
                     onTap: () => Get.toNamed(AppRoutes.contactUs),
-                  ),
-                  Item(
-                    icon: Icons.info,
-                    title: "About Us",
-                    onTap: () => Get.toNamed(AppRoutes.aboutUs),
                   ),
 
                   /// Language item here

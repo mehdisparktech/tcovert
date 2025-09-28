@@ -127,9 +127,9 @@ logOutPopUp() {
                         child: CommonButton(
                           titleText: AppString.no,
                           borderWidth: 1.5,
-                          borderColor: AppColors.primaryColor,
+                          borderColor: AppColors.white,
                           buttonColor: AppColors.transparent,
-                          titleColor: AppColors.primaryColor,
+                          titleColor: AppColors.white,
                           onTap: () => Get.back(),
                         ),
                       ),

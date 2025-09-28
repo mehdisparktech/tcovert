@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
+import 'package:tcovert/features/home/presentation/screen/image_view_screen.dart';
 import 'package:tcovert/features/home/presentation/screen/promo_code_screen.dart';
+import 'package:tcovert/features/home/presentation/widgets/image_selete_bottom_sheet.dart';
 import 'package:tcovert/utils/constants/app_colors.dart';
 import 'package:tcovert/utils/extensions/extension.dart';
 import '../../../../component/text/common_text.dart';
@@ -39,7 +41,7 @@ class UserBottomSheet extends StatelessWidget {
         mainAxisAlignment: MainAxisAlignment.center,
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
-          _buildDragHandle(),
+          SizedBox(height: 20.h),
           _buildHeader(),
           Expanded(
             child: SingleChildScrollView(
@@ -49,25 +51,13 @@ class UserBottomSheet extends StatelessWidget {
                   SizedBox(height: 20.h),
                   _buildPromoCard(),
                   SizedBox(height: 24.h),
-                  _buildPhotoSection(),
+                  _buildPhotoSection(context),
                   SizedBox(height: 20.h),
                 ],
               ),
             ),
           ),
         ],
-      ),
-    );
-  }
-
-  Widget _buildDragHandle() {
-    return Container(
-      margin: EdgeInsets.only(top: 12.h, bottom: 8.h),
-      width: 40.w,
-      height: 4.h,
-      decoration: BoxDecoration(
-        color: Colors.grey[600],
-        borderRadius: BorderRadius.circular(2.r),
       ),
     );
   }
@@ -119,22 +109,20 @@ class UserBottomSheet extends StatelessWidget {
               ],
             ),
           ),
-          SizedBox(width: 16.w),
-          _buildCloseButton(),
         ],
       ),
     );
   }
 
-  Widget _buildCloseButton() {
-    return GestureDetector(
-      onTap: () => Get.back(),
-      child: Padding(
-        padding: EdgeInsets.only(right: 8.w),
-        child: Icon(Icons.close, color: Colors.white, size: 20.sp),
-      ),
-    );
-  }
+  // Widget _buildCloseButton() {
+  //   return GestureDetector(
+  //     onTap: () => Get.back(),
+  //     child: Padding(
+  //       padding: EdgeInsets.only(right: 8.w),
+  //       child: Icon(Icons.close, color: Colors.white, size: 20.sp),
+  //     ),
+  //   );
+  // }
 
   Widget _buildPromoCard() {
     return Container(
@@ -214,18 +202,18 @@ class UserBottomSheet extends StatelessWidget {
     );
   }
 
-  Widget _buildPhotoSection() {
+  Widget _buildPhotoSection(BuildContext context) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        _buildAddPhotoCard(),
+        _buildAddPhotoCard(context),
         SizedBox(height: 16.h),
-        _buildPhotoGrid(),
+        _buildPhotoGrid(context),
       ],
     );
   }
 
-  Widget _buildAddPhotoCard() {
+  Widget _buildAddPhotoCard(BuildContext context) {
     return Container(
       width: double.infinity,
       height: 120.h,
@@ -239,7 +227,10 @@ class UserBottomSheet extends StatelessWidget {
         child: InkWell(
           borderRadius: BorderRadius.circular(12.r),
           onTap: () {
-            // Handle add photo action
+            // Close current bottom sheet first
+            Navigator.pop(context);
+            // Then show the image select bottom sheet
+            ImageSeleteBottomSheet.show(context);
           },
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
@@ -266,7 +257,7 @@ class UserBottomSheet extends StatelessWidget {
     );
   }
 
-  Widget _buildPhotoGrid() {
+  Widget _buildPhotoGrid(BuildContext context) {
     final List<PhotoModel> photos = [
       PhotoModel(AppImages.image1, 'Risa Tachibana', '1 mo ago'),
       PhotoModel(AppImages.image2, 'Rina Ishihara', '1 mo ago'),
@@ -282,9 +273,21 @@ class UserBottomSheet extends StatelessWidget {
         // First row - 2 large items
         Row(
           children: [
-            Expanded(child: _buildPhotoCard(photos[0], isLarge: true)),
+            Expanded(
+              child: _buildPhotoCard(
+                photos[0],
+                isLarge: true,
+                context: context,
+              ),
+            ),
             SizedBox(width: 8.w),
-            Expanded(child: _buildPhotoCard(photos[1], isLarge: true)),
+            Expanded(
+              child: _buildPhotoCard(
+                photos[1],
+                isLarge: true,
+                context: context,
+              ),
+            ),
           ],
         ),
         SizedBox(height: 8.h),
@@ -301,97 +304,118 @@ class UserBottomSheet extends StatelessWidget {
           ),
           itemCount: photos.length - 2,
           itemBuilder: (context, index) {
-            return _buildPhotoCard(photos[index + 2]);
+            return _buildPhotoCard(photos[index + 2], context: context);
           },
         ),
       ],
     );
   }
 
-  Widget _buildPhotoCard(PhotoModel photo, {bool isLarge = false}) {
-    return Container(
-      height: isLarge ? 140.h : null,
-      decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(12.r),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black.withOpacity(0.1),
-            blurRadius: 4,
-            offset: const Offset(0, 2),
+  Widget _buildPhotoCard(
+    PhotoModel photo, {
+    bool isLarge = false,
+    required BuildContext context,
+  }) {
+    return GestureDetector(
+      onTap: () {
+        // Handle photo tap action
+        // Example usage in another screen
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder:
+                (context) => ImageViewScreen(
+                  imageUrl: AppImages.image2,
+                  title: 'Starbucks Coffee',
+                  subtitle: 'Enjoy your favorite coffee',
+                ),
           ),
-        ],
-      ),
-      child: Stack(
-        children: [
-          // Photo
-          ClipRRect(
-            borderRadius: BorderRadius.circular(12.r),
-            child: CommonImage(
-              imageSrc: photo.imagePath,
-              width: double.infinity,
-              height: double.infinity,
-              fill: BoxFit.cover,
+        );
+      },
+      child: Container(
+        height: isLarge ? 140.h : null,
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(12.r),
+          boxShadow: [
+            BoxShadow(
+              color: Colors.black.withOpacity(0.1),
+              blurRadius: 4,
+              offset: const Offset(0, 2),
             ),
-          ),
-
-          // Gradient overlay
-          Container(
-            decoration: BoxDecoration(
+          ],
+        ),
+        child: Stack(
+          children: [
+            // Photo
+            ClipRRect(
               borderRadius: BorderRadius.circular(12.r),
-              gradient: LinearGradient(
-                begin: Alignment.topCenter,
-                end: Alignment.bottomCenter,
-                colors: [
-                  Colors.transparent,
-                  Colors.black.withOpacity(0.3),
-                  Colors.black.withOpacity(0.6),
+              child: CommonImage(
+                imageSrc: photo.imagePath,
+                width: double.infinity,
+                height: double.infinity,
+                fill: BoxFit.cover,
+              ),
+            ),
+
+            // Gradient overlay
+            Container(
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(12.r),
+                gradient: LinearGradient(
+                  begin: Alignment.topCenter,
+                  end: Alignment.bottomCenter,
+                  colors: [
+                    Colors.transparent,
+                    Colors.black.withOpacity(0.3),
+                    Colors.black.withOpacity(0.6),
+                  ],
+                ),
+              ),
+            ),
+
+            // User info
+            Positioned(
+              left: 8.w,
+              bottom: 8.h,
+              right: 8.w,
+              child: Row(
+                children: [
+                  CircleAvatar(
+                    radius: isLarge ? 12.r : 8.r,
+                    backgroundColor: Colors.white.withOpacity(0.9),
+                    child: ClipOval(
+                      child: CommonImage(imageSrc: AppImages.profile),
+                    ),
+                  ),
+                  SizedBox(width: 6.w),
+                  Expanded(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        CommonText(
+                          text: photo.userName,
+                          fontSize: isLarge ? 12 : 10,
+                          fontWeight: FontWeight.w600,
+                          color: Colors.white,
+                          textAlign: TextAlign.left,
+                          maxLines: 1,
+                        ),
+                        CommonText(
+                          text: photo.timeAgo,
+                          fontSize: isLarge ? 10 : 8,
+                          fontWeight: FontWeight.w400,
+                          color: Colors.white.withOpacity(0.8),
+                          textAlign: TextAlign.left,
+                        ),
+                      ],
+                    ),
+                  ),
                 ],
               ),
             ),
-          ),
-
-          // User info
-          Positioned(
-            left: 8.w,
-            bottom: 8.h,
-            right: 8.w,
-            child: Row(
-              children: [
-                CircleAvatar(
-                  radius: isLarge ? 12.r : 8.r,
-                  backgroundColor: Colors.white.withOpacity(0.9),
-                  child: ClipOval(
-                    child: CommonImage(imageSrc: AppImages.profile),
-                  ),
-                ),
-                SizedBox(width: 6.w),
-                Expanded(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      CommonText(
-                        text: photo.userName,
-                        fontSize: isLarge ? 12 : 10,
-                        fontWeight: FontWeight.w600,
-                        color: Colors.white,
-                        textAlign: TextAlign.left,
-                        maxLines: 1,
-                      ),
-                      CommonText(
-                        text: photo.timeAgo,
-                        fontSize: isLarge ? 10 : 8,
-                        fontWeight: FontWeight.w400,
-                        color: Colors.white.withOpacity(0.8),
-                        textAlign: TextAlign.left,
-                      ),
-                    ],
-                  ),
-                ),
-              ],
-            ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }
