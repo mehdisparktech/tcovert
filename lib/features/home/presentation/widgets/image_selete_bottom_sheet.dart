@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:tcovert/component/image/common_image.dart';
 import 'package:tcovert/features/home/presentation/widgets/image_bottom_sheet.dart';
+import 'package:tcovert/utils/constants/app_colors.dart';
+import 'package:tcovert/utils/constants/app_images.dart';
 import 'package:tcovert/utils/extensions/extension.dart';
 import '../../../../component/text/common_text.dart';
 
@@ -26,7 +29,7 @@ class ImageSeleteBottomSheet extends StatelessWidget {
     return Container(
       height: MediaQuery.of(context).size.height * 0.30,
       decoration: BoxDecoration(
-        color: const Color(0xFF1A1B2E),
+        color: AppColors.primaryColor,
         borderRadius: BorderRadius.vertical(top: Radius.circular(24.r)),
       ),
       child: Column(
@@ -106,16 +109,12 @@ class ImageSeleteBottomSheet extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Expanded(
-          child: _buildAddPhotoCard(
-            Icons.camera_alt_outlined,
-            "Take a Photo",
-            context,
-          ),
+          child: _buildAddPhotoCard(AppImages.camera, "Take a Photo", context),
         ),
         SizedBox(width: 20.w),
         Expanded(
           child: _buildAddPhotoCard(
-            Icons.photo_library_outlined,
+            AppImages.gallery,
             "Choose from Gallery",
             context,
           ),
@@ -124,7 +123,7 @@ class ImageSeleteBottomSheet extends StatelessWidget {
     );
   }
 
-  Widget _buildAddPhotoCard(IconData icon, String text, BuildContext context) {
+  Widget _buildAddPhotoCard(String icon, String text, BuildContext context) {
     return Container(
       width: double.infinity,
       height: 120.h,
@@ -152,7 +151,7 @@ class ImageSeleteBottomSheet extends StatelessWidget {
                   color: Colors.white.withOpacity(0.1),
                   shape: BoxShape.circle,
                 ),
-                child: Icon(icon, color: Colors.grey[400], size: 24.sp),
+                child: CommonImage(imageSrc: icon, width: 20.w),
               ),
               SizedBox(height: 8.h),
               CommonText(

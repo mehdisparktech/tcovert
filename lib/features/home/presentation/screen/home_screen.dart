@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
+import 'package:tcovert/features/home/presentation/widgets/business_information_bottom_sheet.dart';
 import '../../../../component/text/common_text.dart';
 import '../../../../component/image/common_image.dart';
 import '../../../../utils/constants/app_colors.dart';
@@ -41,6 +42,8 @@ class HomeScreen extends StatelessWidget {
 
                     // My Location Button
                     _buildLocationButton(controller),
+                    // User Bottom Sheet
+                    _buildUserBottomSheet(controller, context),
                   ],
                 ),
               ),
@@ -197,7 +200,7 @@ class HomeScreen extends StatelessWidget {
     }
 
     return Positioned(
-      bottom: 30.h,
+      bottom: 80.h,
       left: 20.w,
       right: 20.w,
       child: GestureDetector(
@@ -274,6 +277,34 @@ class HomeScreen extends StatelessWidget {
         onPressed: controller.getCurrentLocation,
         backgroundColor: AppColors.white,
         child: const Icon(Icons.my_location, color: AppColors.secondary),
+      ),
+    );
+  }
+
+  Widget _buildUserBottomSheet(
+    HomeController controller,
+    BuildContext context,
+  ) {
+    return Positioned(
+      bottom: 10,
+      left: 50.w,
+      right: 50.w,
+      child: GestureDetector(
+        onTap: () {
+          BusinessInformationBottomSheet.show(context);
+        },
+        child: Container(
+          padding: EdgeInsets.all(8.w),
+          decoration: BoxDecoration(
+            color: AppColors.white.withOpacity(0.8),
+            borderRadius: BorderRadius.all(Radius.circular(30)),
+          ),
+          child: CommonText(
+            text: "Map Activity",
+            color: AppColors.secondary,
+            fontSize: 24,
+          ),
+        ),
       ),
     );
   }

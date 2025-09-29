@@ -59,7 +59,7 @@ class SignInScreen extends StatelessWidget {
                   /// Account Email Input here
                   CommonTextField(
                     controller: controller.emailController,
-                    prefixIcon: const Icon(Icons.mail),
+                    prefixIcon: Image.asset(AppImages.email),
                     hintText: AppString.email,
                     validator: OtherHelper.emailValidator,
                     fillColor: AppColors.textfieldColor,
@@ -70,7 +70,7 @@ class SignInScreen extends StatelessWidget {
                   /// Account Password Input here
                   CommonTextField(
                     controller: controller.passwordController,
-                    prefixIcon: const Icon(Icons.lock),
+                    prefixIcon: Image.asset(AppImages.password),
                     isPassword: true,
                     hintText: AppString.password,
                     validator: OtherHelper.passwordValidator,

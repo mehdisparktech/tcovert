@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:tcovert/features/auth/change_password/presentation/controller/change_password_controller.dart';
+import 'package:tcovert/features/auth/sign%20up/presentation/screen/auth_preferences_screen.dart';
 import 'package:tcovert/utils/constants/app_images.dart';
 import '../../../../../../../config/route/app_routes.dart';
 import '../../../../../../../utils/extensions/extension.dart';
@@ -55,7 +56,7 @@ class SetPasswordScreen extends StatelessWidget {
                     hintText: AppString.newPassword,
                     validator: OtherHelper.passwordValidator,
                     isPassword: true,
-                    prefixIcon: Icon(Icons.lock, size: 20.sp),
+                    prefixIcon: Image.asset(AppImages.password),
                     fillColor: AppColors.textfieldColor,
                   ),
                   20.height,
@@ -68,7 +69,7 @@ class SetPasswordScreen extends StatelessWidget {
                           controller.newPasswordController,
                         ),
                     isPassword: true,
-                    prefixIcon: Icon(Icons.lock, size: 20.sp),
+                    prefixIcon: Image.asset(AppImages.password),
                     fillColor: AppColors.textfieldColor,
                   ),
 
@@ -91,7 +92,9 @@ class SetPasswordScreen extends StatelessWidget {
                   CommonButton(
                     titleText: AppString.confirm,
                     isLoading: controller.isLoading,
-                    onTap: controller.changePasswordRepo,
+                    onTap: () {
+                      Get.to(() => AuthPreferencesScreen());
+                    },
                   ),
                 ],
               ),

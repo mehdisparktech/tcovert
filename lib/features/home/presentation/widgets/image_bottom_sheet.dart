@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:tcovert/component/button/common_button.dart';
+import 'package:tcovert/component/image/common_image.dart';
 import 'package:tcovert/features/home/presentation/widgets/business_Information_bottom_sheet.dart';
 import 'package:tcovert/utils/constants/app_colors.dart';
 import 'package:tcovert/utils/constants/app_images.dart';
@@ -31,7 +32,7 @@ class ImageBottomSheet extends StatelessWidget {
       child: Container(
         height: MediaQuery.of(context).size.height * 0.35,
         decoration: BoxDecoration(
-          color: const Color(0xFF1A1B2E),
+          color: AppColors.primaryColor,
           borderRadius: BorderRadius.vertical(top: Radius.circular(24.r)),
         ),
         child: Column(
@@ -43,11 +44,11 @@ class ImageBottomSheet extends StatelessWidget {
             SizedBox(height: 20.h),
             Expanded(
               child: SingleChildScrollView(
-                padding: EdgeInsets.symmetric(horizontal: 20.w),
+                padding: EdgeInsets.symmetric(horizontal: 10.w),
                 child: Column(
                   children: [
                     _buildPhotoSection(context),
-                    SizedBox(height: 20.h),
+                    SizedBox(height: 10.h),
                   ],
                 ),
               ),
@@ -57,6 +58,9 @@ class ImageBottomSheet extends StatelessWidget {
               child: CommonButton(
                 titleText: "Save",
                 buttonColor: AppColors.secondary,
+                onTap: () {
+                  Navigator.pop(context);
+                },
               ),
             ),
           ],
@@ -91,10 +95,10 @@ class ImageBottomSheet extends StatelessWidget {
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     80.width,
-                    Icon(
-                      Icons.location_on_outlined,
-                      color: Colors.grey[400],
-                      size: 16.sp,
+                    CommonImage(
+                      imageSrc: AppImages.location2,
+                      height: 20.h,
+                      width: 20.w,
                     ),
                     SizedBox(width: 6.w),
                     Expanded(
@@ -122,15 +126,15 @@ class ImageBottomSheet extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Expanded(child: _buildSelectedPhotoCard(AppImages.image1, context)),
-        SizedBox(width: 20.w),
+        SizedBox(width: 10.w),
         Expanded(child: _buildSelectedPhotoCard(AppImages.image1, context)),
-        SizedBox(width: 20.w),
-        Expanded(child: _buildAddPhotoCard(Icons.add, "Take a Photo")),
+        SizedBox(width: 10.w),
+        Expanded(child: _buildAddPhotoCard(AppImages.add, "Add more")),
       ],
     );
   }
 
-  Widget _buildAddPhotoCard(IconData icon, String text) {
+  Widget _buildAddPhotoCard(String icon, String text) {
     return Container(
       width: double.infinity,
       height: 114.h,
@@ -151,19 +155,15 @@ class ImageBottomSheet extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               Container(
-                padding: EdgeInsets.all(12.w),
-                decoration: BoxDecoration(
-                  color: Colors.white.withOpacity(0.1),
-                  shape: BoxShape.circle,
-                ),
-                child: Icon(icon, color: Colors.grey[400], size: 24.sp),
+                decoration: BoxDecoration(shape: BoxShape.circle),
+                child: CommonImage(imageSrc: icon, height: 24.h, width: 24.w),
               ),
               SizedBox(height: 8.h),
               CommonText(
                 text: text,
                 fontSize: 14,
                 fontWeight: FontWeight.w500,
-                color: Color(0xFF9E9E9E),
+                color: Colors.grey.withOpacity(0.8),
               ),
             ],
           ),

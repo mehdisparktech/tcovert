@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:tcovert/utils/constants/app_images.dart';
 import 'package:tcovert/utils/extensions/extension.dart';
 import '../../../../../../utils/helpers/other_helper.dart';
 import '../../../../../../utils/constants/app_string.dart';
@@ -18,7 +19,7 @@ class SignUpAllField extends StatelessWidget {
       children: [
         /// User Name here
         CommonTextField(
-          prefixIcon: const Icon(Icons.person),
+          prefixIcon: Image.asset(AppImages.user),
           hintText: AppString.fullName,
           controller: controller.nameController,
           validator: OtherHelper.validator,
@@ -29,7 +30,7 @@ class SignUpAllField extends StatelessWidget {
         /// User Email here
         CommonTextField(
           controller: controller.emailController,
-          prefixIcon: const Icon(Icons.mail),
+          prefixIcon: Image.asset(AppImages.email),
           hintText: AppString.email,
           validator: OtherHelper.emailValidator,
           fillColor: AppColors.textfieldColor,

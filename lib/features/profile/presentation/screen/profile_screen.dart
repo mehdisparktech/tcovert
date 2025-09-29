@@ -5,7 +5,6 @@ import 'package:tcovert/utils/constants/app_colors.dart';
 import '../../../../../../config/route/app_routes.dart';
 import '../../../../component/image/common_image.dart';
 import '../../../../component/other_widgets/item.dart';
-import '../../../../component/pop_up/common_pop_menu.dart';
 import '../../../../component/text/common_text.dart';
 import '../controller/profile_controller.dart';
 import '../../../../../../utils/constants/app_images.dart';
@@ -52,36 +51,36 @@ class ProfileScreen extends StatelessWidget {
 
                   /// Edit Profile item here
                   Item(
-                    icon: Icons.person,
+                    icon: AppImages.edit,
                     title: AppString.editProfile,
                     onTap: () => Get.toNamed(AppRoutes.editProfile),
                   ),
                   Item(
-                    icon: Icons.password,
+                    icon: AppImages.password,
                     title: AppString.changePassword,
                     onTap: () => Get.toNamed(AppRoutes.changePassword),
                   ),
 
                   /// Setting item here
                   Item(
-                    icon: Icons.settings,
+                    icon: AppImages.option,
                     title: "Preferences",
                     onTap: () => Get.toNamed(AppRoutes.preferences),
                   ),
                   Item(
-                    icon: Icons.check_circle,
+                    icon: AppImages.check,
                     title: "Permission",
                     onTap: () => Get.toNamed(AppRoutes.permission),
                   ),
 
                   /// Setting item here
                   Item(
-                    icon: Icons.scanner,
+                    icon: AppImages.qrscan,
                     title: "Create Promo",
                     onTap: () => Get.toNamed(AppRoutes.createPromo),
                   ),
                   Item(
-                    icon: Icons.contact_support,
+                    icon: AppImages.information,
                     title: "Contact Us",
                     onTap: () => Get.toNamed(AppRoutes.contactUs),
                   ),
@@ -89,11 +88,11 @@ class ProfileScreen extends StatelessWidget {
                   /// Language item here
 
                   /// Log Out item here
-                  Item(
-                    icon: Icons.logout,
-                    title: AppString.logOut,
-                    onTap: logOutPopUp,
-                  ),
+                  // Item(
+                  //   icon: AppImages.information,
+                  //   title: AppString.logOut,
+                  //   onTap: logOutPopUp,
+                  // ),
                 ],
               ),
             ),

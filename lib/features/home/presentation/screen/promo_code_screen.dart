@@ -1,3 +1,4 @@
+import 'package:dotted_border/dotted_border.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -31,7 +32,7 @@ class PromoCodeScreen extends StatelessWidget {
                     // Store name
                     const CommonText(
                       text: "Starbucks",
-                      fontSize: 24,
+                      fontSize: 26,
                       fontWeight: FontWeight.w600,
                       color: AppColors.white,
                     ),
@@ -42,17 +43,13 @@ class PromoCodeScreen extends StatelessWidget {
                     Row(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                        Icon(
-                          Icons.location_on,
-                          color: AppColors.grey,
-                          size: 16.sp,
-                        ),
+                        CommonImage(imageSrc: AppImages.location2, size: 24),
                         SizedBox(width: 4.w),
-                        const CommonText(
+                        CommonText(
                           text: "756 031 Ines Riverway, Rhiannonchester",
-                          fontSize: 12,
+                          fontSize: 14,
                           fontWeight: FontWeight.w500,
-                          color: AppColors.grey,
+                          color: AppColors.white.withOpacity(0.9),
                         ),
                       ],
                     ),
@@ -76,12 +73,12 @@ class PromoCodeScreen extends StatelessWidget {
                           SizedBox(height: 12.h),
 
                           // Offer description
-                          const CommonText(
+                          CommonText(
                             text:
                                 "Get one of our select handcrafted beverages for free when you buy one",
                             fontSize: 14,
                             fontWeight: FontWeight.w400,
-                            color: AppColors.grey,
+                            color: AppColors.white.withOpacity(0.9),
                             textAlign: TextAlign.center,
                             maxLines: 2,
                           ),
@@ -126,36 +123,74 @@ class PromoCodeScreen extends StatelessWidget {
           ),
         ],
       ),
-      child: CommonImage(imageSrc: AppImages.image2, fill: BoxFit.cover),
+      child: CommonImage(imageSrc: AppImages.promoimage, fill: BoxFit.cover),
     );
   }
 
   Widget _buildPromoCodeContainer() {
-    return Container(
-      width: double.infinity,
-      padding: EdgeInsets.all(20.w),
-      decoration: BoxDecoration(
-        color: AppColors.grey.withOpacity(0.10),
-        borderRadius: BorderRadius.circular(12.r),
-        border: Border.all(color: AppColors.white.withOpacity(0.3), width: 1),
-      ),
-      child: Column(
-        children: [
-          CommonText(
-            text: "Your promo code",
-            fontSize: 14,
-            fontWeight: FontWeight.w500,
-            color: AppColors.white.withOpacity(0.9),
-          ),
-          SizedBox(height: 8.h),
-          const CommonText(
-            text: "BG44Y90",
-            fontSize: 30,
-            fontWeight: FontWeight.w500,
-            color: AppColors.secondary,
-            textAlign: TextAlign.center,
-          ),
-        ],
+    return DottedBorder(
+      borderType: BorderType.RRect,
+      radius: Radius.circular(12),
+      dashPattern: [4, 4], // 6 length dash, 3 length gap
+      color: Colors.grey,
+      strokeWidth: 2,
+      child: Container(
+        width: double.infinity,
+        padding: EdgeInsets.all(20.w),
+        decoration: BoxDecoration(
+          color: AppColors.grey.withOpacity(0.10),
+          borderRadius: BorderRadius.circular(12.r),
+        ),
+        child: Column(
+          children: [
+            CommonText(
+              text: "Your promo code",
+              fontSize: 16,
+              fontWeight: FontWeight.w500,
+              color: AppColors.white.withOpacity(0.9),
+            ),
+            SizedBox(height: 20.h),
+            const CommonText(
+              text: "BG44Y90",
+              fontSize: 30,
+              fontWeight: FontWeight.w600,
+              color: AppColors.secondary,
+              textAlign: TextAlign.center,
+            ),
+            SizedBox(height: 20.h),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                CommonImage(
+                  imageSrc: AppImages.copy,
+                  width: 20.w,
+                  height: 20.h,
+                ),
+                SizedBox(width: 8.w),
+                CommonText(
+                  text: "Copy Code",
+                  fontSize: 14,
+                  fontWeight: FontWeight.w500,
+                  color: AppColors.secondary,
+                ),
+                SizedBox(width: 8.w),
+                CommonImage(
+                  imageSrc: AppImages.share,
+                  width: 20.w,
+                  height: 20.h,
+                ),
+                SizedBox(width: 8.w),
+                CommonText(
+                  text: "Share",
+                  fontSize: 14,
+                  fontWeight: FontWeight.w500,
+                  color: AppColors.secondary,
+                ),
+                SizedBox(width: 8.w),
+              ],
+            ),
+          ],
+        ),
       ),
     );
   }

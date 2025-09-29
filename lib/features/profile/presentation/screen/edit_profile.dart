@@ -69,11 +69,14 @@ class EditProfile extends StatelessWidget {
                         child: IconButton(
                           style: ButtonStyle(
                             backgroundColor: WidgetStateColor.resolveWith(
-                              (states) => Colors.black,
+                              (states) => Colors.white.withOpacity(0.5),
                             ),
                           ),
                           onPressed: controller.getProfileImage,
-                          icon: const Icon(Icons.edit, color: Colors.white),
+                          icon: const Icon(
+                            Icons.edit,
+                            color: AppColors.primaryColor,
+                          ),
                         ),
                       ),
                     ],

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:tcovert/component/image/common_image.dart';
 import '../../../../../utils/constants/app_colors.dart';
 import '../../../../component/text/common_text.dart';
 
@@ -7,7 +8,7 @@ class Item extends StatelessWidget {
   const Item({super.key, required this.title, required this.icon, this.onTap});
 
   final String title;
-  final IconData icon;
+  final String icon;
   final VoidCallback? onTap;
 
   @override
@@ -25,7 +26,11 @@ class Item extends StatelessWidget {
         child: Row(
           children: [
             /// show icon here
-            Icon(icon, color: AppColors.white),
+            CommonImage(
+              imageSrc: icon,
+              size: 20.w,
+              imageColor: AppColors.white,
+            ),
 
             /// show Title here
             CommonText(text: title, color: AppColors.white, left: 12),
