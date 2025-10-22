@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:geolocator/geolocator.dart';
+import 'package:permission_handler/permission_handler.dart';
 import 'package:tcovert/utils/constants/app_images.dart';
 import '../../../../config/route/app_routes.dart';
 import '../../../../utils/constants/app_colors.dart';
@@ -11,6 +14,16 @@ class HomeController extends GetxController {
   var nearbyUsers = <Map<String, dynamic>>[].obs;
   var selectedUser = Rxn<Map<String, dynamic>>();
 
+  // Google Maps variables
+  GoogleMapController? mapController;
+  var currentPosition = Rxn<Position>();
+  var markers = <Marker>{}.obs;
+  var initialCameraPosition =
+      const CameraPosition(
+        target: LatLng(23.8103, 90.4125), // Dhaka, Bangladesh default
+        zoom: 14.0,
+      ).obs;
+
   @override
   void onInit() {
     super.onInit();
@@ -19,6 +32,19 @@ class HomeController extends GetxController {
     if (nearbyUsers.isNotEmpty) {
       selectedUser.value = nearbyUsers[0];
     }
+  }
+
+  @override
+  void onReady() {
+    super.onReady();
+    // Request location permission when the screen is fully loaded
+    _requestLocationPermission();
+  }
+
+  @override
+  void onClose() {
+    mapController?.dispose();
+    super.onClose();
   }
 
   // Initialize sample user data (would normally come from API)
@@ -31,6 +57,8 @@ class HomeController extends GetxController {
         'time': '2 mi - 17 min',
         'image': AppImages.image1,
         'isOnline': true,
+        'lat': 23.8103,
+        'lng': 90.4125,
       },
       {
         'id': '2',
@@ -39,6 +67,8 @@ class HomeController extends GetxController {
         'time': '1.5 mi - 12 min',
         'image': AppImages.image2,
         'isOnline': true,
+        'lat': 23.8140,
+        'lng': 90.4200,
       },
       {
         'id': '3',
@@ -47,6 +77,8 @@ class HomeController extends GetxController {
         'time': '3 mi - 20 min',
         'image': AppImages.image3,
         'isOnline': false,
+        'lat': 23.8050,
+        'lng': 90.4080,
       },
       {
         'id': '4',
@@ -55,6 +87,8 @@ class HomeController extends GetxController {
         'time': '2.5 mi - 15 min',
         'image': AppImages.image4,
         'isOnline': true,
+        'lat': 23.8180,
+        'lng': 90.4150,
       },
     ];
 
@@ -62,6 +96,8 @@ class HomeController extends GetxController {
     if (nearbyUsers.isNotEmpty) {
       selectedUser.value = nearbyUsers[0];
     }
+
+    _createMarkers();
   }
 
   // Navigation methods
@@ -78,14 +114,142 @@ class HomeController extends GetxController {
     selectedUser.value = user;
   }
 
+  // Location permission
+  Future<void> _requestLocationPermission() async {
+    try {
+      // Check current permission status
+      var status = await Permission.location.status;
+
+      // If permission not determined yet or denied, request it
+      if (status.isDenied || status.isRestricted || status.isLimited) {
+        // Request permission - this will show the system dialog
+        status = await Permission.location.request();
+      }
+
+      if (status.isGranted || status.isLimited) {
+        // Permission granted, get location
+        await getCurrentLocation();
+      } else if (status.isDenied) {
+        // User denied the permission
+        Get.snackbar(
+          "Permission Denied",
+          "Location permission is needed to show your position",
+          backgroundColor: AppColors.red.withOpacity(0.9),
+          colorText: AppColors.white,
+          duration: const Duration(seconds: 4),
+          isDismissible: true,
+          mainButton: TextButton(
+            onPressed: () {
+              Get.back();
+              _requestLocationPermission(); // Ask again
+            },
+            child: const Text(
+              "Retry",
+              style: TextStyle(
+                color: AppColors.white,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+          ),
+        );
+      }
+    } catch (e) {
+      print("Permission error: $e");
+    }
+  }
+
   // Location methods
-  void getCurrentLocation() {
-    Get.snackbar(
-      "Location",
-      "Getting current location...",
-      backgroundColor: AppColors.secondary,
-      colorText: AppColors.white,
-    );
+  Future<void> getCurrentLocation() async {
+    try {
+      // Check permission first
+      final permissionStatus = await Permission.location.status;
+      if (!permissionStatus.isGranted) {
+        await _requestLocationPermission();
+        return;
+      }
+
+      final serviceEnabled = await Geolocator.isLocationServiceEnabled();
+      if (!serviceEnabled) {
+        Get.snackbar(
+          "Location Service",
+          "Please enable location services in your device settings",
+          backgroundColor: AppColors.red,
+          colorText: AppColors.white,
+          duration: const Duration(seconds: 3),
+        );
+        return;
+      }
+
+      // Show loading indicator
+      Get.snackbar(
+        "Getting Location",
+        "Please wait...",
+        backgroundColor: AppColors.secondary.withOpacity(0.8),
+        colorText: AppColors.white,
+        duration: const Duration(seconds: 1),
+        showProgressIndicator: true,
+      );
+
+      final position = await Geolocator.getCurrentPosition(
+        desiredAccuracy: LocationAccuracy.high,
+        timeLimit: const Duration(seconds: 10),
+      );
+
+      currentPosition.value = position;
+
+      // Move camera to current location
+      mapController?.animateCamera(
+        CameraUpdate.newLatLngZoom(
+          LatLng(position.latitude, position.longitude),
+          15.0,
+        ),
+      );
+
+      Get.snackbar(
+        "Location Updated",
+        "Moved to your current location",
+        backgroundColor: AppColors.secondary,
+        colorText: AppColors.white,
+        duration: const Duration(seconds: 2),
+      );
+    } catch (e) {
+      Get.snackbar(
+        "Error",
+        "Failed to get location. Please check your GPS and try again.",
+        backgroundColor: AppColors.red,
+        colorText: AppColors.white,
+        duration: const Duration(seconds: 3),
+      );
+    }
+  }
+
+  // Map methods
+  void onMapCreated(GoogleMapController controller) {
+    mapController = controller;
+    print("✅ Google Map Created Successfully");
+    // Location will be fetched after permission is granted
+  }
+
+  // Create markers for nearby users
+  void _createMarkers() {
+    markers.clear();
+
+    for (var i = 0; i < nearbyUsers.length; i++) {
+      final user = nearbyUsers[i];
+      final marker = Marker(
+        markerId: MarkerId(user['id']),
+        position: LatLng(user['lat'], user['lng']),
+        onTap: () => selectUser(user),
+        infoWindow: InfoWindow(
+          title: user['name'],
+          snippet: user['description'],
+        ),
+        icon: BitmapDescriptor.defaultMarkerWithHue(
+          i % 2 == 0 ? BitmapDescriptor.hueRed : BitmapDescriptor.hueAzure,
+        ),
+      );
+      markers.add(marker);
+    }
   }
 
   // API methods (for future implementation)
@@ -113,7 +277,6 @@ class HomeController extends GetxController {
 
     try {
       isLoading.value = true;
-      // TODO: Implement search API call
       // Filter locally for now
       final filteredUsers =
           nearbyUsers

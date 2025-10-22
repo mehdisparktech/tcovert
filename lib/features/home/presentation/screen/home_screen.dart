@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
+import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:tcovert/features/home/presentation/widgets/business_information_bottom_sheet.dart';
 import '../../../../component/text/common_text.dart';
 import '../../../../component/image/common_image.dart';
@@ -17,46 +18,70 @@ class HomeScreen extends StatelessWidget {
 
     return Scaffold(
       backgroundColor: AppColors.background,
-      body: SafeArea(
-        child: Container(
-          decoration: BoxDecoration(
-            image: DecorationImage(
-              image: AssetImage(AppImages.mapBackground),
-              fit: BoxFit.cover,
-            ),
-          ),
-          child: Column(
-            children: [
-              // Top Header
-              _buildHeader(controller),
+      body: Container(
+        decoration: BoxDecoration(
+          // image: DecorationImage(
+          //   image: AssetImage(AppImages.mapBackground),
+          //   fit: BoxFit.cover,
+          // ),
+        ),
+        child: Column(
+          children: [
+            // Top Header
 
-              // Map Placeholder (will be replaced with Google Maps later)
-              Expanded(
-                child: Stack(
+            // Google Maps
+            Expanded(
+              child: Obx(
+                () => Stack(
                   children: [
-                    // Sample markers overlay
-                    Obx(() => Stack(children: _buildSampleMarkers(controller))),
+                    // Google Map Widget
+                    GoogleMap(
+                      initialCameraPosition:
+                          controller.initialCameraPosition.value,
+                      onMapCreated: controller.onMapCreated,
+                      markers: controller.markers,
+                      myLocationEnabled: true,
+                      myLocationButtonEnabled: false,
+                      zoomControlsEnabled: false,
+                      mapToolbarEnabled: false,
+                      mapType: MapType.normal,
+                      compassEnabled: true,
+                      rotateGesturesEnabled: true,
+                      scrollGesturesEnabled: true,
+                      tiltGesturesEnabled: true,
+                      zoomGesturesEnabled: true,
+                      indoorViewEnabled: true,
+                      trafficEnabled: false,
+                      buildingsEnabled: true,
+                      liteModeEnabled: false,
+                    ),
+                    _buildHeader(controller, context),
 
                     // Bottom User Card
-                    Obx(() => _buildBottomUserCard(controller)),
+                    _buildBottomUserCard(controller, context),
 
                     // My Location Button
-                    _buildLocationButton(controller),
+                    _buildLocationButton(controller, context),
+
                     // User Bottom Sheet
                     _buildUserBottomSheet(controller, context),
                   ],
                 ),
               ),
-            ],
-          ),
+            ),
+          ],
         ),
       ),
     );
   }
 
-  Widget _buildHeader(HomeController controller) {
+  Widget _buildHeader(HomeController controller, BuildContext context) {
     return Padding(
-      padding: EdgeInsets.symmetric(horizontal: 20.w, vertical: 16.h),
+      padding: EdgeInsets.only(
+        left: 20.w,
+        right: 20.w,
+        top: MediaQuery.of(context).padding.top + 8.h,
+      ),
       child: Row(
         children: [
           // Search Bar
@@ -117,90 +142,14 @@ class HomeScreen extends StatelessWidget {
     );
   }
 
-  List<Widget> _buildSampleMarkers(HomeController controller) {
-    final users = controller.nearbyUsers;
-    if (users.isEmpty) return [];
-
-    return [
-      // Sample marker positions (will be replaced with real map markers)
-      if (users.isNotEmpty)
-        Positioned(
-          top: 100.h,
-          left: 80.w,
-          child: _buildMarkerWidget(
-            controller,
-            users[0],
-            controller.getMarkerColor(0),
-          ),
-        ),
-      if (users.length > 1)
-        Positioned(
-          top: 150.h,
-          right: 100.w,
-          child: _buildMarkerWidget(
-            controller,
-            users[1],
-            controller.getMarkerColor(1),
-          ),
-        ),
-      if (users.length > 2)
-        Positioned(
-          top: 250.h,
-          left: 120.w,
-          child: _buildMarkerWidget(
-            controller,
-            users[2],
-            controller.getMarkerColor(2),
-          ),
-        ),
-      if (users.length > 3)
-        Positioned(
-          bottom: 200.h,
-          right: 80.w,
-          child: _buildMarkerWidget(
-            controller,
-            users[3],
-            controller.getMarkerColor(3),
-          ),
-        ),
-    ];
-  }
-
-  Widget _buildMarkerWidget(
-    HomeController controller,
-    Map<String, dynamic> user,
-    Color color,
-  ) {
-    return GestureDetector(
-      onTap: () => controller.selectUser(user),
-      child: Container(
-        width: 40.w,
-        height: 40.h,
-        decoration: BoxDecoration(
-          color: color,
-          //shape: BoxShape.circle,
-          border: Border.all(color: AppColors.white, width: 2),
-          boxShadow: [
-            BoxShadow(
-              color: AppColors.black.withOpacity(0.2),
-              blurRadius: 5,
-              offset: const Offset(0, 2),
-            ),
-          ],
-        ),
-        child: CommonImage(imageSrc: AppImages.image2, fill: BoxFit.cover),
-      ),
-    );
-  }
-
-  Widget _buildBottomUserCard(HomeController controller) {
+  Widget _buildBottomUserCard(HomeController controller, BuildContext context) {
     final selectedUser = controller.getSelectedUser();
     if (selectedUser == null) {
       return const SizedBox.shrink();
     }
 
     return Positioned(
-      bottom: 80.h,
+      bottom: MediaQuery.of(context).padding.bottom + 80.h,
       left: 20.w,
       right: 20.w,
       child: GestureDetector(
@@ -269,10 +218,10 @@ class HomeScreen extends StatelessWidget {
     );
   }
 
-  Widget _buildLocationButton(HomeController controller) {
+  Widget _buildLocationButton(HomeController controller, BuildContext context) {
     return Positioned(
-      bottom: 200.h,
-      right: 20.w,
+      top: MediaQuery.of(context).padding.top + 200.h,
+      right: 10.w,
       child: FloatingActionButton(
         onPressed: controller.getCurrentLocation,
         backgroundColor: AppColors.white,
@@ -286,7 +235,7 @@ class HomeScreen extends StatelessWidget {
     BuildContext context,
   ) {
     return Positioned(
-      bottom: 10,
+      bottom: MediaQuery.of(context).padding.bottom + 10.h,
       left: 50.w,
       right: 50.w,
       child: GestureDetector(
