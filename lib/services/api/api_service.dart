@@ -12,35 +12,41 @@ class ApiService {
   static final Dio _dio = _getMyDio();
 
   /// ========== [ HTTP METHODS ] ========== ///
+  /// POST request
   static Future<ApiResponseModel> post(
     String url, {
     dynamic body,
     Map<String, String>? header,
   }) => _request(url, "POST", body: body, header: header);
 
+  /// GET request
   static Future<ApiResponseModel> get(
     String url, {
     Map<String, String>? header,
   }) => _request(url, "GET", header: header);
 
+  /// PUT request
   static Future<ApiResponseModel> put(
     String url, {
     dynamic body,
     Map<String, String>? header,
   }) => _request(url, "PUT", body: body, header: header);
 
+  /// PATCH request
   static Future<ApiResponseModel> patch(
     String url, {
     dynamic body,
     Map<String, String>? header,
   }) => _request(url, "PATCH", body: body, header: header);
 
+  /// DELETE request
   static Future<ApiResponseModel> delete(
     String url, {
     dynamic body,
     Map<String, String>? header,
   }) => _request(url, "DELETE", body: body, header: header);
 
+  /// MULTIPART request
   static Future<ApiResponseModel> multipart(
     String url, {
     Map<String, String> header = const {},
@@ -80,6 +86,7 @@ class ApiService {
   }
 
   /// ========== [ API REQUEST HANDLER ] ========== ///
+  /// Request handler
   static Future<ApiResponseModel> _request(
     String url,
     String method, {
@@ -98,6 +105,7 @@ class ApiService {
     }
   }
 
+  /// Response handler
   static ApiResponseModel _handleResponse(Response response) {
     if (response.statusCode == 201) {
       return ApiResponseModel(200, response.data);
@@ -105,6 +113,7 @@ class ApiService {
     return ApiResponseModel(response.statusCode, response.data);
   }
 
+  /// Error handler
   static ApiResponseModel _handleError(dynamic error) {
     try {
       return _handleDioException(error);
@@ -113,6 +122,7 @@ class ApiService {
     }
   }
 
+  /// Dio exception handler
   static ApiResponseModel _handleDioException(DioException error) {
     switch (error.type) {
       case DioExceptionType.connectionTimeout:
@@ -138,6 +148,7 @@ class ApiService {
 }
 
 /// ========== [ DIO INSTANCE WITH INTERCEPTORS ] ========== ///
+/// Get Dio instance
 Dio _getMyDio() {
   Dio dio = Dio();
 

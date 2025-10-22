@@ -41,8 +41,6 @@ class ForgetPasswordController extends GetxController {
     text: kDebugMode ? 'hello123' : '',
   );
 
-
-
   @override
   void dispose() {
     startTimer();

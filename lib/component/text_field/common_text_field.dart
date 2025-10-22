@@ -32,6 +32,7 @@ class CommonTextField extends StatelessWidget {
     this.onSubmitted,
     this.onTap,
     this.suffixIcon,
+    this.maxLines = 1,
   });
 
   final String? hintText;
@@ -57,12 +58,13 @@ class CommonTextField extends StatelessWidget {
   final FormFieldValidator? validator;
   final TextInputType keyboardType;
   final List<TextInputFormatter>? inputFormatters;
-
+  final int? maxLines;
   @override
   Widget build(BuildContext context) {
     return TextFormField(
       autovalidateMode: AutovalidateMode.onUnfocus,
       keyboardType: keyboardType,
+      maxLines: maxLines,
       controller: controller,
       obscureText: obscureText.value,
       textInputAction: textInputAction,
