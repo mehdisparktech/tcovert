@@ -105,34 +105,32 @@ class ContactUsScreen extends StatelessWidget {
   }
 
   Widget _buildBusinessProfileSection(ContactUsController controller) {
-    return Obx(
-      () => GestureDetector(
-        onTap: controller.toggleBusinessProfileExpansion,
-        child: Container(
-          width: double.infinity,
-          padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 14.h),
-          decoration: BoxDecoration(
-            color: AppColors.white10,
-            borderRadius: BorderRadius.circular(10.r),
-            border: Border.all(color: AppColors.transparent),
-          ),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              const CommonText(
-                text: "Request for Business Profile",
-                fontSize: 16,
-                fontWeight: FontWeight.w400,
-                color: AppColors.white,
-                textAlign: TextAlign.left,
-              ),
-              Icon(
-                Icons.keyboard_arrow_right,
-                color: AppColors.white,
-                size: 20.sp,
-              ),
-            ],
-          ),
+    return GestureDetector(
+      onTap: controller.toggleBusinessProfileExpansion,
+      child: Container(
+        width: double.infinity,
+        padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 14.h),
+        decoration: BoxDecoration(
+          color: AppColors.white10,
+          borderRadius: BorderRadius.circular(10.r),
+          border: Border.all(color: AppColors.transparent),
+        ),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            const CommonText(
+              text: "Request for Business Profile",
+              fontSize: 16,
+              fontWeight: FontWeight.w400,
+              color: AppColors.white,
+              textAlign: TextAlign.left,
+            ),
+            Icon(
+              Icons.keyboard_arrow_right,
+              color: AppColors.white,
+              size: 20.sp,
+            ),
+          ],
         ),
       ),
     );

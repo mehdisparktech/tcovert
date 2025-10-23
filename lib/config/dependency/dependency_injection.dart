@@ -1,5 +1,6 @@
 import 'package:get/get.dart';
 import 'package:tcovert/features/home/presentation/controller/home_controller.dart';
+import 'package:tcovert/features/profile/presentation/controller/contact_us_controller.dart';
 
 import '../../features/auth/change_password/presentation/controller/change_password_controller.dart';
 import '../../features/auth/forgot password/presentation/controller/forget_password_controller.dart';
@@ -23,5 +24,6 @@ class DependencyInjection extends Bindings {
     Get.lazyPut(() => PrivacyPolicyController(), fenix: true);
     Get.lazyPut(() => TermsOfServicesController(), fenix: true);
     Get.lazyPut(() => HomeController(), fenix: true);
+    Get.lazyPut(() => ContactUsController(), fenix: true);
   }
 }

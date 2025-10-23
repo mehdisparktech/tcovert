@@ -1,12 +1,13 @@
 import 'package:get/get.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:tcovert/config/api/api_end_point.dart';
-import 'package:tcovert/config/route/app_routes.dart';
 import 'package:tcovert/features/auth/sign%20up/data/model/auth_preferences_model.dart';
+import 'package:tcovert/features/home/presentation/screen/home_screen.dart';
 import 'package:tcovert/services/api/api_service.dart';
 import 'package:tcovert/services/storage/storage_keys.dart';
 import 'package:tcovert/services/storage/storage_services.dart';
 import 'package:tcovert/utils/app_utils.dart';
+import 'package:tcovert/utils/log/error_log.dart';
 
 class AuthPreferencesController extends GetxController {
   bool isLoading = false;
@@ -215,8 +216,6 @@ class AuthPreferencesController extends GetxController {
 
   /// Toggle preference selection
   void togglePreferenceSelection(int index, String number) {
-    print("index number========> $index   and =====number>>>>>>>>> $number");
-    print("index number========> $selectedPhotoOfInterest");
     if (selectedPreferences.contains(index)) {
       selectedPreferences.remove(index);
       selectedPhotoOfInterest.remove(number);
@@ -237,14 +236,13 @@ class AuthPreferencesController extends GetxController {
     try {
       isLoadingVerify = true;
       update();
-      print("============>>>>token<<<<<<+++++++++++ ${LocalStorage.token}");
       var response = await ApiService.patch(
         ApiEndPoint.user,
         body: {'preferences': selectedPhotoOfInterest},
         header: {'Authorization': 'Bearer ${LocalStorage.token}'},
       );
       if (response.statusCode == 200) {
-        Get.toNamed(AppRoutes.home);
+        profileApiCall();
       } else {
         Utils.errorSnackBar(response.statusCode.toString(), response.message);
       }
@@ -253,6 +251,44 @@ class AuthPreferencesController extends GetxController {
     } finally {
       isLoadingVerify = false;
       update();
+    }
+  }
+
+  Future<void> profileApiCall() async {
+    try {
+      var profileResponse = await ApiService.get(
+        ApiEndPoint.profile,
+        header: {"Authorization": "Bearer ${LocalStorage.token}"},
+      );
+      if (profileResponse.statusCode == 200) {
+        var profileData = profileResponse.data;
+        LocalStorage.userId = profileData['data']['_id'];
+        LocalStorage.myRole = profileData['data']['role'];
+        LocalStorage.status = profileData['data']['status'];
+        LocalStorage.verified = profileData['data']['verified'];
+        LocalStorage.myImage = profileData['data']['profileImage'];
+        LocalStorage.myName = profileData['data']['name'];
+        LocalStorage.myEmail = profileData['data']['email'];
+        LocalStorage.setString(LocalStorageKeys.myRole, LocalStorage.myRole);
+        LocalStorage.setString(LocalStorageKeys.status, LocalStorage.status);
+        LocalStorage.setBoolValue(
+          LocalStorageKeys.verified,
+          LocalStorage.verified,
+        );
+        LocalStorage.setString(LocalStorageKeys.myImage, LocalStorage.myImage);
+        LocalStorage.setString(LocalStorageKeys.myName, LocalStorage.myName);
+        LocalStorage.setString(LocalStorageKeys.myEmail, LocalStorage.myEmail);
+        Get.offAll(() => const HomeScreen());
+      } else {
+        Utils.errorSnackBar(
+          profileResponse.statusCode.toString(),
+          profileResponse.message,
+        );
+        errorLog(profileResponse.message, source: "Profile Api Call");
+      }
+    } catch (e) {
+      Utils.errorSnackBar(e.toString(), e.toString());
+      errorLog(e.toString(), source: "Profile Api Call");
     }
   }
 
