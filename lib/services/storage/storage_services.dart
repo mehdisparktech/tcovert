@@ -13,6 +13,9 @@ class LocalStorage {
   static String myImage = "";
   static String myName = "";
   static String myEmail = "";
+  static String myRole = "";
+  static String status = "";
+  static bool verified = false;
 
   // Create Local Storage Instance
   static SharedPreferences? preferences;
@@ -34,7 +37,9 @@ class LocalStorage {
     myImage = localStorage.getString(LocalStorageKeys.myImage) ?? "";
     myName = localStorage.getString(LocalStorageKeys.myName) ?? "";
     myEmail = localStorage.getString(LocalStorageKeys.myEmail) ?? "";
-
+    myRole = localStorage.getString(LocalStorageKeys.myRole) ?? "";
+    status = localStorage.getString(LocalStorageKeys.status) ?? "";
+    verified = localStorage.getBool(LocalStorageKeys.verified) ?? false;
     appLog(userId, source: "Local Storage");
   }
 
@@ -56,6 +61,9 @@ class LocalStorage {
     localStorage.setString(LocalStorageKeys.myImage, "");
     localStorage.setString(LocalStorageKeys.myName, "");
     localStorage.setString(LocalStorageKeys.myEmail, "");
+    localStorage.setString(LocalStorageKeys.myRole, "");
+    localStorage.setString(LocalStorageKeys.status, "");
+    localStorage.setBool(LocalStorageKeys.verified, false);
     localStorage.setBool(LocalStorageKeys.isLogIn, false);
   }
 
@@ -73,5 +81,20 @@ class LocalStorage {
   static Future<void> setInt(String key, int value) async {
     final localStorage = await _getStorage();
     await localStorage.setInt(key, value);
+  }
+
+  static Future<void> setBoolValue(String key, bool value) async {
+    final localStorage = await _getStorage();
+    await localStorage.setBool(key, value);
+  }
+
+  static Future<bool> getBool(String key, {bool defaultValue = false}) async {
+    final localStorage = await _getStorage();
+    return localStorage.getBool(key) ?? defaultValue;
+  }
+
+  static Future<String> getString(String key, {String defaultValue = ""}) async {
+    final localStorage = await _getStorage();
+    return localStorage.getString(key) ?? defaultValue;
   }
 }

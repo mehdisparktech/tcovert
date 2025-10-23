@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
+import 'package:tcovert/features/auth/sign%20in/presentation/screen/sign_in_screen.dart';
 import 'package:tcovert/utils/helpers/other_helper.dart';
 import '../../../services/storage/storage_services.dart';
 import '../../../utils/constants/app_colors.dart';
@@ -276,6 +277,7 @@ logOutPopUps() {
                     onTap: () async {
                       await AnimationPopUpState.closeDialog();
                       LocalStorage.removeAllPrefData();
+                      Get.offAll(() => const SignInScreen());
                     },
                   ),
                 ),

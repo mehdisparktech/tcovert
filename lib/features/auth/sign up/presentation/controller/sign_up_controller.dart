@@ -4,6 +4,8 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:intl_phone_field/countries.dart';
+import 'package:tcovert/services/storage/storage_keys.dart';
+import 'package:tcovert/services/storage/storage_services.dart';
 import 'package:tcovert/utils/helpers/other_helper.dart';
 
 import '../../../../../config/route/app_routes.dart';
@@ -45,7 +47,7 @@ class SignUpController extends GetxController {
     text: kDebugMode ? '1865965581' : '',
   );
   TextEditingController otpController = TextEditingController(
-    text: kDebugMode ? '123456' : '',
+    text: kDebugMode ? '' : '',
   );
 
   @override
@@ -75,28 +77,30 @@ class SignUpController extends GetxController {
 
   /// Sign up user
   signUpUser() async {
-    // Get.toNamed(AppRoutes.verifyUser);
-    // return;
-    isLoading = true;
-    update();
-    Map<String, String> body = {
-      "name": nameController.text,
-      "email": emailController.text,
-      "password": passwordController.text,
-      "confirmPassword": confirmPasswordController.text,
-    };
+    try {
+      isLoading = true;
+      update();
+      Map<String, String> body = {
+        "name": nameController.text,
+        "email": emailController.text,
+        "password": passwordController.text,
+        "confirmPassword": confirmPasswordController.text,
+      };
 
-    var response = await ApiService.post(ApiEndPoint.signUp, body: body);
+      var response = await ApiService.post(ApiEndPoint.signUp, body: body);
 
-    if (response.statusCode == 200) {
-      var data = response.data;
-      signUpToken = data['data']['signUpToken'];
-      Get.toNamed(AppRoutes.verifyUser);
-    } else {
-      Utils.errorSnackBar(response.statusCode.toString(), response.message);
+      if (response.statusCode == 200) {
+        Utils.successSnackBar(response.statusCode.toString(), response.message);
+        Get.toNamed(AppRoutes.verifyUser);
+      } else {
+        Utils.errorSnackBar(response.statusCode.toString(), response.message);
+      }
+    } catch (e) {
+      Utils.errorSnackBar(e.toString(), e.toString());
+    } finally {
+      isLoading = false;
+      update();
     }
-    isLoading = false;
-    update();
   }
 
   /// Start timer
@@ -120,26 +124,53 @@ class SignUpController extends GetxController {
 
   /// Verify OTP
   Future<void> verifyOtpRepo() async {
-    Get.toNamed(AppRoutes.signIn);
-    return;
+    try {
+      isLoadingVerify = true;
+      update();
+      Map<String, dynamic> body = {
+        "email": emailController.text,
+        "oneTimeCode": int.parse(otpController.text),
+      };
+      var response = await ApiService.post(ApiEndPoint.verifyOtp, body: body);
 
-    isLoadingVerify = true;
-    update();
-    Map<String, String> body = {
-      "email": emailController.text,
-      "oneTimeCode": otpController.text,
-    };
-    var response = await ApiService.post(ApiEndPoint.verifyOtp, body: body);
+      if (response.statusCode == 200) {
+        print(response.data['data']['token']);
+        LocalStorage.token = response.data['data']['token'];
+        LocalStorage.setString(LocalStorageKeys.token, LocalStorage.token);
+        Utils.successSnackBar(response.statusCode.toString(), response.message);
 
-    if (response.statusCode == 200) {
-      Utils.successSnackBar(response.statusCode.toString(), response.message);
-
-      Get.toNamed(AppRoutes.signIn);
-    } else {
-      Utils.errorSnackBar(response.statusCode.toString(), response.message);
+        Get.toNamed(AppRoutes.authPreferences);
+      } else {
+        Utils.errorSnackBar(response.statusCode.toString(), response.message);
+      }
+    } catch (e) {
+      Utils.errorSnackBar(e.toString(), e.toString());
+    } finally {
+      isLoadingVerify = false;
+      update();
     }
+  }
 
-    isLoadingVerify = false;
-    update();
+  /// resend OTP
+  Future<void> resendOtpRepo() async {
+    try {
+      isLoadingVerify = true;
+      update();
+      Map<String, dynamic> body = {"email": emailController.text};
+      var response = await ApiService.post(ApiEndPoint.resendOtp, body: body);
+
+      if (response.statusCode == 200) {
+        Utils.successSnackBar(response.statusCode.toString(), response.message);
+
+        Get.toNamed(AppRoutes.verifyUser);
+      } else {
+        Utils.errorSnackBar(response.statusCode.toString(), response.message);
+      }
+    } catch (e) {
+      Utils.errorSnackBar(e.toString(), e.toString());
+    } finally {
+      isLoadingVerify = false;
+      update();
+    }
   }
 }

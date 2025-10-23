@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
+import 'package:tcovert/component/pop_up/common_pop_menu.dart';
 import 'package:tcovert/utils/constants/app_colors.dart';
 import '../../../../../../config/route/app_routes.dart';
 import '../../../../component/image/common_image.dart';
@@ -88,11 +89,11 @@ class ProfileScreen extends StatelessWidget {
                   /// Language item here
 
                   /// Log Out item here
-                  // Item(
-                  //   icon: AppImages.information,
-                  //   title: AppString.logOut,
-                  //   onTap: logOutPopUp,
-                  // ),
+                  Item(
+                    icon: AppImages.information,
+                    title: AppString.logOut,
+                    onTap: logOutPopUp,
+                  ),
                 ],
               ),
             ),

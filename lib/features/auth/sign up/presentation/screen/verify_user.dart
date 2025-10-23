@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
-import 'package:tcovert/features/auth/sign%20up/presentation/screen/set_password_screen.dart';
+import 'package:pin_code_fields/pin_code_fields.dart';
+import 'package:tcovert/utils/constants/app_colors.dart';
 import 'package:tcovert/utils/constants/app_images.dart';
 import '../../../../../component/button/common_button.dart';
 import '../../../../../component/text/common_text.dart';
@@ -55,76 +56,79 @@ class _VerifyUserState extends State<VerifyUser> {
                   /// instruction how to get OTP
                   Center(
                     child: CommonText(
-                      text: "Check Your Email For the Activation Link",
+                      text: "Check Your Email For the OTP",
                       fontSize: 28.sp,
                       top: 100,
-                      bottom: 30,
+                      bottom: 40,
                       maxLines: 3,
                     ),
                   ),
 
                   /// OTP Filed here
-                  // Flexible(
-                  //   flex: 0,
-                  //   child: PinCodeTextField(
-                  //     controller: controller.otpController,
-                  //     autoDisposeControllers: false,
-                  //     cursorColor: AppColors.black,
-                  //     appContext: (context),
-                  //     autoFocus: true,
-                  //     pinTheme: PinTheme(
-                  //       shape: PinCodeFieldShape.box,
-                  //       borderRadius: BorderRadius.circular(16.r),
-                  //       fieldHeight: 60.h,
-                  //       fieldWidth: 60.w,
-                  //       activeFillColor: AppColors.transparent,
-                  //       selectedFillColor: AppColors.transparent,
-                  //       inactiveFillColor: AppColors.transparent,
-                  //       borderWidth: 0.5.w,
-                  //       selectedColor: AppColors.primaryColor,
-                  //       activeColor: AppColors.primaryColor,
-                  //       inactiveColor: AppColors.black,
-                  //     ),
-                  //     length: 6,
-                  //     keyboardType: TextInputType.number,
-                  //     autovalidateMode: AutovalidateMode.disabled,
-                  //     enableActiveFill: true,
-                  //     validator: (value) {
-                  //       if (value != null && value.length == 6) {
-                  //         return null;
-                  //       } else {
-                  //         return AppString.otpIsInValid;
-                  //       }
-                  //     },
-                  //   ),
-                  // ),
+                  Flexible(
+                    flex: 0,
+                    child: PinCodeTextField(
+                      controller: controller.otpController,
+                      autoDisposeControllers: false,
+                      cursorColor: AppColors.white,
+                      textStyle: TextStyle(color: AppColors.white),
+                      appContext: (context),
+                      autoFocus: true,
+                      pinTheme: PinTheme(
+                        shape: PinCodeFieldShape.box,
+                        borderRadius: BorderRadius.circular(16.r),
+                        fieldHeight: 60.h,
+                        fieldWidth: 60.w,
+                        activeFillColor: AppColors.textfieldColor,
+                        selectedFillColor: AppColors.textfieldColor,
+                        inactiveFillColor: AppColors.textfieldColor,
+                        borderWidth: 0.5.w,
+                        selectedColor: AppColors.textfieldColor,
+                        activeColor: AppColors.textfieldColor,
+                        inactiveColor: AppColors.textfieldColor,
+                      ),
+                      length: 4,
+                      keyboardType: TextInputType.number,
+                      autovalidateMode: AutovalidateMode.disabled,
+                      enableActiveFill: true,
+                      validator: (value) {
+                        if (value != null && value.length == 4) {
+                          return null;
+                        } else {
+                          return AppString.otpIsInValid;
+                        }
+                      },
+                    ),
+                  ),
 
-                  // /// Resent OTP or show Timer
-                  // GestureDetector(
-                  //   onTap:
-                  //       controller.time == '00:00'
-                  //           ? () {
-                  //             controller.startTimer();
-                  //             controller.signUpUser();
-                  //           }
-                  //           : () {},
-                  //   child: CommonText(
-                  //     text:
-                  //         controller.time == '00:00'
-                  //             ? AppString.resendCode
-                  //             : "${AppString.resendCodeIn} ${controller.time} ${AppString.minute}",
-                  //     top: 60,
-                  //     bottom: 100,
-                  //     fontSize: 18,
-                  //   ),
-                  // ),
+                  /// Resent OTP or show Timer
+                  GestureDetector(
+                    onTap:
+                        controller.time == '00:00'
+                            ? () {
+                              controller.startTimer();
+                              controller.resendOtpRepo();
+                            }
+                            : () {},
+                    child: CommonText(
+                      text:
+                          controller.time == '00:00'
+                              ? AppString.resendCode
+                              : "${AppString.resendCodeIn} ${controller.time} ${AppString.minute}",
+                      top: 60,
+                      bottom: 100,
+                      fontSize: 18,
+                    ),
+                  ),
 
                   ///  Submit Button here
                   CommonButton(
-                    titleText: AppString.resendLink,
+                    titleText: AppString.verify,
                     isLoading: controller.isLoadingVerify,
                     onTap: () {
-                      Get.to(() => const SetPasswordScreen());
+                      if (formKey.currentState!.validate()) {
+                        controller.verifyOtpRepo();
+                      }
                     },
                   ),
                 ],

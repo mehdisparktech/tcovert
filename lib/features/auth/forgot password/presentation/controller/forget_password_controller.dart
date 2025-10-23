@@ -74,25 +74,27 @@ class ForgetPasswordController extends GetxController {
   /// Forget Password Api Call
 
   Future<void> forgotPasswordRepo() async {
-    Get.toNamed(AppRoutes.verifyEmail);
-    return;
     isLoadingEmail = true;
     update();
+    try {
+      Map<String, String> body = {"email": emailController.text};
+      var response = await ApiService.post(
+        ApiEndPoint.forgotPassword,
+        body: body,
+      );
 
-    Map<String, String> body = {"email": emailController.text};
-    var response = await ApiService.post(
-      ApiEndPoint.forgotPassword,
-      body: body,
-    );
-
-    if (response.statusCode == 200) {
-      Utils.successSnackBar(response.statusCode.toString(), response.message);
-      Get.toNamed(AppRoutes.verifyEmail);
-    } else {
-      Get.snackbar(response.statusCode.toString(), response.message);
+      if (response.statusCode == 200) {
+        Utils.successSnackBar(response.statusCode.toString(), response.message);
+        Get.toNamed(AppRoutes.verifyEmail);
+      } else {
+        Get.snackbar(response.statusCode.toString(), response.message);
+      }
+    } catch (e) {
+      Utils.errorSnackBar(e.toString(), e.toString());
+    } finally {
+      isLoadingEmail = false;
+      update();
     }
-    isLoadingEmail = false;
-    update();
   }
 
   /// Verify OTP Api Call
@@ -102,15 +104,15 @@ class ForgetPasswordController extends GetxController {
     return;
     isLoadingVerify = true;
     update();
-    Map<String, String> body = {
+    Map<String, dynamic> body = {
       "email": emailController.text,
-      "otp": otpController.text,
+      "oneTimeCode": int.parse(otpController.text),
     };
     var response = await ApiService.post(ApiEndPoint.verifyOtp, body: body);
 
     if (response.statusCode == 200) {
       var data = response.data;
-      forgetPasswordToken = data['data']['forgetPasswordToken'];
+      forgetPasswordToken = data['data']['token'];
       Get.toNamed(AppRoutes.createPassword);
     } else {
       Get.snackbar(response.statusCode.toString(), response.message);
@@ -132,8 +134,8 @@ class ForgetPasswordController extends GetxController {
     };
 
     Map<String, String> body = {
-      "email": emailController.text,
-      "password": passwordController.text,
+      "newPassword": emailController.text,
+      "confirmPassword": passwordController.text,
     };
     var response = await ApiService.post(
       ApiEndPoint.resetPassword,

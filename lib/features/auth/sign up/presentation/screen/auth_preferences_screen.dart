@@ -4,17 +4,15 @@ import 'package:get/get.dart';
 import 'package:tcovert/component/button/common_button.dart';
 import 'package:tcovert/component/other_widgets/custom_switch.dart';
 import 'package:tcovert/component/text/common_text.dart';
-import 'package:tcovert/config/route/app_routes.dart';
-import 'package:tcovert/features/profile/presentation/controller/permission_controller.dart';
+import 'package:tcovert/features/auth/sign up/presentation/controller/auth_preferences_controller.dart';
 import 'package:tcovert/utils/constants/app_colors.dart';
-import 'package:tcovert/utils/extensions/extension.dart';
 
 class AuthPreferencesScreen extends StatelessWidget {
   const AuthPreferencesScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
-    final controller = Get.put(PermissionController());
+    final controller = Get.put(AuthPreferencesController());
 
     return Scaffold(
       backgroundColor: AppColors.primaryColor,
@@ -31,6 +29,14 @@ class AuthPreferencesScreen extends StatelessWidget {
           icon: const Icon(Icons.arrow_back, color: AppColors.white),
           onPressed: () => Get.back(),
         ),
+        actions: [
+          IconButton(
+            icon: const Icon(Icons.refresh, color: AppColors.white),
+            onPressed: () {
+              controller.getAuthPreferences();
+            },
+          ),
+        ],
       ),
       body: SafeArea(
         child: Padding(
@@ -39,7 +45,7 @@ class AuthPreferencesScreen extends StatelessWidget {
             child: Column(
               children: [
                 Container(
-                  padding: EdgeInsets.all(20.w),
+                  padding: EdgeInsets.all(14.w),
                   decoration: BoxDecoration(
                     color: AppColors.secondary.withOpacity(0.04),
                     borderRadius: BorderRadius.circular(16.r),
@@ -50,6 +56,7 @@ class AuthPreferencesScreen extends StatelessWidget {
                   ),
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
+                    mainAxisSize: MainAxisSize.min,
                     children: [
                       CommonText(
                         text: "Photos of Interest",
@@ -58,16 +65,35 @@ class AuthPreferencesScreen extends StatelessWidget {
                         color: AppColors.white,
                         bottom: 20.h,
                       ),
-                      _buildPreferenceItem(
-                        title: "Family",
-                        title2: "Social Events",
-                      ),
-                      10.height,
-                      _buildPreferenceItem(title: "Friends", title2: "Nature"),
-                      10.height,
-                      _buildPreferenceItem(
-                        title: "Restaurants",
-                        title2: "Travel",
+                      Obx(
+                        () => GridView.builder(
+                          shrinkWrap: true,
+                          physics: const NeverScrollableScrollPhysics(),
+                          itemCount: controller.photoOfInterest.length,
+                          gridDelegate:
+                              SliverGridDelegateWithFixedCrossAxisCount(
+                                crossAxisCount: 2,
+                                childAspectRatio: 3,
+                                crossAxisSpacing: 8.w,
+                                mainAxisSpacing: 12.h,
+                              ),
+                          itemBuilder: (context, index) {
+                            return Obx(
+                              () => _buildPreferenceItem(
+                                title: controller.photoOfInterest[index].name,
+                                title2: controller.photoOfInterest[index].name,
+                                isSelected: controller.isPreferenceSelected(
+                                  index,
+                                ),
+                                onTap:
+                                    () => controller.togglePreferenceSelection(
+                                      index,
+                                      controller.photoOfInterest[index].id,
+                                    ),
+                              ),
+                            );
+                          },
+                        ),
                       ),
                     ],
                   ),
@@ -85,6 +111,7 @@ class AuthPreferencesScreen extends StatelessWidget {
                   ),
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
+                    mainAxisSize: MainAxisSize.min,
                     children: [
                       CommonText(
                         text: "Permission",
@@ -127,7 +154,7 @@ class AuthPreferencesScreen extends StatelessWidget {
                 CommonButton(
                   titleText: "Save",
                   onTap: () {
-                    Get.toNamed(AppRoutes.home);
+                    controller.savePreferences();
                   },
                   titleColor: AppColors.white,
                   buttonHeight: 52.h,
@@ -183,33 +210,47 @@ class AuthPreferencesScreen extends StatelessWidget {
     );
   }
 
-  Widget _buildPreferenceItem({required String title, required String title2}) {
-    return Row(
-      children: [
-        Expanded(
-          child: Container(
-            padding: EdgeInsets.all(16.w),
-            decoration: BoxDecoration(
-              color: AppColors.secondary.withOpacity(0.04),
-              borderRadius: BorderRadius.circular(8.r),
-              border: Border.all(color: AppColors.secondary, width: 1),
-            ),
-            child: CommonText(text: title, fontSize: 16.sp),
+  Widget _buildPreferenceItem({
+    required String title,
+    required String title2,
+    required bool isSelected,
+    required VoidCallback onTap,
+  }) {
+    return GestureDetector(
+      onTap: onTap,
+      child: Container(
+        padding: EdgeInsets.all(16.w),
+        decoration: BoxDecoration(
+          color:
+              isSelected
+                  ? AppColors.secondary.withOpacity(0.2)
+                  : AppColors.secondary.withOpacity(0.04),
+          borderRadius: BorderRadius.circular(8.r),
+          border: Border.all(
+            color:
+                isSelected
+                    ? AppColors.secondary
+                    : AppColors.secondary.withOpacity(0.5),
+            width: isSelected ? 2 : 1,
           ),
         ),
-        10.width,
-        Expanded(
-          child: Container(
-            padding: EdgeInsets.all(16.w),
-            decoration: BoxDecoration(
-              color: AppColors.secondary.withOpacity(0.04),
-              borderRadius: BorderRadius.circular(8.r),
-              border: Border.all(color: AppColors.secondary, width: 1),
-            ),
-            child: CommonText(text: title2, fontSize: 16.sp),
+        child: Center(
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              CommonText(text: title, fontSize: 16.sp, color: AppColors.white),
+              if (isSelected) ...[
+                SizedBox(width: 8.w),
+                Icon(
+                  Icons.check_circle,
+                  color: AppColors.secondary,
+                  size: 20.w,
+                ),
+              ],
+            ],
           ),
         ),
-      ],
+      ),
     );
   }
 }

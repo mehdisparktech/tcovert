@@ -6,4 +6,13 @@ class LocalStorageKeys {
   static const String myImage = "myImage";
   static const String myName = "myName";
   static const String myEmail = "myEmail";
+  static const String myRole = "myRole";
+  static const String status = "status";
+  static const String verified = "verified";
+  
+  // Permission keys
+  static const String locationServiceEnabled = "locationServiceEnabled";
+  static const String accessCalendarEnabled = "accessCalendarEnabled";
+  static const String accessContactsEnabled = "accessContactsEnabled";
+  static const String allowNotificationEnabled = "allowNotificationEnabled";
 }

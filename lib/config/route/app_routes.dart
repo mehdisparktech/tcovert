@@ -4,6 +4,7 @@ import '../../features/auth/forgot password/presentation/screen/create_password.
 import '../../features/auth/forgot password/presentation/screen/forgot_password.dart';
 import '../../features/auth/forgot password/presentation/screen/verify_screen.dart';
 import '../../features/auth/sign in/presentation/screen/sign_in_screen.dart';
+import '../../features/auth/sign up/presentation/screen/auth_preferences_screen.dart';
 import '../../features/auth/sign up/presentation/screen/sign_up_screen.dart';
 import '../../features/auth/sign up/presentation/screen/verify_user.dart';
 import '../../features/profile/presentation/screen/about_us_screen.dart';
@@ -43,7 +44,7 @@ class AppRoutes {
   static const String privacyPolicy = "/privacy_policy_screen.dart";
   static const String termsOfServices = "/terms_of_services_screen.dart";
   static const String setting = "/setting_screen.dart";
-
+  static const String authPreferences = "/auth_preferences_screen.dart";
   static List<GetPage> routes = [
     GetPage(name: splash, page: () => const SplashScreen()),
     GetPage(name: home, page: () => const HomeScreen()),
@@ -67,5 +68,6 @@ class AppRoutes {
     GetPage(name: privacyPolicy, page: () => const PrivacyPolicyScreen()),
     GetPage(name: termsOfServices, page: () => const TermsOfServicesScreen()),
     GetPage(name: setting, page: () => const SettingScreen()),
+    GetPage(name: authPreferences, page: () => const AuthPreferencesScreen()),
   ];
 }

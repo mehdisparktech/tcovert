@@ -3,6 +3,7 @@ import 'package:flutter/foundation.dart';
 import 'package:get/get.dart';
 import 'package:tcovert/features/home/presentation/screen/home_screen.dart';
 import 'package:tcovert/utils/app_utils.dart';
+import 'package:tcovert/utils/log/error_log.dart';
 import '../../../../../services/api/api_service.dart';
 import '../../../../../config/api/api_end_point.dart';
 import '../../../../../services/storage/storage_keys.dart';
@@ -14,10 +15,10 @@ class SignInController extends GetxController {
 
   /// email and password Controller here
   TextEditingController emailController = TextEditingController(
-    text: kDebugMode ? 'developernaimul00@gmail.com' : '',
+    text: kDebugMode ? 'abdullahalnoman1512@gmail.com' : '',
   );
   TextEditingController passwordController = TextEditingController(
-    text: kDebugMode ? 'hello123' : "",
+    text: kDebugMode ? 'Abdullahalnoman1512@' : "",
   );
 
   /// Sign in Api call here
@@ -39,11 +40,8 @@ class SignInController extends GetxController {
 
       if (response.statusCode == 200) {
         var data = response.data;
-        LocalStorage.setBool(LocalStorageKeys.isLogIn, LocalStorage.isLogIn);
-        LocalStorage.setString(
-          LocalStorageKeys.token,
-          data['data']['accessToken'],
-        );
+        LocalStorage.setBool(LocalStorageKeys.isLogIn, true);
+        LocalStorage.setString(LocalStorageKeys.token, data['data']['token']);
         await profileApiCall();
         emailController.clear();
         passwordController.clear();
@@ -63,16 +61,23 @@ class SignInController extends GetxController {
     try {
       var profileResponse = await ApiService.get(
         ApiEndPoint.profile,
-      ).timeout(const Duration(seconds: 30));
+        header: {"Authorization": "Bearer ${LocalStorage.token}"},
+      );
       if (profileResponse.statusCode == 200) {
         var profileData = profileResponse.data;
         LocalStorage.userId = profileData['data']['_id'];
-        LocalStorage.myImage = profileData['data']['image'];
-        LocalStorage.myName = profileData['data']['fullName'];
+        LocalStorage.myRole = profileData['data']['role'];
+        LocalStorage.status = profileData['data']['status'];
+        LocalStorage.verified = profileData['data']['verified'];
+        LocalStorage.myImage = profileData['data']['profileImage'];
+        LocalStorage.myName = profileData['data']['name'];
         LocalStorage.myEmail = profileData['data']['email'];
-        LocalStorage.isLogIn = true;
-
-        LocalStorage.setString(LocalStorageKeys.userId, LocalStorage.userId);
+        LocalStorage.setString(LocalStorageKeys.myRole, LocalStorage.myRole);
+        LocalStorage.setString(LocalStorageKeys.status, LocalStorage.status);
+        LocalStorage.setBoolValue(
+          LocalStorageKeys.verified,
+          LocalStorage.verified,
+        );
         LocalStorage.setString(LocalStorageKeys.myImage, LocalStorage.myImage);
         LocalStorage.setString(LocalStorageKeys.myName, LocalStorage.myName);
         LocalStorage.setString(LocalStorageKeys.myEmail, LocalStorage.myEmail);
@@ -82,13 +87,11 @@ class SignInController extends GetxController {
           profileResponse.statusCode.toString(),
           profileResponse.message,
         );
-        Utils.errorSnackBar(
-          profileResponse.statusCode.toString(),
-          profileResponse.message,
-        );
+        errorLog(profileResponse.message, source: "Profile Api Call");
       }
     } catch (e) {
       Utils.errorSnackBar(e.toString(), e.toString());
+      errorLog(e.toString(), source: "Profile Api Call");
     }
   }
 }

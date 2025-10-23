@@ -35,30 +35,31 @@ class SignUpAllField extends StatelessWidget {
           validator: OtherHelper.emailValidator,
           fillColor: AppColors.textfieldColor,
         ),
+        20.height,
+        // User Password here
+        CommonTextField(
+          controller: controller.passwordController,
+          prefixIcon: Image.asset(AppImages.password),
+          isPassword: true,
+          hintText: AppString.password,
+          fillColor: AppColors.textfieldColor,
+          validator: OtherHelper.passwordValidator,
+        ),
+        20.height,
 
-        /// User Password here
-        // const CommonText(text: AppString.password, bottom: 8, top: 12),
-        // CommonTextField(
-        //   controller: controller.passwordController,
-        //   prefixIcon: const Icon(Icons.lock, color: AppColors.black),
-        //   isPassword: true,
-        //   hintText: AppString.password,
-        //   validator: OtherHelper.passwordValidator,
-        // ),
-
-        // /// User Confirm Password here
-        // const CommonText(text: AppString.confirmPassword, bottom: 8, top: 12),
-        // CommonTextField(
-        //   controller: controller.confirmPasswordController,
-        //   prefixIcon: const Icon(Icons.lock, color: AppColors.black),
-        //   isPassword: true,
-        //   hintText: AppString.confirmPassword,
-        //   validator:
-        //       (value) => OtherHelper.confirmPasswordValidator(
-        //         value,
-        //         controller.passwordController,
-        //       ),
-        // ),
+        /// User Confirm Password here
+        CommonTextField(
+          controller: controller.confirmPasswordController,
+          prefixIcon: Image.asset(AppImages.password),
+          isPassword: true,
+          hintText: AppString.confirmPassword,
+          fillColor: AppColors.textfieldColor,
+          validator:
+              (value) => OtherHelper.confirmPasswordValidator(
+                value,
+                controller.passwordController,
+              ),
+        ),
       ],
     );
   }

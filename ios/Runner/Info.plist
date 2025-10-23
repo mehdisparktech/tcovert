@@ -49,5 +49,13 @@
 		<string>This app needs location access to show nearby friends on the map.</string>
 		<key>NSLocationAlwaysAndWhenInUseUsageDescription</key>
 		<string>This app needs location access to show nearby friends on the map.</string>
+		<key>NSCalendarsUsageDescription</key>
+		<string>This app needs calendar access to sync your events.</string>
+		<key>NSCalendarsFullAccessUsageDescription</key>
+		<string>This app needs full calendar access to sync your events.</string>
+		<key>NSContactsUsageDescription</key>
+		<string>This app needs contacts access to help you connect with friends.</string>
+		<key>NSUserNotificationsUsageDescription</key>
+		<string>This app needs notification permission to send you important updates.</string>
 	</dict>
 </plist>
