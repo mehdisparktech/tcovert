@@ -17,4 +17,6 @@ class ApiEndPoint {
   static const chats = "chats";
   static const messages = "messages";
   static const contactUs = "contact";
+  static const preferences = "preferences";
+  static const profile = "user/me";
 }

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
+import 'package:tcovert/utils/helpers/other_helper.dart';
 import '../../../../component/text/common_text.dart';
 import '../../../../component/text_field/common_text_field.dart';
 import '../../../../component/button/common_button.dart';
@@ -47,7 +48,7 @@ class ContactUsScreen extends StatelessWidget {
                 label: "Name",
                 controller: controller.nameController,
                 hintText: "Your Name",
-                validator: controller.validateField("Name"),
+                validator: OtherHelper.validator,
               ),
               20.height,
 
@@ -66,7 +67,7 @@ class ContactUsScreen extends StatelessWidget {
                 label: "Subject",
                 controller: controller.subjectController,
                 hintText: "Subject",
-                validator: controller.validateField("Subject"),
+                validator: OtherHelper.validator,
               ),
               20.height,
 
@@ -77,7 +78,7 @@ class ContactUsScreen extends StatelessWidget {
                 hintText: "Message",
                 maxLines: 6,
                 textInputAction: TextInputAction.done,
-                validator: controller.validateField("Message"),
+                validator: OtherHelper.validator,
               ),
               40.height,
 
@@ -120,16 +121,14 @@ class ContactUsScreen extends StatelessWidget {
             children: [
               const CommonText(
                 text: "Request for Business Profile",
-                fontSize: 14,
+                fontSize: 16,
                 fontWeight: FontWeight.w400,
-                color: AppColors.textFiledColor,
+                color: AppColors.white,
                 textAlign: TextAlign.left,
               ),
               Icon(
-                controller.isBusinessProfileExpanded.value
-                    ? Icons.keyboard_arrow_up
-                    : Icons.keyboard_arrow_down,
-                color: AppColors.textFiledColor,
+                Icons.keyboard_arrow_right,
+                color: AppColors.white,
                 size: 20.sp,
               ),
             ],
@@ -172,7 +171,6 @@ class ContactUsScreen extends StatelessWidget {
           borderRadius: 10,
           paddingHorizontal: 16,
           paddingVertical: maxLines > 1 ? 16 : 14,
-          validator: validator as FormFieldValidator?,
         ),
       ],
     );
