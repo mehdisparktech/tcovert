@@ -1,6 +1,5 @@
 import 'package:flutter/cupertino.dart';
 import 'package:get/get.dart';
-import 'package:tcovert/config/route/app_routes.dart';
 import 'package:tcovert/services/storage/storage_services.dart';
 
 import '../../../../../services/api/api_service.dart';
@@ -19,8 +18,7 @@ class ChangePasswordController extends GetxController {
 
   Future<void> changePasswordRepo() async {
     //if (!formKey.currentState!.validate()) return;
-    Get.toNamed(AppRoutes.signIn);
-    return;
+
     isLoading = true;
     update();
 
@@ -37,7 +35,7 @@ class ChangePasswordController extends GetxController {
     );
 
     if (response.statusCode == 200) {
-      Utils.successSnackBar(response.statusCode.toString(), response.message);
+      Utils.successSnackBar("Password Changed", response.message);
 
       currentPasswordController.clear();
       newPasswordController.clear();
@@ -45,7 +43,7 @@ class ChangePasswordController extends GetxController {
 
       Get.back();
     } else {
-      Get.snackbar(response.statusCode.toString(), response.message);
+      Get.snackbar("Error", response.message);
     }
     isLoading = false;
     update();
