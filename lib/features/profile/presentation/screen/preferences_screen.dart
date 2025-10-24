@@ -34,54 +34,29 @@ class PreferencesScreen extends StatelessWidget {
         padding: EdgeInsets.symmetric(horizontal: 24.w, vertical: 32.h),
         child: Column(
           children: [
-            Container(
-              padding: EdgeInsets.all(20),
-              decoration: BoxDecoration(
-                color: AppColors.white.withOpacity(0.05),
-                borderRadius: BorderRadius.circular(12.r),
-              ),
-              child: Column(
-                mainAxisSize: MainAxisSize.min,
-                mainAxisAlignment: MainAxisAlignment.start,
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  _buildPreferenceItem(
-                    title: "Family",
-                    value: controller.familyEnabled,
-                    onChanged: (_) => controller.toggleFamily(),
+            GetBuilder<PreferencesController>(
+              builder:
+                  (controller) => Container(
+                    padding: EdgeInsets.all(20),
+                    decoration: BoxDecoration(
+                      color: AppColors.white.withOpacity(0.05),
+                      borderRadius: BorderRadius.circular(12.r),
+                    ),
+                    child: ListView.separated(
+                      shrinkWrap: true,
+                      physics: NeverScrollableScrollPhysics(),
+                      itemCount: controller.photoOfInterest.length,
+                      itemBuilder: (context, index) {
+                        return _buildPreferenceItem(
+                          title: controller.photoOfInterest[index].name,
+                          value: controller.photoOfInterest[index].active,
+                          onChanged: (_) => controller.togglePreference(index),
+                        );
+                      },
+                      separatorBuilder:
+                          (context, index) => SizedBox(height: 24.h),
+                    ),
                   ),
-                  SizedBox(height: 24.h),
-                  _buildPreferenceItem(
-                    title: "Nature",
-                    value: controller.natureEnabled,
-                    onChanged: (_) => controller.toggleNature(),
-                  ),
-                  SizedBox(height: 24.h),
-                  _buildPreferenceItem(
-                    title: "Social",
-                    value: controller.socialEnabled,
-                    onChanged: (_) => controller.toggleSocial(),
-                  ),
-                  SizedBox(height: 24.h),
-                  _buildPreferenceItem(
-                    title: "Friends",
-                    value: controller.friendsEnabled,
-                    onChanged: (_) => controller.toggleFriends(),
-                  ),
-                  SizedBox(height: 24.h),
-                  _buildPreferenceItem(
-                    title: "Travel",
-                    value: controller.travelEnabled,
-                    onChanged: (_) => controller.toggleTravel(),
-                  ),
-                  SizedBox(height: 24.h),
-                  _buildPreferenceItem(
-                    title: "Restaurants",
-                    value: controller.restaurantsEnabled,
-                    onChanged: (_) => controller.toggleRestaurants(),
-                  ),
-                ],
-              ),
             ),
             SizedBox(height: 40.h),
             CommonButton(
@@ -102,22 +77,20 @@ class PreferencesScreen extends StatelessWidget {
 
   Widget _buildPreferenceItem({
     required String title,
-    required RxBool value,
+    required bool value,
     required ValueChanged<bool> onChanged,
   }) {
-    return Obx(
-      () => Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: [
-          CommonText(
-            text: title,
-            fontSize: 16,
-            fontWeight: FontWeight.w400,
-            color: AppColors.white,
-          ),
-          CustomCheckbox(value: value.value, onChanged: onChanged, size: 24),
-        ],
-      ),
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      children: [
+        CommonText(
+          text: title,
+          fontSize: 16,
+          fontWeight: FontWeight.w400,
+          color: AppColors.white,
+        ),
+        CustomCheckbox(value: value, onChanged: onChanged, size: 24),
+      ],
     );
   }
 }
