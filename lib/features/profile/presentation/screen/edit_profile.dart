@@ -1,5 +1,7 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
+import 'package:tcovert/config/api/api_end_point.dart';
+import 'package:tcovert/services/storage/storage_services.dart';
 import 'package:tcovert/utils/constants/app_colors.dart';
 import '../../../../../../utils/extensions/extension.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -8,7 +10,6 @@ import '../../../../component/button/common_button.dart';
 import '../../../../component/image/common_image.dart';
 import '../../../../component/text/common_text.dart';
 import '../controller/profile_controller.dart';
-import '../../../../../../utils/constants/app_images.dart';
 import '../../../../../../utils/constants/app_string.dart';
 import '../widgets/edit_profile_all_filed.dart';
 
@@ -17,6 +18,7 @@ class EditProfile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final formKey = GlobalKey<FormState>();
     return GetBuilder<ProfileController>(
       builder: (controller) {
         return Scaffold(
@@ -34,7 +36,7 @@ class EditProfile extends StatelessWidget {
           body: SingleChildScrollView(
             padding: EdgeInsets.symmetric(horizontal: 20.w, vertical: 24.h),
             child: Form(
-              key: controller.formKey,
+              key: formKey,
               child: Column(
                 children: [
                   /// User Profile image here
@@ -53,8 +55,10 @@ class EditProfile extends StatelessWidget {
                                       height: 170,
                                       fit: BoxFit.fill,
                                     )
-                                    : const CommonImage(
-                                      imageSrc: AppImages.profile,
+                                    : CommonImage(
+                                      imageSrc:
+                                          ApiEndPoint.imageUrl +
+                                          LocalStorage.myImage,
                                       height: 170,
                                       width: 170,
                                     ),
@@ -91,7 +95,7 @@ class EditProfile extends StatelessWidget {
                   CommonButton(
                     titleText: AppString.saveAndChanges,
                     isLoading: controller.isLoading,
-                    onTap: controller.editProfileRepo,
+                    onTap: () => controller.editProfileRepo(formKey),
                     buttonColor: AppColors.secondary,
                   ),
                 ],

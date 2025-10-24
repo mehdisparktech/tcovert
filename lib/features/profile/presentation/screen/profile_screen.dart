@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:tcovert/component/pop_up/common_pop_menu.dart';
+import 'package:tcovert/config/api/api_end_point.dart';
+import 'package:tcovert/services/storage/storage_services.dart';
 import 'package:tcovert/utils/constants/app_colors.dart';
 import '../../../../../../config/route/app_routes.dart';
 import '../../../../component/image/common_image.dart';
@@ -28,21 +30,21 @@ class ProfileScreen extends StatelessWidget {
                   /// User Profile Image here
                   Center(
                     child: CommonImage(
-                      imageSrc: AppImages.profile,
+                      imageSrc: ApiEndPoint.imageUrl + LocalStorage.myImage,
                       size: 120,
                       defaultImage: AppImages.profile,
                     ),
                   ),
 
                   /// User Name here
-                  const CommonText(
-                    text: "Emma Phillips",
+                  CommonText(
+                    text: LocalStorage.myName,
                     fontSize: 16,
                     fontWeight: FontWeight.w600,
                     top: 20,
                   ),
-                  const CommonText(
-                    text: "www.emmaphilips.com",
+                  CommonText(
+                    text: LocalStorage.myEmail,
                     fontSize: 16,
                     fontWeight: FontWeight.w400,
                     color: AppColors.grey,

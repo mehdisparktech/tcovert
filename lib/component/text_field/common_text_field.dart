@@ -33,6 +33,7 @@ class CommonTextField extends StatelessWidget {
     this.onTap,
     this.suffixIcon,
     this.maxLines = 1,
+    this.readOnly = false,
   });
 
   final String? hintText;
@@ -59,10 +60,12 @@ class CommonTextField extends StatelessWidget {
   final TextInputType keyboardType;
   final List<TextInputFormatter>? inputFormatters;
   final int? maxLines;
+  final bool readOnly;
   @override
   Widget build(BuildContext context) {
     return TextFormField(
       autovalidateMode: AutovalidateMode.onUnfocus,
+      readOnly: readOnly,
       keyboardType: keyboardType,
       maxLines: maxLines,
       controller: controller,

@@ -13,7 +13,6 @@ class ProfileController extends GetxController {
   List languages = ["English", "French", "Arabic"];
 
   /// form key here
-  final formKey = GlobalKey<FormState>();
 
   /// select Language here
   String selectedLanguage = "English";
@@ -25,9 +24,10 @@ class ProfileController extends GetxController {
   bool isLoading = false;
 
   /// all controller here
-  TextEditingController nameController = TextEditingController();
-  TextEditingController emailController = TextEditingController();
-  TextEditingController numberController = TextEditingController();
+  TextEditingController nameController =
+      TextEditingController()..text = LocalStorage.myName;
+  TextEditingController emailController =
+      TextEditingController()..text = LocalStorage.myEmail;
 
   /// select image function here
   getProfileImage() async {
@@ -43,31 +43,29 @@ class ProfileController extends GetxController {
   }
 
   /// update profile function here
-  Future<void> editProfileRepo() async {
+  Future<void> editProfileRepo(GlobalKey<FormState> formKey) async {
     if (!formKey.currentState!.validate()) return;
 
     if (!LocalStorage.isLogIn) return;
     isLoading = true;
     update();
 
-    Map<String, String> body = {
-      "fullName": nameController.text,
-      "phone": numberController.text,
-    };
+    Map<String, String> body = {"name": nameController.text};
 
     var response = await ApiService.multipart(
-      ApiEndPoint.user,
+      ApiEndPoint.baseUrl + ApiEndPoint.user,
       body: body,
       imagePath: image,
-      imageName: "image",
+      imageName: "profileImage",
+      method: "PATCH",
     );
 
     if (response.statusCode == 200) {
       var data = response.data;
 
       LocalStorage.userId = data['data']?["_id"] ?? "";
-      LocalStorage.myImage = data['data']?["image"] ?? "";
-      LocalStorage.myName = data['data']?["fullName"] ?? "";
+      LocalStorage.myImage = data['data']?["profileImage"] ?? "";
+      LocalStorage.myName = data['data']?["name"] ?? "";
       LocalStorage.myEmail = data['data']?["email"] ?? "";
 
       LocalStorage.setString("userId", LocalStorage.userId);

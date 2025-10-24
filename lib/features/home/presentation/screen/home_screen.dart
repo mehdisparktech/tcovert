@@ -2,11 +2,12 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:tcovert/config/api/api_end_point.dart';
 import 'package:tcovert/features/home/presentation/widgets/business_information_bottom_sheet.dart';
+import 'package:tcovert/services/storage/storage_services.dart';
 import '../../../../component/text/common_text.dart';
 import '../../../../component/image/common_image.dart';
 import '../../../../utils/constants/app_colors.dart';
-import '../../../../utils/constants/app_images.dart';
 import '../controller/home_controller.dart';
 
 class HomeScreen extends StatelessWidget {
@@ -129,7 +130,7 @@ class HomeScreen extends StatelessWidget {
                 backgroundColor: AppColors.grey,
                 child: ClipOval(
                   child: CommonImage(
-                    imageSrc: AppImages.profile,
+                    imageSrc: ApiEndPoint.imageUrl + LocalStorage.myImage,
                     height: 40,
                     width: 40,
                   ),

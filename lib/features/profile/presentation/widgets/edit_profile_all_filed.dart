@@ -39,6 +39,7 @@ class EditProfileAllFiled extends StatelessWidget {
           controller: controller.emailController,
           validator: OtherHelper.validator,
           hintText: AppString.email,
+          readOnly: true,
         ),
       ],
     );

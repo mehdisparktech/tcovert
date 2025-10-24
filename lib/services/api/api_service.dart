@@ -80,9 +80,11 @@ class ApiService {
       formData.fields.add(MapEntry(key, value));
     });
 
-    header['Content-Type'] = "multipart/form-data";
+    // Create a mutable copy of the header map
+    final mutableHeader = Map<String, String>.from(header);
+    mutableHeader['Content-Type'] = "multipart/form-data";
 
-    return _request(url, method, body: formData, header: header);
+    return _request(url, method, body: formData, header: mutableHeader);
   }
 
   /// ========== [ API REQUEST HANDLER ] ========== ///
