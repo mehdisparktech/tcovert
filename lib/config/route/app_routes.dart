@@ -61,7 +61,7 @@ class AppRoutes {
     GetPage(name: editProfile, page: () => EditProfile()),
     GetPage(name: preferences, page: () => const PreferencesScreen()),
     GetPage(name: permission, page: () => const PermissionScreen()),
-    GetPage(name: createPromo, page: () => const CreatePromoScreen()),
+    GetPage(name: createPromo, page: () => CreatePromoScreen()),
     GetPage(name: contactUs, page: () => const ContactUsScreen()),
     GetPage(name: request, page: () => const RequestScreen()),
     GetPage(name: aboutUs, page: () => const AboutUsScreen()),

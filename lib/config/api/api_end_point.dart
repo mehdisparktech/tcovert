@@ -21,4 +21,5 @@ class ApiEndPoint {
   static const profile = "user/me";
   static const authPreferences = "preference";
   static const resendOtp = "auth/resend-otp";
+  static const promo = "promo";
 }
