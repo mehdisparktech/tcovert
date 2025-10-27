@@ -6,13 +6,18 @@ import 'package:permission_handler/permission_handler.dart';
 import 'package:tcovert/utils/constants/app_images.dart';
 import '../../../../config/route/app_routes.dart';
 import '../../../../utils/constants/app_colors.dart';
+import '../../data/models/business_model.dart';
+import '../../data/services/business_service.dart';
+import '../../../../config/api/api_end_point.dart';
 import '../widgets/user_bottom_sheet.dart';
 
 class HomeController extends GetxController {
   // Observable variables
   var isLoading = false.obs;
   var nearbyUsers = <Map<String, dynamic>>[].obs;
+  var nearbyBusinesses = <BusinessModel>[].obs;
   var selectedUser = Rxn<Map<String, dynamic>>();
+  var selectedBusiness = Rxn<BusinessModel>();
 
   // Google Maps variables
   GoogleMapController? mapController;
@@ -32,6 +37,8 @@ class HomeController extends GetxController {
     if (nearbyUsers.isNotEmpty) {
       selectedUser.value = nearbyUsers[0];
     }
+    // Fetch real-time business data
+    fetchNearbyBusinesses();
   }
 
   @override
@@ -212,6 +219,9 @@ class HomeController extends GetxController {
         colorText: AppColors.white,
         duration: const Duration(seconds: 2),
       );
+
+      // Refresh business data with new location
+      await fetchNearbyBusinesses();
     } catch (e) {
       Get.snackbar(
         "Error",
@@ -252,21 +262,107 @@ class HomeController extends GetxController {
     }
   }
 
-  // API methods (for future implementation)
-  Future<void> fetchNearbyUsers() async {
+  // API methods
+  Future<void> fetchNearbyBusinesses() async {
     try {
       isLoading.value = true;
-      // nearbyUsers.value = await apiService.getNearbyUsers();
+
+      // Get current position or use default coordinates
+      final lat = currentPosition.value?.latitude ?? 23.810331;
+      final lng = currentPosition.value?.longitude ?? 90.412521;
+
+      final response = await BusinessService.getNearbyBusinesses(
+        page: 1,
+        limit: 10,
+        lat: lat,
+        lng: lng,
+      );
+
+      if (response != null && response.success) {
+        nearbyBusinesses.value = response.data;
+
+        // Convert businesses to user format for backward compatibility
+        nearbyUsers.value =
+            response.data.map((business) {
+              return {
+                'id': business.id,
+                'name': business.name,
+                'description': business.address,
+                'time': _calculateDistance(
+                  business.location.latitude,
+                  business.location.longitude,
+                ),
+                'image':
+                    business.coverPhoto != null
+                        ? '${ApiEndPoint.imageUrl}${business.coverPhoto!.imageUrl}'
+                        : AppImages.image1,
+                'isOnline': business.isApproved,
+                'lat': business.location.latitude,
+                'lng': business.location.longitude,
+              };
+            }).toList();
+
+        // Set first business as selected
+        if (nearbyBusinesses.isNotEmpty) {
+          selectedBusiness.value = nearbyBusinesses[0];
+          selectedUser.value = nearbyUsers[0];
+        }
+
+        // Update markers
+        _createMarkers();
+
+        Get.snackbar(
+          "Success",
+          "${response.data.length} businesses loaded",
+          backgroundColor: AppColors.secondary,
+          colorText: AppColors.white,
+          duration: const Duration(seconds: 2),
+        );
+      } else {
+        Get.snackbar(
+          "Info",
+          "No businesses found nearby",
+          backgroundColor: AppColors.secondary,
+          colorText: AppColors.white,
+        );
+      }
     } catch (e) {
+      print('Error fetching businesses: $e');
       Get.snackbar(
         "Error",
-        "Failed to fetch nearby users",
+        "Failed to fetch nearby businesses",
         backgroundColor: AppColors.red,
         colorText: AppColors.white,
       );
     } finally {
       isLoading.value = false;
     }
+  }
+
+  // Calculate distance and time estimation
+  String _calculateDistance(double lat, double lng) {
+    if (currentPosition.value == null) {
+      return 'Unknown distance';
+    }
+
+    final distance = Geolocator.distanceBetween(
+      currentPosition.value!.latitude,
+      currentPosition.value!.longitude,
+      lat,
+      lng,
+    );
+
+    // Convert to miles
+    final miles = distance / 1609.34;
+    // Estimate time (assuming 20 mph average speed)
+    final minutes = (miles / 20 * 60).round();
+
+    return '${miles.toStringAsFixed(1)} mi - $minutes min';
+  }
+
+  Future<void> fetchNearbyUsers() async {
+    // Redirect to business fetch
+    await fetchNearbyBusinesses();
   }
 
   Future<void> searchUsers(String query) async {
