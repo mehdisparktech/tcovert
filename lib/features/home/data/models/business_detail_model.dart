@@ -8,6 +8,8 @@ class BusinessDetailModel {
   final DateTime updatedAt;
   final PromoCodeModel? promoCode;
   final bool isPromoActive;
+  final List<ImageModel> gallery;
+  final List<ImageModel> usersPictures;
 
   BusinessDetailModel({
     required this.id,
@@ -19,6 +21,8 @@ class BusinessDetailModel {
     required this.updatedAt,
     this.promoCode,
     required this.isPromoActive,
+    this.gallery = const [],
+    this.usersPictures = const [],
   });
 
   factory BusinessDetailModel.fromJson(Map<String, dynamic> json) {
@@ -47,6 +51,20 @@ class BusinessDetailModel {
               )
               : null,
       isPromoActive: json['isPromoActive'] ?? false,
+      gallery:
+          (json['gallery'] as List<dynamic>?)
+              ?.map(
+                (image) => ImageModel.fromJson(image as Map<String, dynamic>),
+              )
+              .toList() ??
+          [],
+      usersPictures:
+          (json['usersPictures'] as List<dynamic>?)
+              ?.map(
+                (image) => ImageModel.fromJson(image as Map<String, dynamic>),
+              )
+              .toList() ??
+          [],
     );
   }
 
@@ -61,6 +79,8 @@ class BusinessDetailModel {
       'updatedAt': updatedAt.toIso8601String(),
       'promoCode': promoCode?.toJson(),
       'isPromoActive': isPromoActive,
+      'gallery': gallery.map((image) => image.toJson()).toList(),
+      'usersPictures': usersPictures.map((image) => image.toJson()).toList(),
     };
   }
 }

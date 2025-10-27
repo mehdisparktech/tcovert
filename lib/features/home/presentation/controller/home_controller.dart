@@ -3,6 +3,8 @@ import 'package:get/get.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:permission_handler/permission_handler.dart';
+import 'package:tcovert/features/home/presentation/widgets/business_image_view_bottom_sheet.dart';
+import 'package:tcovert/features/home/presentation/widgets/business_information_bottom_sheet.dart';
 import 'package:tcovert/services/api/api_service.dart';
 import 'package:tcovert/services/storage/storage_keys.dart';
 import 'package:tcovert/services/storage/storage_services.dart';
@@ -451,6 +453,45 @@ class HomeController extends GetxController {
       }
     } catch (e) {
       Utils.errorSnackBar(e.toString(), e.toString());
+    }
+  }
+
+  Future<void> gotoBusinessInformationBottomSheet(BuildContext context) async {
+    try {
+      final response = await ApiService.get(
+        ApiEndPoint.businessInformation,
+        header: {"Authorization": "Bearer ${LocalStorage.token}"},
+      );
+
+      if (response.statusCode == 200) {
+        // Parse the response data
+        final businessData = response.data['data'];
+
+        // Check if gallery or usersPictures exist
+        final hasGallery =
+            businessData['gallery'] != null &&
+            (businessData['gallery'] as List).isNotEmpty;
+        final hasUsersPictures =
+            businessData['usersPictures'] != null &&
+            (businessData['usersPictures'] as List).isNotEmpty;
+
+        if (hasGallery || hasUsersPictures) {
+          // Navigate to BusinessImageViewBottomSheet with data
+          BusinessImageViewBottomSheet.show(
+            context,
+            businessName: businessData['name'] ?? 'Unknown',
+            businessAddress: businessData['address'] ?? 'Unknown',
+            gallery: businessData['gallery'] ?? [],
+            usersPictures: businessData['usersPictures'] ?? [],
+          );
+        } else {
+          BusinessInformationBottomSheet.show(context);
+        }
+      } else {
+        BusinessInformationBottomSheet.show(context);
+      }
+    } catch (e) {
+      BusinessInformationBottomSheet.show(context);
     }
   }
 }

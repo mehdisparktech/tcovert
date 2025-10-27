@@ -3,7 +3,6 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:tcovert/config/api/api_end_point.dart';
-import 'package:tcovert/features/home/presentation/widgets/business_information_bottom_sheet.dart';
 import 'package:tcovert/services/storage/storage_services.dart';
 import 'package:tcovert/utils/enum/enum.dart';
 import '../../../../component/text/common_text.dart';
@@ -258,7 +257,7 @@ class HomeScreen extends StatelessWidget {
       right: 50.w,
       child: GestureDetector(
         onTap: () {
-          BusinessInformationBottomSheet.show(context);
+          controller.gotoBusinessInformationBottomSheet(context);
         },
         child: Container(
           padding: EdgeInsets.all(8.w),

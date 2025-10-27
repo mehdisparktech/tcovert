@@ -24,4 +24,5 @@ class ApiEndPoint {
   static const promo = "promo";
   static const business = "business";
   static const businessRequest = "business-request";
+  static const businessInformation = "business/my-business";
 }
