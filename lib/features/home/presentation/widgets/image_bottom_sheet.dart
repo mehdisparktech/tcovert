@@ -1,18 +1,32 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:tcovert/component/button/common_button.dart';
 import 'package:tcovert/component/image/common_image.dart';
-import 'package:tcovert/features/home/presentation/widgets/business_Information_bottom_sheet.dart';
+import 'package:tcovert/features/home/presentation/widgets/image_selete_bottom_sheet.dart';
+import 'package:tcovert/services/api/api_service.dart';
 import 'package:tcovert/utils/constants/app_colors.dart';
 import 'package:tcovert/utils/constants/app_images.dart';
 import 'package:tcovert/utils/extensions/extension.dart';
 import '../../../../component/text/common_text.dart';
 
 class ImageBottomSheet extends StatelessWidget {
-  const ImageBottomSheet({super.key});
+  final List<String> selectedImagePaths;
+  final String businessId;
 
-  static void show(BuildContext context) {
+  const ImageBottomSheet({
+    super.key,
+    required this.selectedImagePaths,
+    required this.businessId,
+  });
+
+  static void show(
+    BuildContext context, {
+    required List<String> selectedImagePaths,
+    required String businessId,
+  }) {
     showModalBottomSheet(
       context: context,
       backgroundColor: Colors.transparent,
@@ -22,49 +36,105 @@ class ImageBottomSheet extends StatelessWidget {
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.vertical(top: Radius.circular(24.r)),
       ),
-      builder: (context) => ImageBottomSheet(),
+      builder:
+          (context) => ImageBottomSheet(
+            selectedImagePaths: selectedImagePaths,
+            businessId: businessId,
+          ),
     );
   }
 
   @override
   Widget build(BuildContext context) {
-    return SafeArea(
-      child: Container(
-        height: MediaQuery.of(context).size.height * 0.35,
-        decoration: BoxDecoration(
-          color: AppColors.primaryColor,
-          borderRadius: BorderRadius.vertical(top: Radius.circular(24.r)),
-        ),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: [
-            SizedBox(height: 20.h),
-            _buildHeader(),
-            SizedBox(height: 20.h),
-            Expanded(
-              child: SingleChildScrollView(
-                padding: EdgeInsets.symmetric(horizontal: 10.w),
-                child: Column(
-                  children: [
-                    _buildPhotoSection(context),
-                    SizedBox(height: 10.h),
-                  ],
-                ),
+    return Container(
+      height: MediaQuery.of(context).size.height * 0.40,
+      decoration: BoxDecoration(
+        color: AppColors.primaryColor,
+        borderRadius: BorderRadius.vertical(top: Radius.circular(24.r)),
+      ),
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: [
+          SizedBox(height: 20.h),
+          _buildHeader(),
+          SizedBox(height: 20.h),
+          Expanded(
+            child: SingleChildScrollView(
+              padding: EdgeInsets.symmetric(horizontal: 10.w),
+              child: Column(
+                children: [_buildPhotoSection(context), SizedBox(height: 10.h)],
               ),
             ),
-            Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: CommonButton(
-                titleText: "Save",
-                buttonColor: AppColors.secondary,
-                onTap: () {
-                  Navigator.pop(context);
-                },
-              ),
+          ),
+          Padding(
+            padding: const EdgeInsets.all(10.0),
+            child: CommonButton(
+              titleText: "Save",
+              buttonColor: AppColors.secondary,
+              onTap: () async {
+                if (selectedImagePaths.isEmpty) {
+                  Get.snackbar(
+                    "Error",
+                    "Please select at least one image",
+                    backgroundColor: Colors.red,
+                    colorText: Colors.white,
+                  );
+                  return;
+                }
+
+                // Show loading
+                Get.dialog(
+                  Center(
+                    child: CircularProgressIndicator(
+                      color: AppColors.secondary,
+                    ),
+                  ),
+                  barrierDismissible: false,
+                );
+
+                try {
+                  // Upload images to business API
+                  final response = await ApiService.multipartMultipleImages(
+                    "business/68e5fd6078e258f0611e0344",
+                    method: "PATCH",
+                    imageName: "image",
+                    imagePaths: selectedImagePaths,
+                  );
+
+                  // Hide loading
+                  Get.back();
+
+                  if (response.statusCode == 200) {
+                    Get.snackbar(
+                      "Success",
+                      "Images uploaded successfully",
+                      backgroundColor: Colors.green,
+                      colorText: Colors.white,
+                    );
+                    Navigator.pop(context);
+                  } else {
+                    Get.snackbar(
+                      "Error",
+                      "Failed to upload images",
+                      backgroundColor: Colors.red,
+                      colorText: Colors.white,
+                    );
+                  }
+                } catch (e) {
+                  Get.back();
+                  Get.snackbar(
+                    "Error",
+                    "An error occurred: $e",
+                    backgroundColor: Colors.red,
+                    colorText: Colors.white,
+                  );
+                }
+              },
             ),
-          ],
-        ),
+          ),
+          SizedBox(height: 30.h),
+        ],
       ),
     );
   }
@@ -125,16 +195,28 @@ class ImageBottomSheet extends StatelessWidget {
     return Row(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Expanded(child: _buildSelectedPhotoCard(AppImages.image1, context)),
-        SizedBox(width: 10.w),
-        Expanded(child: _buildSelectedPhotoCard(AppImages.image1, context)),
-        SizedBox(width: 10.w),
-        Expanded(child: _buildAddPhotoCard(AppImages.add, "Add more")),
+        // Display all selected images
+        ...selectedImagePaths
+            .map(
+              (imagePath) => [
+                Expanded(
+                  child: _buildSelectedPhotoCard(
+                    imagePath,
+                    context,
+                    isFile: true,
+                  ),
+                ),
+                SizedBox(width: 10.w),
+              ],
+            )
+            .expand((widget) => widget),
+        // Add more button
+        Expanded(child: _buildAddPhotoCard(AppImages.add, "Add more", context)),
       ],
     );
   }
 
-  Widget _buildAddPhotoCard(String icon, String text) {
+  Widget _buildAddPhotoCard(String icon, String text, BuildContext context) {
     return Container(
       width: double.infinity,
       height: 114.h,
@@ -148,8 +230,15 @@ class ImageBottomSheet extends StatelessWidget {
         child: InkWell(
           borderRadius: BorderRadius.circular(12.r),
           onTap: () {
-            // Handle add photo action
-            Get.to(() => BusinessInformationBottomSheet());
+            // Close current bottom sheet and show ImageSeleteBottomSheet
+            Navigator.pop(context);
+            ImageSeleteBottomSheet.show(
+              context,
+              existingImages: selectedImagePaths,
+              businessId: businessId,
+              businessName: 'businessName',
+              businessAddress: 'businessAddress',
+            );
           },
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
@@ -172,7 +261,11 @@ class ImageBottomSheet extends StatelessWidget {
     );
   }
 
-  Widget _buildSelectedPhotoCard(String imagePath, BuildContext context) {
+  Widget _buildSelectedPhotoCard(
+    String imagePath,
+    BuildContext context, {
+    bool isFile = false,
+  }) {
     return Container(
       width: double.infinity,
       height: 114.h,
@@ -181,7 +274,10 @@ class ImageBottomSheet extends StatelessWidget {
         borderRadius: BorderRadius.circular(12.r),
         border: Border.all(color: Colors.grey.withOpacity(0.3), width: 1),
         image: DecorationImage(
-          image: AssetImage(imagePath),
+          image:
+              isFile
+                  ? FileImage(File(imagePath)) as ImageProvider
+                  : AssetImage(imagePath),
           fit: BoxFit.cover,
           alignment: Alignment.center,
         ),
@@ -192,7 +288,6 @@ class ImageBottomSheet extends StatelessWidget {
           borderRadius: BorderRadius.circular(12.r),
           onTap: () {
             // Handle add photo action
-            Get.to(() => BusinessInformationBottomSheet());
           },
         ),
       ),

@@ -1,6 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
+import 'package:tcovert/config/api/api_end_point.dart';
+import 'package:tcovert/services/api/api_service.dart';
+import 'package:tcovert/services/storage/storage_services.dart';
+import 'package:tcovert/utils/app_utils.dart';
 import '../../../../component/text/common_text.dart';
 import '../../../../component/text_field/common_text_field.dart';
 import '../../../../component/button/common_button.dart';
@@ -158,21 +162,30 @@ class _RequestScreenState extends State<RequestScreen> {
       });
 
       // Simulate API call
-      await Future.delayed(const Duration(seconds: 2));
+      Map<String, String> body = {
+        "name": nameController.text,
+        "email": emailController.text,
+        "url": urlController.text,
+      };
+
+      final response = await ApiService.post(
+        ApiEndPoint.businessRequest,
+        body: body,
+        header: {"Authorization": "Bearer ${LocalStorage.token}"},
+      );
+
+      if (response.isSuccess) {
+        Get.back();
+        Utils.successSnackBar('Success', response.message);
+      } else {
+        Utils.errorSnackBar('Error', response.message);
+      }
 
       setState(() {
         isLoading = false;
       });
 
       // Show success message
-      Get.snackbar(
-        "Success",
-        "Your request has been sent successfully!",
-        backgroundColor: AppColors.secondary,
-        colorText: AppColors.white,
-        snackPosition: SnackPosition.TOP,
-        duration: const Duration(seconds: 3),
-      );
 
       // Clear form
       nameController.clear();

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:tcovert/config/api/api_end_point.dart';
+import 'package:tcovert/features/profile/presentation/screen/request_screen.dart';
 import 'package:tcovert/services/api/api_service.dart';
 import 'package:tcovert/utils/app_utils.dart';
 import '../../data/model/contact_us_request_model.dart';
@@ -32,7 +33,7 @@ class ContactUsController extends GetxController {
 
   // Toggle business profile expansion
   void toggleBusinessProfileExpansion() {
-    isBusinessProfileExpanded.value = !isBusinessProfileExpanded.value;
+    Get.to(RequestScreen());
   }
 
   // Handle send message

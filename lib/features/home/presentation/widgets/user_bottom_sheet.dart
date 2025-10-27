@@ -108,7 +108,12 @@ class _UserBottomSheetState extends State<UserBottomSheet> {
                                 null)
                               _buildPromoCard(),
                             SizedBox(height: 24.h),
-                            _buildPhotoSection(context),
+                            _buildPhotoSection(
+                              context,
+                              widget.businessId,
+                              controller.businessDetail.value?.name ?? '',
+                              controller.businessDetail.value?.address ?? '',
+                            ),
                             SizedBox(height: 20.h),
                           ],
                         ),
@@ -286,18 +291,28 @@ class _UserBottomSheetState extends State<UserBottomSheet> {
     );
   }
 
-  Widget _buildPhotoSection(BuildContext context) {
+  Widget _buildPhotoSection(
+    BuildContext context,
+    String businessId,
+    String businessName,
+    String businessAddress,
+  ) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        _buildAddPhotoCard(context),
+        _buildAddPhotoCard(context, businessId, businessName, businessAddress),
         SizedBox(height: 16.h),
         _buildPhotoGrid(context),
       ],
     );
   }
 
-  Widget _buildAddPhotoCard(BuildContext context) {
+  Widget _buildAddPhotoCard(
+    BuildContext context,
+    String businessId,
+    String businessName,
+    String businessAddress,
+  ) {
     return Container(
       width: double.infinity,
       height: 120.h,
@@ -314,7 +329,12 @@ class _UserBottomSheetState extends State<UserBottomSheet> {
             // Close current bottom sheet first
             Navigator.pop(context);
             // Then show the image select bottom sheet
-            ImageSeleteBottomSheet.show(context);
+            ImageSeleteBottomSheet.show(
+              context,
+              businessId: businessId,
+              businessName: businessName,
+              businessAddress: businessAddress,
+            );
           },
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,

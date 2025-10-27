@@ -5,12 +5,30 @@ import 'package:tcovert/features/home/presentation/widgets/image_bottom_sheet.da
 import 'package:tcovert/utils/constants/app_colors.dart';
 import 'package:tcovert/utils/constants/app_images.dart';
 import 'package:tcovert/utils/extensions/extension.dart';
+import 'package:tcovert/utils/helpers/other_helper.dart';
 import '../../../../component/text/common_text.dart';
 
 class ImageSeleteBottomSheet extends StatelessWidget {
-  const ImageSeleteBottomSheet({super.key});
+  final List<String> existingImages;
+  final String businessId;
+  final String businessName;
+  final String businessAddress;
 
-  static void show(BuildContext context) {
+  const ImageSeleteBottomSheet({
+    super.key,
+    this.existingImages = const [],
+    required this.businessId,
+    required this.businessName,
+    required this.businessAddress,
+  });
+
+  static void show(
+    BuildContext context, {
+    List<String> existingImages = const [],
+    required String businessId,
+    required String businessName,
+    required String businessAddress,
+  }) {
     showModalBottomSheet(
       context: context,
       backgroundColor: Colors.transparent,
@@ -20,7 +38,13 @@ class ImageSeleteBottomSheet extends StatelessWidget {
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.vertical(top: Radius.circular(24.r)),
       ),
-      builder: (context) => ImageSeleteBottomSheet(),
+      builder:
+          (context) => ImageSeleteBottomSheet(
+            existingImages: existingImages,
+            businessId: businessId,
+            businessName: businessName,
+            businessAddress: businessAddress,
+          ),
     );
   }
 
@@ -124,6 +148,9 @@ class ImageSeleteBottomSheet extends StatelessWidget {
   }
 
   Widget _buildAddPhotoCard(String icon, String text, BuildContext context) {
+    // Determine if this is camera or gallery based on icon
+    final bool isCamera = icon == AppImages.camera;
+
     return Container(
       width: double.infinity,
       height: 120.h,
@@ -136,11 +163,29 @@ class ImageSeleteBottomSheet extends StatelessWidget {
         color: Colors.transparent,
         child: InkWell(
           borderRadius: BorderRadius.circular(12.r),
-          onTap: () {
-            // Close current bottom sheet first
-            Navigator.pop(context);
-            // Then show the image select bottom sheet
-            ImageBottomSheet.show(context);
+          onTap: () async {
+            // Open camera or gallery based on the option
+            String? selectedImagePath =
+                isCamera
+                    ? await OtherHelper.openCamera()
+                    : await OtherHelper.openGallery();
+
+            if (selectedImagePath != null && context.mounted) {
+              // Add new image to existing images list
+              List<String> updatedImages = [
+                ...existingImages,
+                selectedImagePath,
+              ];
+
+              // Close current bottom sheet
+              Navigator.pop(context);
+              // Show ImageBottomSheet with all selected images
+              ImageBottomSheet.show(
+                context,
+                selectedImagePaths: updatedImages,
+                businessId: businessId,
+              );
+            }
           },
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,

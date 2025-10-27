@@ -87,6 +87,51 @@ class ApiService {
     return _request(url, method, body: formData, header: mutableHeader);
   }
 
+  /// MULTIPART request with multiple images
+  static Future<ApiResponseModel> multipartMultipleImages(
+    String url, {
+    Map<String, String> header = const {},
+    Map<String, String> body = const {},
+    String method = "PATCH",
+    String imageName = 'image',
+    List<String>? imagePaths,
+  }) async {
+    FormData formData = FormData();
+    
+    // Add multiple images
+    if (imagePaths != null && imagePaths.isNotEmpty) {
+      for (String imagePath in imagePaths) {
+        File file = File(imagePath);
+        String extension = file.path.split('.').last.toLowerCase();
+        String? mimeType = lookupMimeType(imagePath);
+
+        formData.files.add(
+          MapEntry(
+            imageName,
+            await MultipartFile.fromFile(
+              imagePath,
+              filename: "$imageName.$extension",
+              contentType:
+                  mimeType != null
+                      ? DioMediaType.parse(mimeType)
+                      : DioMediaType.parse("image/jpeg"),
+            ),
+          ),
+        );
+      }
+    }
+
+    body.forEach((key, value) {
+      formData.fields.add(MapEntry(key, value));
+    });
+
+    // Create a mutable copy of the header map
+    final mutableHeader = Map<String, String>.from(header);
+    mutableHeader['Content-Type'] = "multipart/form-data";
+
+    return _request(url, method, body: formData, header: mutableHeader);
+  }
+
   /// ========== [ API REQUEST HANDLER ] ========== ///
   /// Request handler
   static Future<ApiResponseModel> _request(

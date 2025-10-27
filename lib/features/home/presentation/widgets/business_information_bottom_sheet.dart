@@ -146,7 +146,12 @@ class BusinessInformationBottomSheet extends StatelessWidget {
           onTap: () {
             Navigator.pop(context);
             // Handle add photo action
-            ImageSeleteBottomSheet.show(context);
+            ImageSeleteBottomSheet.show(
+              context,
+              businessId: 'businessId',
+              businessName: 'businessName',
+              businessAddress: 'businessAddress',
+            );
           },
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
