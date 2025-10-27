@@ -226,16 +226,7 @@ class _UserBottomSheetState extends State<UserBottomSheet> {
               color: Colors.white.withOpacity(0.9),
               textAlign: TextAlign.left,
             ),
-            if (hasPromo) ...[
-              SizedBox(height: 12.h),
-              CommonText(
-                text: "Discount: ${promo.discount}%",
-                fontSize: 14.sp,
-                fontWeight: FontWeight.w600,
-                color: Colors.white,
-                textAlign: TextAlign.left,
-              ),
-            ],
+
             SizedBox(height: 20.h),
             if (hasPromo) _buildPromoButton(),
           ],
@@ -274,9 +265,10 @@ class _UserBottomSheetState extends State<UserBottomSheet> {
                 promoCode: business.promoCode!,
                 businessName: business.name,
                 businessAddress: business.address,
-                businessLogo: business.images.isNotEmpty
-                    ? business.images.first.imageUrl
-                    : null,
+                businessLogo:
+                    business.images.isNotEmpty
+                        ? business.images.first.imageUrl
+                        : null,
               ),
             );
           },
@@ -416,7 +408,6 @@ class _UserBottomSheetState extends State<UserBottomSheet> {
     bool isLarge = false,
     required BuildContext context,
   }) {
-    final business = controller.businessDetail.value;
     final imageUrl = '${ApiEndPoint.imageUrl}${image.imageUrl}';
     final uploader = image.uploadedBy;
     final uploaderName = uploader?.name ?? 'Anonymous';
@@ -434,8 +425,8 @@ class _UserBottomSheetState extends State<UserBottomSheet> {
             builder:
                 (context) => ImageViewScreen(
                   imageUrl: imageUrl,
-                  title: business?.name ?? 'Business',
-                  subtitle: business?.address ?? '',
+                  title: uploaderName,
+                  subtitle: timeAgo,
                 ),
           ),
         );
