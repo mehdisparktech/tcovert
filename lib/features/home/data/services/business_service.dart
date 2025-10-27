@@ -1,3 +1,5 @@
+import 'package:tcovert/services/storage/storage_services.dart';
+
 import '../../../../config/api/api_end_point.dart';
 import '../../../../services/api/api_response_model.dart';
 import '../../../../services/api/api_service.dart';
@@ -48,6 +50,40 @@ class BusinessService {
     } catch (e) {
       print('Error fetching business detail: $e');
       return null;
+    }
+  }
+
+  /// Create a new business
+  static Future<ApiResponseModel> createBusiness({
+    required String name,
+    required String address,
+    required double latitude,
+    required double longitude,
+    List<String>? imagePaths,
+  }) async {
+    try {
+      final body = {
+        'name': name,
+        'address': address,
+        'latitude': latitude.toString(),
+        'longitude': longitude.toString(),
+      };
+      print("================>>${LocalStorage.token}");
+
+      final ApiResponseModel response =
+          await ApiService.multipartMultipleImages(
+            ApiEndPoint.business,
+            method: 'POST',
+            body: body,
+            imageName: 'image',
+            imagePaths: imagePaths,
+            header: {'Authorization': 'Bearer ${LocalStorage.token}'},
+          );
+
+      return response;
+    } catch (e) {
+      print('Error creating business: $e');
+      return ApiResponseModel(500, {'message': 'Error creating business'});
     }
   }
 }
