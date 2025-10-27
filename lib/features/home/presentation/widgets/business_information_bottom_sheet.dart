@@ -148,6 +148,7 @@ class BusinessInformationBottomSheet extends StatelessWidget {
             // Handle add photo action
             ImageSeleteBottomSheet.show(
               context,
+              existingImages: [],
               businessId: 'businessId',
               businessName: 'businessName',
               businessAddress: 'businessAddress',

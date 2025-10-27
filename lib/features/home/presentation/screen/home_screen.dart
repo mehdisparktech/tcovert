@@ -5,6 +5,7 @@ import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:tcovert/config/api/api_end_point.dart';
 import 'package:tcovert/features/home/presentation/widgets/business_information_bottom_sheet.dart';
 import 'package:tcovert/services/storage/storage_services.dart';
+import 'package:tcovert/utils/enum/enum.dart';
 import '../../../../component/text/common_text.dart';
 import '../../../../component/image/common_image.dart';
 import '../../../../utils/constants/app_colors.dart';
@@ -65,7 +66,8 @@ class HomeScreen extends StatelessWidget {
                     _buildLocationButton(controller, context),
 
                     // User Bottom Sheet
-                    _buildUserBottomSheet(controller, context),
+                    if (controller.role == Role.business.name)
+                      _buildUserBottomSheet(controller, context),
 
                     // Loading Indicator
                     if (controller.isLoading.value)
@@ -165,7 +167,11 @@ class HomeScreen extends StatelessWidget {
       left: 20.w,
       right: 20.w,
       child: GestureDetector(
-        onTap: () => controller.showUserBottomSheet(Get.context!, selectedUser['id']),
+        onTap:
+            () => controller.showUserBottomSheet(
+              Get.context!,
+              selectedUser['id'],
+            ),
         child: Container(
           padding: EdgeInsets.all(16.w),
           decoration: BoxDecoration(

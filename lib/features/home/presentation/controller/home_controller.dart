@@ -3,6 +3,10 @@ import 'package:get/get.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:permission_handler/permission_handler.dart';
+import 'package:tcovert/services/api/api_service.dart';
+import 'package:tcovert/services/storage/storage_keys.dart';
+import 'package:tcovert/services/storage/storage_services.dart';
+import 'package:tcovert/utils/app_utils.dart';
 import 'package:tcovert/utils/constants/app_images.dart';
 import '../../../../config/route/app_routes.dart';
 import '../../../../utils/constants/app_colors.dart';
@@ -18,6 +22,7 @@ class HomeController extends GetxController {
   var nearbyBusinesses = <BusinessModel>[].obs;
   var selectedUser = Rxn<Map<String, dynamic>>();
   var selectedBusiness = Rxn<BusinessModel>();
+  var role = LocalStorage.role;
 
   // Google Maps variables
   GoogleMapController? mapController;
@@ -32,6 +37,7 @@ class HomeController extends GetxController {
   @override
   void onInit() {
     super.onInit();
+    print("====================>>>>> Role: $role");
     _initializeSampleUsers();
     // Set the first user as selected by default
     if (nearbyUsers.isNotEmpty) {
@@ -39,6 +45,7 @@ class HomeController extends GetxController {
     }
     // Fetch real-time business data
     fetchNearbyBusinesses();
+    profileApiCall();
   }
 
   @override
@@ -408,5 +415,42 @@ class HomeController extends GetxController {
 
   Map<String, dynamic>? getUserAt(int index) {
     return index < nearbyUsers.length ? nearbyUsers[index] : null;
+  }
+
+  Future<void> profileApiCall() async {
+    try {
+      var profileResponse = await ApiService.get(
+        ApiEndPoint.profile,
+        header: {"Authorization": "Bearer ${LocalStorage.token}"},
+      );
+      if (profileResponse.statusCode == 200) {
+        var profileData = profileResponse.data;
+        LocalStorage.userId = profileData['data']['_id'];
+        LocalStorage.myRole = profileData['data']['role'];
+        LocalStorage.status = profileData['data']['status'];
+        LocalStorage.verified = profileData['data']['verified'];
+        LocalStorage.myImage = profileData['data']['profileImage'];
+        LocalStorage.myName = profileData['data']['name'];
+        LocalStorage.myEmail = profileData['data']['email'];
+        LocalStorage.role = profileData['data']['role'];
+        LocalStorage.setString(LocalStorageKeys.myRole, LocalStorage.myRole);
+        LocalStorage.setString(LocalStorageKeys.status, LocalStorage.status);
+        LocalStorage.setBoolValue(
+          LocalStorageKeys.verified,
+          LocalStorage.verified,
+        );
+        LocalStorage.setString(LocalStorageKeys.myImage, LocalStorage.myImage);
+        LocalStorage.setString(LocalStorageKeys.myName, LocalStorage.myName);
+        LocalStorage.setString(LocalStorageKeys.myEmail, LocalStorage.myEmail);
+        LocalStorage.setString(LocalStorageKeys.role, LocalStorage.role);
+      } else {
+        Utils.errorSnackBar(
+          profileResponse.statusCode.toString(),
+          profileResponse.message,
+        );
+      }
+    } catch (e) {
+      Utils.errorSnackBar(e.toString(), e.toString());
+    }
   }
 }

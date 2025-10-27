@@ -16,6 +16,7 @@ class LocalStorage {
   static String myRole = "";
   static String status = "";
   static bool verified = false;
+  static String role = "";
 
   // Create Local Storage Instance
   static SharedPreferences? preferences;
@@ -40,6 +41,7 @@ class LocalStorage {
     myRole = localStorage.getString(LocalStorageKeys.myRole) ?? "";
     status = localStorage.getString(LocalStorageKeys.status) ?? "";
     verified = localStorage.getBool(LocalStorageKeys.verified) ?? false;
+    role = localStorage.getString(LocalStorageKeys.role) ?? "";
     appLog(userId, source: "Local Storage");
   }
 
@@ -65,6 +67,7 @@ class LocalStorage {
     localStorage.setString(LocalStorageKeys.status, "");
     localStorage.setBool(LocalStorageKeys.verified, false);
     localStorage.setBool(LocalStorageKeys.isLogIn, false);
+    localStorage.setString(LocalStorageKeys.role, "");
   }
 
   // Save Data To SharedPreferences
@@ -93,7 +96,10 @@ class LocalStorage {
     return localStorage.getBool(key) ?? defaultValue;
   }
 
-  static Future<String> getString(String key, {String defaultValue = ""}) async {
+  static Future<String> getString(
+    String key, {
+    String defaultValue = "",
+  }) async {
     final localStorage = await _getStorage();
     return localStorage.getString(key) ?? defaultValue;
   }

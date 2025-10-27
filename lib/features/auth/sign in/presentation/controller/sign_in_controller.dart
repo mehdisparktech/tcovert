@@ -40,9 +40,11 @@ class SignInController extends GetxController {
 
       if (response.statusCode == 200) {
         var data = response.data;
+        LocalStorage.token = data['data']['token'];
         LocalStorage.setBool(LocalStorageKeys.isLogIn, true);
-        LocalStorage.setString(LocalStorageKeys.token, data['data']['token']);
-        await profileApiCall();
+        LocalStorage.setString(LocalStorageKeys.token, LocalStorage.token);
+
+        await profileApiCall(data['data']['token']);
         emailController.clear();
         passwordController.clear();
       } else {
@@ -57,11 +59,11 @@ class SignInController extends GetxController {
   }
 
   /// Profile Api call here
-  Future<void> profileApiCall() async {
+  Future<void> profileApiCall(String token) async {
     try {
       var profileResponse = await ApiService.get(
         ApiEndPoint.profile,
-        header: {"Authorization": "Bearer ${LocalStorage.token}"},
+        header: {"Authorization": "Bearer $token"},
       );
       if (profileResponse.statusCode == 200) {
         var profileData = profileResponse.data;
@@ -72,6 +74,7 @@ class SignInController extends GetxController {
         LocalStorage.myImage = profileData['data']['profileImage'];
         LocalStorage.myName = profileData['data']['name'];
         LocalStorage.myEmail = profileData['data']['email'];
+        LocalStorage.role = profileData['data']['role'];
         LocalStorage.setString(LocalStorageKeys.myRole, LocalStorage.myRole);
         LocalStorage.setString(LocalStorageKeys.status, LocalStorage.status);
         LocalStorage.setBoolValue(
@@ -81,6 +84,7 @@ class SignInController extends GetxController {
         LocalStorage.setString(LocalStorageKeys.myImage, LocalStorage.myImage);
         LocalStorage.setString(LocalStorageKeys.myName, LocalStorage.myName);
         LocalStorage.setString(LocalStorageKeys.myEmail, LocalStorage.myEmail);
+        LocalStorage.setString(LocalStorageKeys.role, LocalStorage.role);
         Get.offAll(() => const HomeScreen());
       } else {
         Utils.errorSnackBar(
