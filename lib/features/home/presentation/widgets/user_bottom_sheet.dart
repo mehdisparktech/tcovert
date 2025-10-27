@@ -245,6 +245,11 @@ class _UserBottomSheetState extends State<UserBottomSheet> {
   }
 
   Widget _buildPromoButton() {
+    final business = controller.businessDetail.value;
+    if (business == null || business.promoCode == null) {
+      return const SizedBox.shrink();
+    }
+
     return Container(
       width: double.infinity,
       decoration: BoxDecoration(
@@ -263,8 +268,17 @@ class _UserBottomSheetState extends State<UserBottomSheet> {
         child: InkWell(
           borderRadius: BorderRadius.circular(12.r),
           onTap: () {
-            // Handle promo code action
-            Get.to(() => PromoCodeScreen());
+            // Navigate to PromoCodeScreen with real-time data
+            Get.to(
+              () => PromoCodeScreen(
+                promoCode: business.promoCode!,
+                businessName: business.name,
+                businessAddress: business.address,
+                businessLogo: business.images.isNotEmpty
+                    ? business.images.first.imageUrl
+                    : null,
+              ),
+            );
           },
           child: Padding(
             padding: EdgeInsets.symmetric(vertical: 10.h),
