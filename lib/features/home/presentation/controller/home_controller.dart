@@ -77,26 +77,6 @@ class HomeController extends GetxController {
         'lat': 23.8140,
         'lng': 90.4200,
       },
-      {
-        'id': '3',
-        'name': 'Concord',
-        'description': 'Last seen 5 min ago',
-        'time': '3 mi - 20 min',
-        'image': AppImages.image3,
-        'isOnline': false,
-        'lat': 23.8050,
-        'lng': 90.4080,
-      },
-      {
-        'id': '4',
-        'name': 'Pleasant Hill',
-        'description': 'Uploaded 8 photos',
-        'time': '2.5 mi - 15 min',
-        'image': AppImages.image4,
-        'isOnline': true,
-        'lat': 23.8180,
-        'lng': 90.4150,
-      },
     ];
 
     // Set the first user as selected by default

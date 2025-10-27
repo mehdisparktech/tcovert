@@ -66,7 +66,7 @@ class HomeScreen extends StatelessWidget {
 
                     // User Bottom Sheet
                     _buildUserBottomSheet(controller, context),
-                    
+
                     // Loading Indicator
                     if (controller.isLoading.value)
                       Container(
