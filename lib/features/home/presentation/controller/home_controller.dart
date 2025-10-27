@@ -92,8 +92,8 @@ class HomeController extends GetxController {
     Get.toNamed(AppRoutes.profile);
   }
 
-  void showUserBottomSheet(BuildContext context, Map<String, dynamic> user) {
-    UserBottomSheet.show(context, user);
+  void showUserBottomSheet(BuildContext context, String businessId) {
+    UserBottomSheet.show(context, businessId);
   }
 
   // Method to select a user when marker is clicked

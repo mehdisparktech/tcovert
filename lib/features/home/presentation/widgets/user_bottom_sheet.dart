@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
+import 'package:tcovert/config/api/api_end_point.dart';
 import 'package:tcovert/features/home/presentation/screen/image_view_screen.dart';
 import 'package:tcovert/features/home/presentation/screen/promo_code_screen.dart';
 import 'package:tcovert/features/home/presentation/widgets/image_selete_bottom_sheet.dart';
@@ -9,13 +10,14 @@ import 'package:tcovert/utils/extensions/extension.dart';
 import '../../../../component/text/common_text.dart';
 import '../../../../component/image/common_image.dart';
 import '../../../../utils/constants/app_images.dart';
+import '../controller/user_bottom_sheet_controller.dart';
 
-class UserBottomSheet extends StatelessWidget {
-  final Map<String, dynamic> user;
+class UserBottomSheet extends StatefulWidget {
+  final String businessId;
 
-  const UserBottomSheet({super.key, required this.user});
+  const UserBottomSheet({super.key, required this.businessId});
 
-  static void show(BuildContext context, Map<String, dynamic> user) {
+  static void show(BuildContext context, String businessId) {
     showModalBottomSheet(
       context: context,
       backgroundColor: Colors.transparent,
@@ -25,44 +27,103 @@ class UserBottomSheet extends StatelessWidget {
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.vertical(top: Radius.circular(24.r)),
       ),
-      builder: (context) => UserBottomSheet(user: user),
+      builder: (context) => UserBottomSheet(businessId: businessId),
     );
   }
 
   @override
+  State<UserBottomSheet> createState() => _UserBottomSheetState();
+}
+
+class _UserBottomSheetState extends State<UserBottomSheet> {
+  late UserBottomSheetController controller;
+
+  @override
+  void initState() {
+    super.initState();
+    controller = Get.put(UserBottomSheetController());
+    // Fetch business detail when bottom sheet opens
+    controller.fetchBusinessDetail(widget.businessId);
+  }
+
+  @override
+  void dispose() {
+    Get.delete<UserBottomSheetController>();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
-    return Container(
-      height: MediaQuery.of(context).size.height * 0.85,
-      decoration: BoxDecoration(
-        color: AppColors.primaryColor,
-        borderRadius: BorderRadius.vertical(top: Radius.circular(24.r)),
-      ),
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        crossAxisAlignment: CrossAxisAlignment.center,
-        children: [
-          SizedBox(height: 20.h),
-          _buildHeader(),
-          Expanded(
-            child: SingleChildScrollView(
-              padding: EdgeInsets.symmetric(horizontal: 20.w),
-              child: Column(
-                children: [
-                  SizedBox(height: 20.h),
-                  _buildPromoCard(),
-                  SizedBox(height: 24.h),
-                  _buildPhotoSection(context),
-                  SizedBox(height: 20.h),
-                ],
-              ),
-            ),
-          ),
-        ],
+    return Obx(
+      () => Container(
+        height: MediaQuery.of(context).size.height * 0.85,
+        decoration: BoxDecoration(
+          color: AppColors.primaryColor,
+          borderRadius: BorderRadius.vertical(top: Radius.circular(24.r)),
+        ),
+        child:
+            controller.isLoading.value
+                ? const Center(
+                  child: CircularProgressIndicator(color: AppColors.secondary),
+                )
+                : controller.errorMessage.value.isNotEmpty
+                ? Center(
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Icon(Icons.error_outline, size: 60.sp, color: Colors.red),
+                      SizedBox(height: 16.h),
+                      CommonText(
+                        text: controller.errorMessage.value,
+                        fontSize: 16,
+                        color: Colors.white,
+                      ),
+                      SizedBox(height: 16.h),
+                      ElevatedButton(
+                        onPressed: () {
+                          controller.fetchBusinessDetail(widget.businessId);
+                        },
+                        child: const CommonText(
+                          text: 'Retry',
+                          fontSize: 14,
+                          color: AppColors.secondary,
+                        ),
+                      ),
+                    ],
+                  ),
+                )
+                : Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    SizedBox(height: 20.h),
+                    _buildHeader(),
+                    Expanded(
+                      child: SingleChildScrollView(
+                        padding: EdgeInsets.symmetric(horizontal: 20.w),
+                        child: Column(
+                          children: [
+                            SizedBox(height: 20.h),
+                            if (controller.businessDetail.value?.promoCode !=
+                                null)
+                              _buildPromoCard(),
+                            SizedBox(height: 24.h),
+                            _buildPhotoSection(context),
+                            SizedBox(height: 20.h),
+                          ],
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
       ),
     );
   }
 
   Widget _buildHeader() {
+    final business = controller.businessDetail.value;
+    if (business == null) return const SizedBox.shrink();
+
     return Padding(
       padding: EdgeInsets.symmetric(vertical: 4.h),
       child: Row(
@@ -75,7 +136,7 @@ class UserBottomSheet extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 CommonText(
-                  text: "Starbucks",
+                  text: business.name,
                   fontSize: 28,
                   fontWeight: FontWeight.w500,
                   color: Colors.white,
@@ -96,7 +157,7 @@ class UserBottomSheet extends StatelessWidget {
                     SizedBox(width: 6.w),
                     Expanded(
                       child: CommonText(
-                        text: "756 031 Ines Riverway, Rhiannonchester",
+                        text: business.address,
                         fontSize: 14,
                         fontWeight: FontWeight.w400,
                         color: Color(0xFF9E9E9E),
@@ -125,6 +186,12 @@ class UserBottomSheet extends StatelessWidget {
   // }
 
   Widget _buildPromoCard() {
+    final business = controller.businessDetail.value;
+    if (business == null) return const SizedBox.shrink();
+
+    final promo = business.promoCode;
+    final hasPromo = promo != null;
+
     return Container(
       width: double.infinity,
       decoration: BoxDecoration(
@@ -144,7 +211,7 @@ class UserBottomSheet extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             CommonText(
-              text: "Buy 1 Get 1 Free!",
+              text: hasPromo ? promo.title : "No Active Promo",
               fontSize: 18.sp,
               fontWeight: FontWeight.w600,
               color: Colors.white,
@@ -152,14 +219,25 @@ class UserBottomSheet extends StatelessWidget {
             ),
             SizedBox(height: 8.h),
             CommonText(
-              text: "Don't miss out on this amazing offer!",
+              text:
+                  hasPromo ? promo.description : "Check back later for offers!",
               fontSize: 12.sp,
               fontWeight: FontWeight.w400,
               color: Colors.white.withOpacity(0.9),
               textAlign: TextAlign.left,
             ),
+            if (hasPromo) ...[
+              SizedBox(height: 12.h),
+              CommonText(
+                text: "Discount: ${promo.discount}%",
+                fontSize: 14.sp,
+                fontWeight: FontWeight.w600,
+                color: Colors.white,
+                textAlign: TextAlign.left,
+              ),
+            ],
             SizedBox(height: 20.h),
-            _buildPromoButton(),
+            if (hasPromo) _buildPromoButton(),
           ],
         ),
       ),
@@ -258,76 +336,92 @@ class UserBottomSheet extends StatelessWidget {
   }
 
   Widget _buildPhotoGrid(BuildContext context) {
-    final List<PhotoModel> photos = [
-      PhotoModel(AppImages.image1, 'Risa Tachibana', '1 mo ago'),
-      PhotoModel(AppImages.image2, 'Rina Ishihara', '1 mo ago'),
-      PhotoModel(AppImages.image2, 'Yua Mikami', '1 mo ago'),
-      PhotoModel(AppImages.image2, 'Ichikawa Mas', '1 mo ago'),
-      PhotoModel(AppImages.image2, 'Nozomi Sasaki', '1 mo ago'),
-      PhotoModel(AppImages.image2, 'Shina Sora', '1 mo ago'),
-      PhotoModel(AppImages.image2, 'Saori Hara', '1 mo ago'),
-    ];
+    final business = controller.businessDetail.value;
+    if (business == null || business.images.isEmpty) {
+      return Center(
+        child: CommonText(
+          text: 'No photos available',
+          fontSize: 14,
+          color: Colors.grey,
+        ),
+      );
+    }
+
+    final images = business.images;
 
     return Column(
       children: [
-        // First row - 2 large items
-        Row(
-          children: [
-            Expanded(
-              child: _buildPhotoCard(
-                photos[0],
-                isLarge: true,
-                context: context,
+        // First row - 2 large items (if available)
+        if (images.length >= 2)
+          Row(
+            children: [
+              Expanded(
+                child: _buildPhotoCard(
+                  images[0],
+                  isLarge: true,
+                  context: context,
+                ),
               ),
-            ),
-            SizedBox(width: 8.w),
-            Expanded(
-              child: _buildPhotoCard(
-                photos[1],
-                isLarge: true,
-                context: context,
+              SizedBox(width: 8.w),
+              Expanded(
+                child: _buildPhotoCard(
+                  images[1],
+                  isLarge: true,
+                  context: context,
+                ),
               ),
-            ),
-          ],
-        ),
-        SizedBox(height: 8.h),
+            ],
+          ),
+        if (images.length >= 2) SizedBox(height: 8.h),
 
         // Remaining items in 3-column grid
-        GridView.builder(
-          shrinkWrap: true,
-          physics: const NeverScrollableScrollPhysics(),
-          gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-            crossAxisCount: 3,
-            crossAxisSpacing: 8.w,
-            mainAxisSpacing: 8.h,
-            childAspectRatio: 1.0,
+        if (images.length > 2)
+          GridView.builder(
+            shrinkWrap: true,
+            physics: const NeverScrollableScrollPhysics(),
+            gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+              crossAxisCount: 3,
+              crossAxisSpacing: 8.w,
+              mainAxisSpacing: 8.h,
+              childAspectRatio: 1.0,
+            ),
+            itemCount: images.length - 2,
+            itemBuilder: (context, index) {
+              return _buildPhotoCard(images[index + 2], context: context);
+            },
           ),
-          itemCount: photos.length - 2,
-          itemBuilder: (context, index) {
-            return _buildPhotoCard(photos[index + 2], context: context);
-          },
-        ),
+        // If only 1 image
+        if (images.length == 1)
+          _buildPhotoCard(images[0], isLarge: true, context: context),
       ],
     );
   }
 
   Widget _buildPhotoCard(
-    PhotoModel photo, {
+    dynamic image, {
     bool isLarge = false,
     required BuildContext context,
   }) {
+    final business = controller.businessDetail.value;
+    final imageUrl = '${ApiEndPoint.imageUrl}${image.imageUrl}';
+    final uploader = image.uploadedBy;
+    final uploaderName = uploader?.name ?? 'Anonymous';
+    final uploaderImage =
+        uploader?.profileImage != null
+            ? '${ApiEndPoint.imageUrl}${uploader!.profileImage}'
+            : AppImages.profile;
+    final timeAgo = controller.getTimeAgo(image.uploadedAt);
+
     return GestureDetector(
       onTap: () {
-        // Handle photo tap action
-        // Example usage in another screen
         Navigator.push(
           context,
           MaterialPageRoute(
             builder:
                 (context) => ImageViewScreen(
-                  imageUrl: AppImages.image2,
-                  title: 'Starbucks Coffee',
-                  subtitle: 'Enjoy your favorite coffee',
+                  imageUrl: imageUrl,
+                  title: business?.name ?? 'Business',
+                  subtitle: business?.address ?? '',
                 ),
           ),
         );
@@ -350,7 +444,7 @@ class UserBottomSheet extends StatelessWidget {
             ClipRRect(
               borderRadius: BorderRadius.circular(12.r),
               child: CommonImage(
-                imageSrc: photo.imagePath,
+                imageSrc: imageUrl,
                 width: double.infinity,
                 height: double.infinity,
                 fill: BoxFit.cover,
@@ -384,7 +478,12 @@ class UserBottomSheet extends StatelessWidget {
                     radius: isLarge ? 12.r : 8.r,
                     backgroundColor: Colors.white.withOpacity(0.9),
                     child: ClipOval(
-                      child: CommonImage(imageSrc: AppImages.profile),
+                      child: CommonImage(
+                        imageSrc: uploaderImage,
+                        width: isLarge ? 24 : 16,
+                        height: isLarge ? 24 : 16,
+                        fill: BoxFit.cover,
+                      ),
                     ),
                   ),
                   SizedBox(width: 6.w),
@@ -394,7 +493,7 @@ class UserBottomSheet extends StatelessWidget {
                       mainAxisSize: MainAxisSize.min,
                       children: [
                         CommonText(
-                          text: photo.userName,
+                          text: uploaderName,
                           fontSize: isLarge ? 12 : 10,
                           fontWeight: FontWeight.w600,
                           color: Colors.white,
@@ -402,7 +501,7 @@ class UserBottomSheet extends StatelessWidget {
                           maxLines: 1,
                         ),
                         CommonText(
-                          text: photo.timeAgo,
+                          text: timeAgo,
                           fontSize: isLarge ? 10 : 8,
                           fontWeight: FontWeight.w400,
                           color: Colors.white.withOpacity(0.8),
@@ -419,12 +518,4 @@ class UserBottomSheet extends StatelessWidget {
       ),
     );
   }
-}
-
-class PhotoModel {
-  final String imagePath;
-  final String userName;
-  final String timeAgo;
-
-  PhotoModel(this.imagePath, this.userName, this.timeAgo);
 }

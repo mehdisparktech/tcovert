@@ -165,7 +165,7 @@ class HomeScreen extends StatelessWidget {
       left: 20.w,
       right: 20.w,
       child: GestureDetector(
-        onTap: () => controller.showUserBottomSheet(Get.context!, selectedUser),
+        onTap: () => controller.showUserBottomSheet(Get.context!, selectedUser['id']),
         child: Container(
           padding: EdgeInsets.all(16.w),
           decoration: BoxDecoration(
