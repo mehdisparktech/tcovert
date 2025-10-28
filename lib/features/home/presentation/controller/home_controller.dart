@@ -3,6 +3,7 @@ import 'package:get/get.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:permission_handler/permission_handler.dart';
+import 'package:tcovert/services/location/location_search_service.dart';
 import 'package:tcovert/features/home/presentation/widgets/business_image_view_bottom_sheet.dart';
 import 'package:tcovert/features/home/presentation/widgets/business_information_bottom_sheet.dart';
 import 'package:tcovert/services/api/api_service.dart';
@@ -25,6 +26,13 @@ class HomeController extends GetxController {
   var selectedUser = Rxn<Map<String, dynamic>>();
   var selectedBusiness = Rxn<BusinessModel>();
   var role = LocalStorage.role;
+
+  // Location search variables
+  final TextEditingController searchController = TextEditingController();
+  var searchSuggestions = <Map<String, dynamic>>[].obs;
+  var isSearching = false.obs;
+  var showSuggestions = false.obs;
+  var hasSearchText = false.obs;
 
   // Google Maps variables
   GoogleMapController? mapController;
@@ -60,6 +68,7 @@ class HomeController extends GetxController {
   @override
   void onClose() {
     mapController?.dispose();
+    searchController.dispose();
     super.onClose();
   }
 
@@ -456,6 +465,84 @@ class HomeController extends GetxController {
     }
   }
 
+  // Location search methods
+  Future<void> searchLocation(String query) async {
+    hasSearchText.value = query.isNotEmpty;
+
+    if (query.isEmpty) {
+      searchSuggestions.clear();
+      showSuggestions.value = false;
+      return;
+    }
+
+    try {
+      isSearching.value = true;
+      showSuggestions.value = true;
+
+      final results = await LocationSearchService.searchPlaces(query);
+      searchSuggestions.value = results;
+    } catch (e) {
+      print('Error searching location: $e');
+      searchSuggestions.clear();
+    } finally {
+      isSearching.value = false;
+    }
+  }
+
+  Future<void> selectLocation(Map<String, dynamic> place) async {
+    try {
+      final lat = place['lat'];
+      final lng = place['lng'];
+      final description = place['description'];
+
+      // Update search field
+      searchController.text = description;
+      showSuggestions.value = false;
+
+      // Move camera to selected location
+      mapController?.animateCamera(
+        CameraUpdate.newLatLngZoom(LatLng(lat, lng), 15.0),
+      );
+
+      // Add a marker for the searched location
+      final searchMarker = Marker(
+        markerId: const MarkerId('searched_location'),
+        position: LatLng(lat, lng),
+        infoWindow: InfoWindow(title: place['name'], snippet: description),
+        icon: BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueBlue),
+      );
+
+      // Add to markers
+      markers.removeWhere((m) => m.markerId.value == 'searched_location');
+      markers.add(searchMarker);
+
+      Get.snackbar(
+        "Location Found",
+        description,
+        backgroundColor: AppColors.secondary,
+        colorText: AppColors.white,
+        duration: const Duration(seconds: 2),
+      );
+    } catch (e) {
+      print('Error selecting location: $e');
+      Get.snackbar(
+        "Error",
+        "Failed to navigate to location",
+        backgroundColor: AppColors.red,
+        colorText: AppColors.white,
+      );
+    }
+  }
+
+  void clearSearch() {
+    searchController.clear();
+    searchSuggestions.clear();
+    showSuggestions.value = false;
+    hasSearchText.value = false;
+    // Remove search marker
+    markers.removeWhere((m) => m.markerId.value == 'searched_location');
+  }
+
   Future<void> gotoBusinessInformationBottomSheet(BuildContext context) async {
     try {
       final response = await ApiService.get(
@@ -479,6 +566,7 @@ class HomeController extends GetxController {
           // Navigate to BusinessImageViewBottomSheet with data
           BusinessImageViewBottomSheet.show(
             context,
+            businessId: businessData['_id'] ?? 'Unknown',
             businessName: businessData['name'] ?? 'Unknown',
             businessAddress: businessData['address'] ?? 'Unknown',
             gallery: businessData['gallery'] ?? [],

@@ -42,9 +42,9 @@ class HomeScreen extends StatelessWidget {
                       onMapCreated: controller.onMapCreated,
                       markers: controller.markers,
                       myLocationEnabled: true,
-                      myLocationButtonEnabled: false,
-                      zoomControlsEnabled: false,
-                      mapToolbarEnabled: false,
+                      myLocationButtonEnabled: true,
+                      zoomControlsEnabled: true,
+                      mapToolbarEnabled: true,
                       mapType: MapType.normal,
                       compassEnabled: true,
                       rotateGesturesEnabled: true,
@@ -95,60 +95,152 @@ class HomeScreen extends StatelessWidget {
         right: 20.w,
         top: MediaQuery.of(context).padding.top + 8.h,
       ),
-      child: Row(
+      child: Column(
         children: [
-          // Search Bar
-          Expanded(
-            child: Container(
-              height: 45.h,
-              decoration: BoxDecoration(
-                color: AppColors.white,
-                borderRadius: BorderRadius.circular(25.r),
-                boxShadow: [
-                  BoxShadow(
-                    color: AppColors.black.withOpacity(0.1),
-                    blurRadius: 10,
-                    offset: const Offset(0, 2),
+          Row(
+            children: [
+              // Search Bar
+              Expanded(
+                child: Container(
+                  height: 45.h,
+                  decoration: BoxDecoration(
+                    color: AppColors.white,
+                    borderRadius: BorderRadius.circular(25.r),
+                    boxShadow: [
+                      BoxShadow(
+                        color: AppColors.black.withOpacity(0.1),
+                        blurRadius: 10,
+                        offset: const Offset(0, 2),
+                      ),
+                    ],
                   ),
-                ],
-              ),
-              child: Row(
-                children: [
-                  SizedBox(width: 15.w),
-                  Icon(Icons.search, color: AppColors.grey, size: 20.sp),
-                  SizedBox(width: 10.w),
-                  const Expanded(
-                    child: CommonText(
-                      text: "Nearby Friends",
-                      fontSize: 14,
-                      fontWeight: FontWeight.w400,
-                      color: AppColors.grey,
-                      textAlign: TextAlign.left,
-                    ),
-                  ),
-                ],
-              ),
-            ),
-          ),
-          SizedBox(width: 15.w),
-          // Profile Avatar
-          GestureDetector(
-            onTap: controller.navigateToProfile,
-            child: CircleAvatar(
-              radius: 22.r,
-              backgroundColor: AppColors.white,
-              child: CircleAvatar(
-                radius: 20.r,
-                backgroundColor: AppColors.grey,
-                child: ClipOval(
-                  child: CommonImage(
-                    imageSrc: ApiEndPoint.imageUrl + LocalStorage.myImage,
-                    height: 40,
-                    width: 40,
+                  child: Row(
+                    children: [
+                      SizedBox(width: 15.w),
+                      Icon(Icons.search, color: AppColors.grey, size: 20.sp),
+                      SizedBox(width: 10.w),
+                      Expanded(
+                        child: TextField(
+                          controller: controller.searchController,
+                          onChanged: (value) {
+                            controller.searchLocation(value);
+                          },
+                          style: TextStyle(
+                            fontSize: 14.sp,
+                            color: AppColors.black,
+                          ),
+                          decoration: InputDecoration(
+                            hintText: "Search location...",
+                            hintStyle: TextStyle(
+                              fontSize: 14.sp,
+                              fontWeight: FontWeight.w400,
+                              color: AppColors.grey,
+                            ),
+                            border: InputBorder.none,
+                            contentPadding: EdgeInsets.zero,
+                          ),
+                        ),
+                      ),
+                      Obx(
+                        () =>
+                            controller.hasSearchText.value
+                                ? IconButton(
+                                  icon: Icon(
+                                    Icons.clear,
+                                    color: AppColors.grey,
+                                    size: 20.sp,
+                                  ),
+                                  onPressed: controller.clearSearch,
+                                )
+                                : const SizedBox.shrink(),
+                      ),
+                    ],
                   ),
                 ),
               ),
-            ),
+              SizedBox(width: 15.w),
+              // Profile Avatar
+              GestureDetector(
+                onTap: controller.navigateToProfile,
+                child: CircleAvatar(
+                  radius: 22.r,
+                  backgroundColor: AppColors.white,
+                  child: CircleAvatar(
+                    radius: 20.r,
+                    backgroundColor: AppColors.grey,
+                    child: ClipOval(
+                      child: CommonImage(
+                        imageSrc: ApiEndPoint.imageUrl + LocalStorage.myImage,
+                        height: 40,
+                        width: 40,
+                      ),
+                    ),
+                  ),
+                ),
+              ),
+            ],
+          ),
+          // Search Suggestions Dropdown
+          Obx(
+            () =>
+                controller.showSuggestions.value &&
+                        controller.searchSuggestions.isNotEmpty
+                    ? Container(
+                      margin: EdgeInsets.only(top: 8.h),
+                      decoration: BoxDecoration(
+                        color: AppColors.white,
+                        borderRadius: BorderRadius.circular(12.r),
+                        boxShadow: [
+                          BoxShadow(
+                            color: AppColors.black.withOpacity(0.1),
+                            blurRadius: 10,
+                            offset: const Offset(0, 2),
+                          ),
+                        ],
+                      ),
+                      constraints: BoxConstraints(maxHeight: 200.h),
+                      child: ListView.separated(
+                        shrinkWrap: true,
+                        padding: EdgeInsets.symmetric(vertical: 8.h),
+                        itemCount: controller.searchSuggestions.length,
+                        separatorBuilder:
+                            (context, index) => Divider(
+                              height: 1,
+                              color: AppColors.grey.withOpacity(0.2),
+                            ),
+                        itemBuilder: (context, index) {
+                          final suggestion =
+                              controller.searchSuggestions[index];
+                          return ListTile(
+                            leading: Icon(
+                              Icons.location_on,
+                              color: AppColors.secondary,
+                              size: 20.sp,
+                            ),
+                            title: CommonText(
+                              text: suggestion['name'] ?? '',
+                              fontSize: 14,
+                              fontWeight: FontWeight.w500,
+                              color: AppColors.black,
+                              textAlign: TextAlign.left,
+                              maxLines: 1,
+                            ),
+                            subtitle: CommonText(
+                              text: suggestion['description'] ?? '',
+                              fontSize: 12,
+                              fontWeight: FontWeight.w400,
+                              color: AppColors.grey,
+                              textAlign: TextAlign.left,
+                              maxLines: 2,
+                            ),
+                            onTap: () {
+                              controller.selectLocation(suggestion);
+                            },
+                          );
+                        },
+                      ),
+                    )
+                    : const SizedBox.shrink(),
           ),
         ],
       ),

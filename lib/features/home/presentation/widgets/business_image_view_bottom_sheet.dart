@@ -2,14 +2,15 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:tcovert/component/button/common_button.dart';
 import 'package:tcovert/component/image/common_image.dart';
+import 'package:tcovert/features/home/presentation/widgets/image_selete_bottom_sheet.dart';
 import 'package:tcovert/utils/constants/app_colors.dart';
 import 'package:tcovert/utils/constants/app_images.dart';
-import 'package:tcovert/utils/helpers/other_helper.dart';
 import '../../../../component/text/common_text.dart';
 import '../../../../config/api/api_end_point.dart';
 import 'package:timeago/timeago.dart' as timeago;
 
 class BusinessImageViewBottomSheet extends StatefulWidget {
+  final String businessId;
   final String businessName;
   final String businessAddress;
   final List<dynamic> gallery;
@@ -17,6 +18,7 @@ class BusinessImageViewBottomSheet extends StatefulWidget {
 
   const BusinessImageViewBottomSheet({
     super.key,
+    required this.businessId,
     required this.businessName,
     required this.businessAddress,
     required this.gallery,
@@ -25,6 +27,7 @@ class BusinessImageViewBottomSheet extends StatefulWidget {
 
   static void show(
     BuildContext context, {
+    required String businessId,
     required String businessName,
     required String businessAddress,
     required List<dynamic> gallery,
@@ -41,6 +44,7 @@ class BusinessImageViewBottomSheet extends StatefulWidget {
       ),
       builder:
           (context) => BusinessImageViewBottomSheet(
+            businessId: businessId,
             businessName: businessName,
             businessAddress: businessAddress,
             gallery: gallery,
@@ -215,7 +219,14 @@ class _ImageBottomSheetState extends State<BusinessImageViewBottomSheet> {
           borderRadius: BorderRadius.circular(12.r),
           onTap: () {
             // Handle add photo action
-            OtherHelper.openGallery();
+            Navigator.pop(context);
+            // Then show the image select bottom sheet
+            ImageSeleteBottomSheet.show(
+              context,
+              businessId: widget.businessId,
+              businessName: widget.businessName,
+              businessAddress: widget.businessAddress,
+            );
           },
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
