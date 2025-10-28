@@ -100,22 +100,22 @@ class ForgetPasswordController extends GetxController {
   /// Verify OTP Api Call
 
   Future<void> verifyOtpRepo() async {
-    Get.toNamed(AppRoutes.createPassword);
-    return;
     isLoadingVerify = true;
     update();
     Map<String, dynamic> body = {
       "email": emailController.text,
       "oneTimeCode": int.parse(otpController.text),
     };
-    var response = await ApiService.post(ApiEndPoint.verifyOtp, body: body);
+    var response = await ApiService.post(
+      ApiEndPoint.verifyResetOtp,
+      body: body,
+    );
 
     if (response.statusCode == 200) {
-      var data = response.data;
-      forgetPasswordToken = data['data']['token'];
+      Get.snackbar("Success", response.message);
       Get.toNamed(AppRoutes.createPassword);
     } else {
-      Get.snackbar(response.statusCode.toString(), response.message);
+      Get.snackbar("Error", response.message);
     }
 
     isLoadingVerify = false;
@@ -125,23 +125,15 @@ class ForgetPasswordController extends GetxController {
   /// Create New Password Api Call
 
   Future<void> resetPasswordRepo() async {
-    Get.offAllNamed(AppRoutes.signIn);
-    return;
     isLoadingReset = true;
     update();
-    Map<String, String> header = {
-      "Forget-password": "Forget-password $forgetPasswordToken",
-    };
 
     Map<String, String> body = {
-      "newPassword": emailController.text,
-      "confirmPassword": passwordController.text,
+      "otp": otpController.text,
+      "newPassword": passwordController.text,
+      "confirmPassword": confirmPasswordController.text,
     };
-    var response = await ApiService.post(
-      ApiEndPoint.resetPassword,
-      body: body,
-      header: header,
-    );
+    var response = await ApiService.post(ApiEndPoint.resetPassword, body: body);
 
     if (response.statusCode == 200) {
       Utils.successSnackBar(response.message, response.message);

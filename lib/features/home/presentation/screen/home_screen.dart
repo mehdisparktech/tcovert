@@ -42,9 +42,9 @@ class HomeScreen extends StatelessWidget {
                       onMapCreated: controller.onMapCreated,
                       markers: controller.markers,
                       myLocationEnabled: true,
-                      myLocationButtonEnabled: true,
+                      myLocationButtonEnabled: false,
                       zoomControlsEnabled: true,
-                      mapToolbarEnabled: true,
+                      mapToolbarEnabled: false,
                       mapType: MapType.normal,
                       compassEnabled: true,
                       rotateGesturesEnabled: true,
@@ -56,7 +56,12 @@ class HomeScreen extends StatelessWidget {
                       buildingsEnabled: true,
                       liteModeEnabled: false,
                     ),
-                    _buildHeader(controller, context),
+                    Positioned(
+                      top: 0,
+                      left: 0,
+                      right: 0,
+                      child: _buildHeader(controller, context),
+                    ),
 
                     // Bottom User Card
                     _buildBottomUserCard(controller, context),

@@ -17,6 +17,10 @@ import '../../data/models/business_model.dart';
 import '../../data/services/business_service.dart';
 import '../../../../config/api/api_end_point.dart';
 import '../widgets/user_bottom_sheet.dart';
+import 'dart:ui' as ui;
+import 'dart:typed_data';
+import 'package:flutter/services.dart';
+import 'package:http/http.dart' as http;
 
 class HomeController extends GetxController {
   // Observable variables
@@ -73,7 +77,7 @@ class HomeController extends GetxController {
   }
 
   // Initialize sample user data (would normally come from API)
-  void _initializeSampleUsers() {
+  Future<void> _initializeSampleUsers() async {
     nearbyUsers.value = [
       {
         'id': '1',
@@ -102,7 +106,7 @@ class HomeController extends GetxController {
       selectedUser.value = nearbyUsers[0];
     }
 
-    _createMarkers();
+    await _createMarkers();
   }
 
   // Navigation methods
@@ -238,12 +242,188 @@ class HomeController extends GetxController {
     // Location will be fetched after permission is granted
   }
 
+  // Create custom marker with image on top of pin
+  Future<BitmapDescriptor> _createCustomMarkerWithImage(String imageUrl) async {
+    try {
+      const double imageSize = 100.0;
+      const double markerHeight = 200.0;
+      const double markerWidth = 100.0;
+
+      final ui.PictureRecorder pictureRecorder = ui.PictureRecorder();
+      final Canvas canvas = Canvas(pictureRecorder);
+
+      // Load the image
+      ui.Image? userImage;
+
+      if (imageUrl.startsWith('http')) {
+        try {
+          final response = await http.get(Uri.parse(imageUrl));
+          if (response.statusCode == 200) {
+            final Uint8List bytes = response.bodyBytes;
+            final ui.Codec codec = await ui.instantiateImageCodec(
+              bytes,
+              targetWidth: imageSize.toInt(),
+              targetHeight: imageSize.toInt(),
+            );
+            final ui.FrameInfo frameInfo = await codec.getNextFrame();
+            userImage = frameInfo.image;
+          }
+        } catch (e) {
+          print('Error loading network image: $e');
+        }
+      } else {
+        try {
+          final ByteData data = await rootBundle.load(imageUrl);
+          final Uint8List bytes = data.buffer.asUint8List();
+          final ui.Codec codec = await ui.instantiateImageCodec(
+            bytes,
+            targetWidth: imageSize.toInt(),
+            targetHeight: imageSize.toInt(),
+          );
+          final ui.FrameInfo frameInfo = await codec.getNextFrame();
+          userImage = frameInfo.image;
+        } catch (e) {
+          print('Error loading asset image: $e');
+        }
+      }
+
+      // Draw white background with border for image
+      final Paint bgPaint =
+          Paint()
+            ..color = Colors.white
+            ..style = PaintingStyle.fill;
+
+      final Paint borderPaint =
+          Paint()
+            ..color = AppColors.secondary
+            ..style = PaintingStyle.stroke
+            ..strokeWidth = 3.0;
+
+      const double imageX = (markerWidth - imageSize) / 2;
+      const double imageY = 0;
+
+      // Draw rounded rectangle background
+      final RRect imageRect = RRect.fromRectAndRadius(
+        Rect.fromLTWH(imageX, imageY, imageSize, imageSize),
+        const Radius.circular(8),
+      );
+
+      canvas.drawRRect(imageRect, bgPaint);
+
+      // Draw the user image if loaded
+      if (userImage != null) {
+        final Rect srcRect = Rect.fromLTWH(
+          0,
+          0,
+          userImage.width.toDouble(),
+          userImage.height.toDouble(),
+        );
+        final Rect dstRect = Rect.fromLTWH(
+          imageX + 3,
+          imageY + 3,
+          imageSize - 6,
+          imageSize - 6,
+        );
+
+        // Clip to rounded rectangle
+        canvas.save();
+        canvas.clipRRect(
+          RRect.fromRectAndRadius(dstRect, const Radius.circular(6)),
+        );
+        canvas.drawImageRect(userImage, srcRect, dstRect, Paint());
+        canvas.restore();
+      }
+
+      // Draw border
+      canvas.drawRRect(imageRect, borderPaint);
+
+      // Draw location pin icon below the image
+      const double pinTop = imageSize;
+      const double pinSize = 80.0;
+
+      final Paint pinPaint =
+          Paint()
+            ..color = AppColors.secondary
+            ..style = PaintingStyle.fill;
+
+      final Paint pinBorderPaint =
+          Paint()
+            ..color = Colors.white
+            ..style = PaintingStyle.stroke
+            ..strokeWidth = 2.0;
+
+      // Draw location pin shape (teardrop/pin shape)
+      final Path pinPath = Path();
+
+      // Top circle part of the pin
+      final double circleRadius = pinSize * 0.35;
+      final double circleCenterX = markerWidth / 2;
+      final double circleCenterY = pinTop + circleRadius;
+
+      pinPath.addOval(
+        Rect.fromCircle(
+          center: Offset(circleCenterX, circleCenterY),
+          radius: circleRadius,
+        ),
+      );
+
+      // Bottom triangle/point of the pin
+      final double pointTop = circleCenterY + circleRadius * 0.7;
+      final double pointBottom = pinTop + pinSize;
+      final double pointWidth = circleRadius * 0.8;
+
+      pinPath.moveTo(circleCenterX - pointWidth, pointTop);
+      pinPath.lineTo(circleCenterX, pointBottom);
+      pinPath.lineTo(circleCenterX + pointWidth, pointTop);
+      pinPath.close();
+
+      // Draw pin with shadow effect
+      canvas.save();
+      canvas.drawShadow(pinPath, Colors.black.withOpacity(0.3), 3.0, false);
+      canvas.restore();
+
+      canvas.drawPath(pinPath, pinPaint);
+      canvas.drawPath(pinPath, pinBorderPaint);
+
+      // Draw inner circle (white dot in the middle)
+      final Paint innerCirclePaint =
+          Paint()
+            ..color = Colors.white
+            ..style = PaintingStyle.fill;
+
+      canvas.drawCircle(
+        Offset(circleCenterX, circleCenterY),
+        circleRadius * 0.4,
+        innerCirclePaint,
+      );
+
+      // Convert to image
+      final ui.Image markerImage = await pictureRecorder.endRecording().toImage(
+        markerWidth.toInt(),
+        markerHeight.toInt(),
+      );
+      final ByteData? byteData = await markerImage.toByteData(
+        format: ui.ImageByteFormat.png,
+      );
+      final Uint8List imageData = byteData!.buffer.asUint8List();
+
+      return BitmapDescriptor.fromBytes(imageData);
+    } catch (e) {
+      print('Error creating custom marker: $e');
+      return BitmapDescriptor.defaultMarker;
+    }
+  }
+
   // Create markers for nearby users
-  void _createMarkers() {
+  Future<void> _createMarkers() async {
     markers.clear();
 
     for (var i = 0; i < nearbyUsers.length; i++) {
       final user = nearbyUsers[i];
+
+      // Create custom marker with image
+      final customIcon = await _createCustomMarkerWithImage(user['image']);
+
       final marker = Marker(
         markerId: MarkerId(user['id']),
         position: LatLng(user['lat'], user['lng']),
@@ -252,9 +432,8 @@ class HomeController extends GetxController {
           title: user['name'],
           snippet: user['description'],
         ),
-        icon: BitmapDescriptor.defaultMarkerWithHue(
-          i % 2 == 0 ? BitmapDescriptor.hueRed : BitmapDescriptor.hueAzure,
-        ),
+        icon: customIcon,
+        anchor: const Offset(0.5, 1.0), // Anchor at bottom center of marker
       );
       markers.add(marker);
     }
@@ -307,7 +486,7 @@ class HomeController extends GetxController {
         }
 
         // Update markers
-        _createMarkers();
+        await _createMarkers();
 
         Get.snackbar(
           "Success",

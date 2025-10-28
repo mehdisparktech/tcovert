@@ -71,6 +71,7 @@ class _VerifyScreenState extends State<VerifyScreen> {
                         fontSize: 18,
 
                         bottom: 60,
+                        maxLines: 2,
                       ),
                     ),
 
@@ -79,13 +80,6 @@ class _VerifyScreenState extends State<VerifyScreen> {
                       flex: 0,
                       child: PinCodeTextField(
                         controller: controller.otpController,
-                        validator: (value) {
-                          if (value != null && value.length == 6) {
-                            return null;
-                          } else {
-                            return AppString.otpIsInValid;
-                          }
-                        },
                         autoDisposeControllers: false,
                         cursorColor: AppColors.white,
                         textStyle: TextStyle(color: AppColors.white),
@@ -136,9 +130,7 @@ class _VerifyScreenState extends State<VerifyScreen> {
                       titleText: AppString.verify,
                       isLoading: controller.isLoadingVerify,
                       onTap: () {
-                        if (formKey.currentState!.validate()) {
-                          controller.verifyOtpRepo();
-                        }
+                        controller.verifyOtpRepo();
                       },
                     ),
                   ],

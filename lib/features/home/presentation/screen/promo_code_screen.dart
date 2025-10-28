@@ -56,17 +56,15 @@ class PromoCodeScreen extends StatelessWidget {
                     Row(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                        CommonImage(imageSrc: AppImages.location2, size: 24),
+                        CommonImage(imageSrc: AppImages.location2, size: 22),
                         SizedBox(width: 4.w),
-                        Expanded(
-                          child: CommonText(
-                            text: businessAddress,
-                            fontSize: 14,
-                            fontWeight: FontWeight.w500,
-                            color: AppColors.white.withOpacity(0.9),
-                            maxLines: 2,
-                            textAlign: TextAlign.center,
-                          ),
+                        CommonText(
+                          text: businessAddress,
+                          fontSize: 14,
+                          fontWeight: FontWeight.w500,
+                          color: AppColors.white.withOpacity(0.9),
+                          maxLines: 2,
+                          textAlign: TextAlign.center,
                         ),
                       ],
                     ),
