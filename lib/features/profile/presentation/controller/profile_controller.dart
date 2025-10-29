@@ -45,8 +45,6 @@ class ProfileController extends GetxController {
   /// update profile function here
   Future<void> editProfileRepo(GlobalKey<FormState> formKey) async {
     if (!formKey.currentState!.validate()) return;
-
-    if (!LocalStorage.isLogIn) return;
     isLoading = true;
     update();
 

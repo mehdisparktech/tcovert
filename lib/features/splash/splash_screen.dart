@@ -17,7 +17,7 @@ class _SplashScreenState extends State<SplashScreen> {
   @override
   void initState() {
     Future.delayed(const Duration(seconds: 3), () {
-      if (LocalStorage.isLogIn) {
+      if (LocalStorage.isLogIn || LocalStorage.token.isNotEmpty) {
         Get.offAllNamed(AppRoutes.home);
       } else {
         Get.offAllNamed(AppRoutes.signIn);

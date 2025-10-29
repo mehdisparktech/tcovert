@@ -96,7 +96,7 @@ class ImageBottomSheet extends StatelessWidget {
                 try {
                   // Upload images to business API
                   final response = await ApiService.multipartMultipleImages(
-                    "business/68e5fd6078e258f0611e0344",
+                    "business/$businessId",
                     method: "PATCH",
                     imageName: "image",
                     imagePaths: selectedImagePaths,

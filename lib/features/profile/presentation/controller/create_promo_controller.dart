@@ -90,33 +90,28 @@ class CreatePromoController extends GetxController {
 
     // Validate dates
     if (startDate.value == null || endDate.value == null) {
-      Utils.errorSnackBar(
-        "Error",
-        "Please select both start and end dates",
-      );
+      Utils.errorSnackBar("Error", "Please select both start and end dates");
       return;
     }
 
     // Parse discount
     final discount = int.tryParse(discountController.text.trim());
     if (discount == null) {
-      Utils.errorSnackBar(
-        "Error",
-        "Please enter a valid discount percentage",
-      );
+      Utils.errorSnackBar("Error", "Please enter a valid discount percentage");
       return;
     }
 
     // Convert dates to ISO 8601 format
     final startDateISO = startDate.value!.toUtc().toIso8601String();
-    final endDateISO = DateTime(
-      endDate.value!.year,
-      endDate.value!.month,
-      endDate.value!.day,
-      23,
-      59,
-      59,
-    ).toUtc().toIso8601String();
+    final endDateISO =
+        DateTime(
+          endDate.value!.year,
+          endDate.value!.month,
+          endDate.value!.day,
+          23,
+          59,
+          59,
+        ).toUtc().toIso8601String();
 
     // Call API
     final success = await createPromo(
@@ -167,10 +162,10 @@ class CreatePromoController extends GetxController {
 
       if (response.isSuccess) {
         promoResponseModel = PromoResponseModel.fromJson(response.data);
-        Utils.successSnackBar('Success', response.message);
+        Get.snackbar('Success', response.message);
         return true;
       } else {
-        Utils.errorSnackBar('Error', response.message);
+        Get.snackbar('Error', response.message);
         return false;
       }
     } catch (e) {

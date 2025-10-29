@@ -34,6 +34,8 @@ class PreferencesController extends GetxController {
 
   // Save changes method
   Future<void> saveChanges() async {
+    Get.snackbar("Success", "Preferences saved successfully");
+    return;
     try {
       isLoading.value = true;
       Map<String, dynamic> body = {

@@ -433,7 +433,7 @@ class _UserBottomSheetState extends State<UserBottomSheet> {
     final uploaderName = uploader?.name ?? 'Anonymous';
     final uploaderImage =
         uploader?.profileImage != null
-            ? '${ApiEndPoint.imageUrl}${uploader!.profileImage}'
+            ? uploader!.profileImage
             : AppImages.profile;
     final timeAgo = controller.getTimeAgo(image.uploadedAt);
 
@@ -447,6 +447,7 @@ class _UserBottomSheetState extends State<UserBottomSheet> {
                   imageUrl: imageUrl,
                   title: uploaderName,
                   subtitle: timeAgo,
+                  uploaderImage: uploaderImage,
                 ),
           ),
         );

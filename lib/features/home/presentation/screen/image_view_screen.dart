@@ -9,12 +9,14 @@ class ImageViewScreen extends StatelessWidget {
   final String imageUrl;
   final String? title;
   final String? subtitle;
+  final String? uploaderImage;
 
   const ImageViewScreen({
     super.key,
     required this.imageUrl,
     this.title,
     this.subtitle,
+    this.uploaderImage,
   });
 
   @override
@@ -53,7 +55,9 @@ class ImageViewScreen extends StatelessWidget {
                     radius: 20.r,
                     backgroundColor: Colors.white.withOpacity(0.9),
                     child: ClipOval(
-                      child: CommonImage(imageSrc: AppImages.profile),
+                      child: CommonImage(
+                        imageSrc: uploaderImage ?? AppImages.profile,
+                      ),
                     ),
                   ),
                   SizedBox(width: 6.w),
