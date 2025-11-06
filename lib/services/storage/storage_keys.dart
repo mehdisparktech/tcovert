@@ -10,6 +10,7 @@ class LocalStorageKeys {
   static const String status = "status";
   static const String verified = "verified";
   static const String role = "role";
+  static const String restaurantCrowdStatus = "restaurantCrowdStatus";
 
   // Permission keys
   static const String locationServiceEnabled = "locationServiceEnabled";

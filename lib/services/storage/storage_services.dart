@@ -17,6 +17,7 @@ class LocalStorage {
   static String status = "";
   static bool verified = false;
   static String role = "";
+  static String restaurantCrowdStatus = "normal";
 
   // Create Local Storage Instance
   static SharedPreferences? preferences;
@@ -42,6 +43,7 @@ class LocalStorage {
     status = localStorage.getString(LocalStorageKeys.status) ?? "";
     verified = localStorage.getBool(LocalStorageKeys.verified) ?? false;
     role = localStorage.getString(LocalStorageKeys.role) ?? "";
+    restaurantCrowdStatus = localStorage.getString(LocalStorageKeys.restaurantCrowdStatus) ?? "normal";
     appLog(userId, source: "Local Storage");
   }
 
@@ -68,6 +70,7 @@ class LocalStorage {
     localStorage.setBool(LocalStorageKeys.verified, false);
     localStorage.setBool(LocalStorageKeys.isLogIn, false);
     localStorage.setString(LocalStorageKeys.role, "");
+    localStorage.setString(LocalStorageKeys.restaurantCrowdStatus, "normal");
   }
 
   // Save Data To SharedPreferences

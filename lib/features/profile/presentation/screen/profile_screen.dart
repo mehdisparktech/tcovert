@@ -83,6 +83,11 @@ class ProfileScreen extends StatelessWidget {
                     onTap: () => Get.toNamed(AppRoutes.createPromo),
                   ),
                   Item(
+                    icon: AppImages.profilePng,
+                    title: "Restaurant Crowed Status",
+                    onTap: () => Get.toNamed(AppRoutes.restaurantCrowedStatus),
+                  ),
+                  Item(
                     icon: AppImages.information,
                     title: "Contact Us",
                     onTap: () => Get.toNamed(AppRoutes.contactUs),

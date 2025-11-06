@@ -77,34 +77,6 @@ class HomeController extends GetxController {
 
   // Initialize sample user data (would normally come from API)
   Future<void> _initializeSampleUsers() async {
-    nearbyUsers.value = [
-      {
-        'id': '1',
-        'name': 'Alan Deo',
-        'description': 'Uploaded 14 photos',
-        'time': '2 mi - 17 min',
-        'image': AppImages.image1,
-        'isOnline': true,
-        'lat': 23.8103,
-        'lng': 90.4125,
-      },
-      {
-        'id': '2',
-        'name': 'Martinez',
-        'description': 'Active now',
-        'time': '1.5 mi - 12 min',
-        'image': AppImages.image2,
-        'isOnline': true,
-        'lat': 23.8140,
-        'lng': 90.4200,
-      },
-    ];
-
-    // Set the first user as selected by default
-    if (nearbyUsers.isNotEmpty) {
-      selectedUser.value = nearbyUsers[0];
-    }
-
     await _createMarkers();
   }
 
@@ -631,6 +603,8 @@ class HomeController extends GetxController {
         LocalStorage.myName = profileData['data']['name'];
         LocalStorage.myEmail = profileData['data']['email'];
         LocalStorage.role = profileData['data']['role'];
+        LocalStorage.restaurantCrowdStatus =
+            profileData['data']['restaurant_crowd_status'] ?? 'normal';
         LocalStorage.setString(LocalStorageKeys.myRole, LocalStorage.myRole);
         LocalStorage.setString(LocalStorageKeys.status, LocalStorage.status);
         LocalStorage.setBoolValue(
@@ -641,6 +615,10 @@ class HomeController extends GetxController {
         LocalStorage.setString(LocalStorageKeys.myName, LocalStorage.myName);
         LocalStorage.setString(LocalStorageKeys.myEmail, LocalStorage.myEmail);
         LocalStorage.setString(LocalStorageKeys.role, LocalStorage.role);
+        LocalStorage.setString(
+          LocalStorageKeys.restaurantCrowdStatus,
+          LocalStorage.restaurantCrowdStatus,
+        );
       } else {
         Utils.errorSnackBar(
           profileResponse.statusCode.toString(),

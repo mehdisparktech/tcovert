@@ -1,4 +1,5 @@
 import 'package:get/get.dart';
+import 'package:tcovert/features/profile/presentation/screen/restaurant_crowed_status_screen.dart';
 import '../../features/auth/change_password/presentation/screen/change_password_screen.dart';
 import '../../features/auth/forgot password/presentation/screen/create_password.dart';
 import '../../features/auth/forgot password/presentation/screen/forgot_password.dart';
@@ -45,6 +46,8 @@ class AppRoutes {
   static const String termsOfServices = "/terms_of_services_screen.dart";
   static const String setting = "/setting_screen.dart";
   static const String authPreferences = "/auth_preferences_screen.dart";
+  static const String restaurantCrowedStatus =
+      "/restaurant_crowed_status_screen.dart";
   static List<GetPage> routes = [
     GetPage(name: splash, page: () => const SplashScreen()),
     GetPage(name: home, page: () => const HomeScreen()),
@@ -69,5 +72,9 @@ class AppRoutes {
     GetPage(name: termsOfServices, page: () => const TermsOfServicesScreen()),
     GetPage(name: setting, page: () => const SettingScreen()),
     GetPage(name: authPreferences, page: () => const AuthPreferencesScreen()),
+    GetPage(
+      name: restaurantCrowedStatus,
+      page: () => const RestaurantCrowedStatusScreen(),
+    ),
   ];
 }
