@@ -32,4 +32,5 @@ class AppImages {
   static const String crowdNormal = "$baseurl/crowdNormal.png";
   static const String crowdHigh = "$baseurl/crowdHigh.png";
   static const String crowdOverloaded = "$baseurl/crowdOverloaded.png";
+  static const String crowed = "$baseurl/crowed.png";
 }

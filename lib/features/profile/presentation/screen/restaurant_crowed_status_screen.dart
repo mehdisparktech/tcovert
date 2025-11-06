@@ -21,6 +21,10 @@ class RestaurantCrowedStatusScreen extends StatelessWidget {
           textAlign: TextAlign.center,
         ),
         centerTitle: true,
+        leading: IconButton(
+          icon: const Icon(Icons.arrow_back_ios_new, color: Colors.white),
+          onPressed: () => Get.back(),
+        ),
       ),
       body: Padding(
         padding: const EdgeInsets.all(20.0),
@@ -95,10 +99,6 @@ class RestaurantCrowedStatusScreen extends StatelessWidget {
               return CommonButton(
                 titleText: 'Save',
                 isLoading: controller.isLoading.value,
-                buttonColor:
-                    hasSelection
-                        ? const Color(0xFF6C63FF)
-                        : Colors.grey.shade300,
                 titleColor: hasSelection ? Colors.white : Colors.grey.shade600,
                 onTap:
                     hasSelection && !controller.isLoading.value

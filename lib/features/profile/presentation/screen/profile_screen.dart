@@ -5,6 +5,7 @@ import 'package:tcovert/component/pop_up/common_pop_menu.dart';
 import 'package:tcovert/config/api/api_end_point.dart';
 import 'package:tcovert/services/storage/storage_services.dart';
 import 'package:tcovert/utils/constants/app_colors.dart';
+import 'package:tcovert/utils/enum/enum.dart';
 import '../../../../../../config/route/app_routes.dart';
 import '../../../../component/image/common_image.dart';
 import '../../../../component/other_widgets/item.dart';
@@ -77,23 +78,24 @@ class ProfileScreen extends StatelessWidget {
                   ),
 
                   /// Setting item here
-                  Item(
-                    icon: AppImages.qrscan,
-                    title: "Create Promo",
-                    onTap: () => Get.toNamed(AppRoutes.createPromo),
-                  ),
-                  Item(
-                    icon: AppImages.profilePng,
-                    title: "Restaurant Crowed Status",
-                    onTap: () => Get.toNamed(AppRoutes.restaurantCrowedStatus),
-                  ),
+                  if (LocalStorage.role == Role.business.name)
+                    Item(
+                      icon: AppImages.qrscan,
+                      title: "Create Promo",
+                      onTap: () => Get.toNamed(AppRoutes.createPromo),
+                    ),
+                  if (LocalStorage.role == Role.business.name)
+                    Item(
+                      icon: AppImages.crowed,
+                      title: "Restaurant Crowed Status",
+                      onTap:
+                          () => Get.toNamed(AppRoutes.restaurantCrowedStatus),
+                    ),
                   Item(
                     icon: AppImages.information,
                     title: "Contact Us",
                     onTap: () => Get.toNamed(AppRoutes.contactUs),
                   ),
-
-                  /// Language item here
 
                   /// Log Out item here
                   Item(
