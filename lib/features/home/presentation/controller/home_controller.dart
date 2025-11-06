@@ -476,6 +476,7 @@ class HomeController extends GetxController {
                 'isOnline': business.isApproved,
                 'lat': business.location.latitude,
                 'lng': business.location.longitude,
+                'crowdStatus': business.crowdStatus,
               };
             }).toList();
 

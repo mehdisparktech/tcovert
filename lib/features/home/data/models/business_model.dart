@@ -6,22 +6,22 @@ class BusinessModel {
   final String name;
   final LocationModel location;
   final String address;
-  final String owner;
   final bool isApproved;
   final String createdAt;
   final String updatedAt;
   final CoverPhotoModel? coverPhoto;
+  final String? crowdStatus;
 
   BusinessModel({
     required this.id,
     required this.name,
     required this.location,
     required this.address,
-    required this.owner,
     required this.isApproved,
     required this.createdAt,
     required this.updatedAt,
     this.coverPhoto,
+    this.crowdStatus,
   });
 
   factory BusinessModel.fromJson(Map<String, dynamic> json) {
@@ -30,13 +30,14 @@ class BusinessModel {
       name: json['name'] ?? '',
       location: LocationModel.fromJson(json['location'] ?? {}),
       address: json['address'] ?? '',
-      owner: json['owner'] ?? '',
       isApproved: json['isApproved'] ?? false,
       createdAt: json['createdAt'] ?? '',
       updatedAt: json['updatedAt'] ?? '',
-      coverPhoto: json['coverPhoto'] != null
-          ? CoverPhotoModel.fromJson(json['coverPhoto'])
-          : null,
+      coverPhoto:
+          json['coverPhoto'] != null
+              ? CoverPhotoModel.fromJson(json['coverPhoto'])
+              : null,
+      crowdStatus: json['crowdStatus'],
     );
   }
 
@@ -46,11 +47,11 @@ class BusinessModel {
       'name': name,
       'location': location.toJson(),
       'address': address,
-      'owner': owner,
       'isApproved': isApproved,
       'createdAt': createdAt,
       'updatedAt': updatedAt,
       'coverPhoto': coverPhoto?.toJson(),
+      'crowdStatus': crowdStatus,
     };
   }
 }
