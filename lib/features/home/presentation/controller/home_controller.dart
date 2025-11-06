@@ -18,7 +18,6 @@ import '../../data/services/business_service.dart';
 import '../../../../config/api/api_end_point.dart';
 import '../widgets/user_bottom_sheet.dart';
 import 'dart:ui' as ui;
-import 'dart:typed_data';
 import 'package:flutter/services.dart';
 import 'package:http/http.dart' as http;
 
@@ -248,10 +247,9 @@ class HomeController extends GetxController {
     String? crowdStatus,
   }) async {
     try {
-      const double imageSize = 100.0;
-      const double markerHeight =
-          280.0; // Increased to accommodate larger status circle
-      const double markerWidth = 100.0;
+      const double imageSize = 120.0;
+      const double markerHeight = 280.0; // Height for image + status image
+      const double markerWidth = 200.0;
 
       final ui.PictureRecorder pictureRecorder = ui.PictureRecorder();
       final Canvas canvas = Canvas(pictureRecorder);
@@ -341,112 +339,66 @@ class HomeController extends GetxController {
       // Draw border
       canvas.drawRRect(imageRect, borderPaint);
 
-      // Draw location pin icon below the image
-      const double pinTop = imageSize;
-      const double pinSize = 80.0;
-
-      final Paint pinPaint =
-          Paint()
-            ..color = AppColors.secondary
-            ..style = PaintingStyle.fill;
-
-      final Paint pinBorderPaint =
-          Paint()
-            ..color = Colors.white
-            ..style = PaintingStyle.stroke
-            ..strokeWidth = 2.0;
-
-      // Draw location pin shape (teardrop/pin shape)
-      final Path pinPath = Path();
-
-      // Top circle part of the pin
-      final double circleRadius = pinSize * 0.35;
-      final double circleCenterX = markerWidth / 2;
-      final double circleCenterY = pinTop + circleRadius;
-
-      pinPath.addOval(
-        Rect.fromCircle(
-          center: Offset(circleCenterX, circleCenterY),
-          radius: circleRadius,
-        ),
-      );
-
-      // Bottom triangle/point of the pin
-      final double pointTop = circleCenterY + circleRadius * 0.7;
-      final double pointBottom = pinTop + pinSize;
-      final double pointWidth = circleRadius * 0.8;
-
-      pinPath.moveTo(circleCenterX - pointWidth, pointTop);
-      pinPath.lineTo(circleCenterX, pointBottom);
-      pinPath.lineTo(circleCenterX + pointWidth, pointTop);
-      pinPath.close();
-
-      // Draw pin with shadow effect
-      canvas.save();
-      canvas.drawShadow(pinPath, Colors.black.withOpacity(0.3), 3.0, false);
-      canvas.restore();
-
-      canvas.drawPath(pinPath, pinPaint);
-      canvas.drawPath(pinPath, pinBorderPaint);
-
-      // Draw inner circle (white dot in the middle)
-      final Paint innerCirclePaint =
-          Paint()
-            ..color = Colors.white
-            ..style = PaintingStyle.fill;
-
-      canvas.drawCircle(
-        Offset(circleCenterX, circleCenterY),
-        circleRadius * 0.4,
-        innerCirclePaint,
-      );
-
-      // Draw crowd status circle below the pin
+      // Draw crowd status image below the image
       if (crowdStatus != null) {
-        final double statusCircleRadius = 45.0;
-        final double statusCircleY = pointBottom + 35.0;
+        final double statusImageSize = 130.0;
+        final double statusImageY = imageSize + 10.0;
 
-        // Determine color based on crowdStatus
-        Color statusColor;
+        // Determine which image to use based on crowdStatus
+        String? statusImagePath;
         switch (crowdStatus.toLowerCase()) {
           case 'overloaded':
-          case 'crowded':
-            statusColor = Color(0xFFF50B0B).withOpacity(0.8);
+            statusImagePath = AppImages.crowdOverloaded;
             break;
           case 'high':
-          case 'not crowded':
-            statusColor = Color(0xFF0BF536).withOpacity(0.8);
+            statusImagePath = AppImages.crowdHigh;
             break;
           case 'normal':
-          case 'moderate':
+            statusImagePath = AppImages.crowdNormal;
+            break;
           default:
-            statusColor = Colors.transparent;
+            statusImagePath = null;
             break;
         }
 
-        // Draw outer transparent circle (border effect)
-        final Paint outerCirclePaint =
-            Paint()
-              ..color = Colors.transparent
-              ..style = PaintingStyle.fill;
+        // Load and draw the status image
+        if (statusImagePath != null) {
+          try {
+            final ByteData statusData = await rootBundle.load(statusImagePath);
+            final Uint8List statusBytes = statusData.buffer.asUint8List();
+            final ui.Codec statusCodec = await ui.instantiateImageCodec(
+              statusBytes,
+              targetWidth: statusImageSize.toInt(),
+              targetHeight: statusImageSize.toInt(),
+            );
+            final ui.FrameInfo statusFrameInfo =
+                await statusCodec.getNextFrame();
+            final ui.Image statusImage = statusFrameInfo.image;
 
-        canvas.drawCircle(
-          Offset(circleCenterX, statusCircleY),
-          statusCircleRadius + 2.0,
-          outerCirclePaint,
-        );
+            final double statusImageX = (markerWidth - statusImageSize) / 2;
+            final Rect statusDstRect = Rect.fromLTWH(
+              statusImageX,
+              statusImageY,
+              statusImageSize,
+              statusImageSize,
+            );
+            final Rect statusSrcRect = Rect.fromLTWH(
+              0,
+              0,
+              statusImage.width.toDouble(),
+              statusImage.height.toDouble(),
+            );
 
-        // Draw colored status circle
-        final Paint statusCirclePaint =
-            Paint()
-              ..color = statusColor
-              ..style = PaintingStyle.fill;
-
-        canvas.drawCircle(
-          Offset(circleCenterX, statusCircleY),
-          statusCircleRadius,
-          statusCirclePaint,
-        );
+            canvas.drawImageRect(
+              statusImage,
+              statusSrcRect,
+              statusDstRect,
+              Paint(),
+            );
+          } catch (e) {
+            print('Error loading status image: $e');
+          }
+        }
       }
 
       // Convert to image
