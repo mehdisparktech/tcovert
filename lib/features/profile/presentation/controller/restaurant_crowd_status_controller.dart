@@ -5,6 +5,7 @@ import 'package:tcovert/services/api/api_service.dart';
 import 'package:tcovert/services/storage/storage_keys.dart';
 import 'package:tcovert/services/storage/storage_services.dart';
 import 'package:tcovert/utils/app_utils.dart';
+import 'package:tcovert/features/home/presentation/controller/home_controller.dart';
 
 class RestaurantCrowdStatusController extends GetxController {
   // Observable variables
@@ -67,6 +68,14 @@ class RestaurantCrowdStatusController extends GetxController {
           LocalStorageKeys.restaurantCrowdStatus,
           selectedStatus.value!,
         );
+
+        // Refresh HomeController to get latest data
+        try {
+          final homeController = Get.find<HomeController>();
+          await homeController.fetchNearbyBusinesses();
+        } catch (e) {
+          print('HomeController not found or error refreshing: $e');
+        }
 
         final label = getStatusLabel(selectedStatus.value);
         Utils.successSnackBar('Success', 'Status saved: $label');

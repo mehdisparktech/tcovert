@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:tcovert/component/button/common_button.dart';
 import 'package:tcovert/component/image/common_image.dart';
+import 'package:tcovert/features/home/presentation/screen/image_view_screen.dart';
 import 'package:tcovert/features/home/presentation/widgets/image_selete_bottom_sheet.dart';
 import 'package:tcovert/utils/constants/app_colors.dart';
 import 'package:tcovert/utils/constants/app_images.dart';
@@ -251,37 +252,47 @@ class _ImageBottomSheetState extends State<BusinessImageViewBottomSheet> {
     final uploadedAt = DateTime.parse(imageData['uploadedAt']);
     final timeAgo = timeago.format(uploadedAt);
 
-    return Container(
-      decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(12.r),
-        image: DecorationImage(
-          image: NetworkImage(imageUrl),
-          fit: BoxFit.cover,
+    return GestureDetector(
+      onTap: () {
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) => ImageViewScreen(imageUrl: imageUrl),
+          ),
+        );
+      },
+      child: Container(
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(12.r),
+          image: DecorationImage(
+            image: NetworkImage(imageUrl),
+            fit: BoxFit.cover,
+          ),
         ),
-      ),
-      child: Stack(
-        children: [
-          Container(
-            decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(12.r),
-              gradient: LinearGradient(
-                begin: Alignment.topCenter,
-                end: Alignment.bottomCenter,
-                colors: [Colors.transparent, Colors.black.withOpacity(0.6)],
+        child: Stack(
+          children: [
+            Container(
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(12.r),
+                gradient: LinearGradient(
+                  begin: Alignment.topCenter,
+                  end: Alignment.bottomCenter,
+                  colors: [Colors.transparent, Colors.black.withOpacity(0.6)],
+                ),
               ),
             ),
-          ),
-          Positioned(
-            bottom: 8.h,
-            left: 8.w,
-            child: CommonText(
-              text: timeAgo,
-              fontSize: 10,
-              fontWeight: FontWeight.w400,
-              color: Colors.white,
+            Positioned(
+              bottom: 8.h,
+              left: 8.w,
+              child: CommonText(
+                text: timeAgo,
+                fontSize: 10,
+                fontWeight: FontWeight.w400,
+                color: Colors.white,
+              ),
             ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }
@@ -294,65 +305,75 @@ class _ImageBottomSheetState extends State<BusinessImageViewBottomSheet> {
     final uploadedAt = DateTime.parse(imageData['uploadedAt']);
     final timeAgo = timeago.format(uploadedAt);
 
-    return Container(
-      decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(12.r),
-        image: DecorationImage(
-          image: NetworkImage(imageUrl),
-          fit: BoxFit.cover,
+    return GestureDetector(
+      onTap: () {
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) => ImageViewScreen(imageUrl: imageUrl),
+          ),
+        );
+      },
+      child: Container(
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(12.r),
+          image: DecorationImage(
+            image: NetworkImage(imageUrl),
+            fit: BoxFit.cover,
+          ),
         ),
-      ),
-      child: Stack(
-        children: [
-          Container(
-            decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(12.r),
-              gradient: LinearGradient(
-                begin: Alignment.topCenter,
-                end: Alignment.bottomCenter,
-                colors: [Colors.transparent, Colors.black.withOpacity(0.7)],
+        child: Stack(
+          children: [
+            Container(
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(12.r),
+                gradient: LinearGradient(
+                  begin: Alignment.topCenter,
+                  end: Alignment.bottomCenter,
+                  colors: [Colors.transparent, Colors.black.withOpacity(0.7)],
+                ),
               ),
             ),
-          ),
-          Positioned(
-            bottom: 8.h,
-            left: 8.w,
-            right: 8.w,
-            child: Row(
-              children: [
-                CircleAvatar(
-                  radius: 10.r,
-                  backgroundImage: NetworkImage(
-                    userProfileImage.startsWith('http')
-                        ? userProfileImage
-                        : '${ApiEndPoint.imageUrl}$userProfileImage',
+            Positioned(
+              bottom: 8.h,
+              left: 8.w,
+              right: 8.w,
+              child: Row(
+                children: [
+                  CircleAvatar(
+                    radius: 10.r,
+                    backgroundImage: NetworkImage(
+                      userProfileImage.startsWith('http')
+                          ? userProfileImage
+                          : '${ApiEndPoint.imageUrl}$userProfileImage',
+                    ),
                   ),
-                ),
-                SizedBox(width: 6.w),
-                Expanded(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      CommonText(
-                        text: userName,
-                        fontSize: 10,
-                        fontWeight: FontWeight.w500,
-                        color: Colors.white,
-                        maxLines: 1,
-                      ),
-                      CommonText(
-                        text: timeAgo,
-                        fontSize: 8,
-                        fontWeight: FontWeight.w400,
-                        color: Colors.grey[400]!,
-                      ),
-                    ],
+                  SizedBox(width: 6.w),
+                  Expanded(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        CommonText(
+                          text: userName,
+                          fontSize: 10,
+                          fontWeight: FontWeight.w500,
+                          color: Colors.white,
+                          maxLines: 1,
+                        ),
+                        CommonText(
+                          text: timeAgo,
+                          fontSize: 8,
+                          fontWeight: FontWeight.w400,
+                          color: Colors.grey[400]!,
+                        ),
+                      ],
+                    ),
                   ),
-                ),
-              ],
+                ],
+              ),
             ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }
