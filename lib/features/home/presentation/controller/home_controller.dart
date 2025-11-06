@@ -243,10 +243,14 @@ class HomeController extends GetxController {
   }
 
   // Create custom marker with image on top of pin
-  Future<BitmapDescriptor> _createCustomMarkerWithImage(String imageUrl) async {
+  Future<BitmapDescriptor> _createCustomMarkerWithImage(
+    String imageUrl, {
+    String? crowdStatus,
+  }) async {
     try {
       const double imageSize = 100.0;
-      const double markerHeight = 200.0;
+      const double markerHeight =
+          280.0; // Increased to accommodate larger status circle
       const double markerWidth = 100.0;
 
       final ui.PictureRecorder pictureRecorder = ui.PictureRecorder();
@@ -397,6 +401,54 @@ class HomeController extends GetxController {
         innerCirclePaint,
       );
 
+      // Draw crowd status circle below the pin
+      if (crowdStatus != null) {
+        final double statusCircleRadius = 45.0;
+        final double statusCircleY = pointBottom + 35.0;
+
+        // Determine color based on crowdStatus
+        Color statusColor;
+        switch (crowdStatus.toLowerCase()) {
+          case 'overloaded':
+          case 'crowded':
+            statusColor = Color(0xFFF50B0B).withOpacity(0.8);
+            break;
+          case 'high':
+          case 'not crowded':
+            statusColor = Color(0xFF0BF536).withOpacity(0.8);
+            break;
+          case 'normal':
+          case 'moderate':
+          default:
+            statusColor = Colors.transparent;
+            break;
+        }
+
+        // Draw outer transparent circle (border effect)
+        final Paint outerCirclePaint =
+            Paint()
+              ..color = Colors.transparent
+              ..style = PaintingStyle.fill;
+
+        canvas.drawCircle(
+          Offset(circleCenterX, statusCircleY),
+          statusCircleRadius + 2.0,
+          outerCirclePaint,
+        );
+
+        // Draw colored status circle
+        final Paint statusCirclePaint =
+            Paint()
+              ..color = statusColor
+              ..style = PaintingStyle.fill;
+
+        canvas.drawCircle(
+          Offset(circleCenterX, statusCircleY),
+          statusCircleRadius,
+          statusCirclePaint,
+        );
+      }
+
       // Convert to image
       final ui.Image markerImage = await pictureRecorder.endRecording().toImage(
         markerWidth.toInt(),
@@ -421,8 +473,11 @@ class HomeController extends GetxController {
     for (var i = 0; i < nearbyUsers.length; i++) {
       final user = nearbyUsers[i];
 
-      // Create custom marker with image
-      final customIcon = await _createCustomMarkerWithImage(user['image']);
+      // Create custom marker with image and crowd status
+      final customIcon = await _createCustomMarkerWithImage(
+        user['image'],
+        crowdStatus: user['crowdStatus'],
+      );
 
       final marker = Marker(
         markerId: MarkerId(user['id']),

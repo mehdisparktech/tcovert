@@ -29,4 +29,7 @@ class AppImages {
   static const String user = "$baseurl/user.png";
   static const String password = "$baseurl/password.png";
   static const String gallery = "$baseurl/gallery.png";
+  static const String crowdNormal = "$baseurl/crowdNormal.png";
+  static const String crowdHigh = "$baseurl/crowdHigh.png";
+  static const String crowdOverloaded = "$baseurl/crowdOverloaded.png";
 }
