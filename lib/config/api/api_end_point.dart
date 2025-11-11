@@ -1,7 +1,7 @@
 class ApiEndPoint {
-  static const baseUrl = "http://10.10.7.72:5000/api/v1/";
-  static const imageUrl = "http://10.10.7.72:5000";
-  static const socketUrl = "http://10.10.7.72:5000";
+  static const baseUrl = "http://92.205.234.176:5010/api/v1/";
+  static const imageUrl = "http://92.205.234.176:5010";
+  static const socketUrl = "http://92.205.234.176:5010";
 
   static const signUp = "user";
   static const verifyEmail = "auth/send-otp";
